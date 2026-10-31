@@ -3,3 +3,20 @@
 @media(max-width:1100px){.sidebar{width:210px}.main-content{margin-left:210px;padding:0 28px 45px}.meal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.week-grid{grid-template-columns:repeat(7,150px)}}
 @media(max-width:700px){.sidebar{position:sticky;top:0;width:100%;height:auto;padding:12px 15px;border-right:0;border-bottom:1px solid var(--line);display:block}.brand{margin:0 0 12px}.brand-mark{width:34px;height:34px}.brand strong{font-size:16px}.main-nav{display:flex;gap:4px}.nav-link{padding:9px 10px;font-size:11px;gap:6px}.nav-link b,.sidebar-label,.sidebar-bottom{display:none}.main-content{margin:0;padding:0 16px 35px}.topbar{height:49px}.view{padding-top:28px}.page-heading{align-items:flex-start;flex-direction:column;margin-bottom:22px}h1{font-size:33px}.meal-grid{grid-template-columns:1fr 1fr;gap:10px}.meal-image{height:125px}.meal-card-body{padding:11px}.meal-card h3{font-size:15px}.button{padding:10px 12px}.week-grid{grid-template-columns:repeat(7,145px)}.form-grid{grid-template-columns:1fr}.field{grid-column:1/-1}.top-actions span{display:none}}
 @media print{body{background:#fff}.sidebar,.topbar,.page-heading button,.week-controls,.add-slot,.meal-actions,.planner-tip{display:none!important}.main-content{margin:0;padding:0;max-width:none}.view{display:none!important}.view.print-target{display:block!important;padding:0}.week-grid{grid-template-columns:repeat(4,1fr);overflow:visible}.day-column{break-inside:avoid;min-height:0}.shopping-list{max-width:none}.shopping-row input{display:none}.page-heading{margin-bottom:15px}h1{font-size:28px}}
+/* Authentication */
+[hidden]{display:none!important}
+.auth-screen{min-height:100vh;display:grid;place-items:center;padding:28px 16px;background:radial-gradient(ellipse at 15% 10%,#edf2e9 0,transparent 42%),#fbfaf7}
+.auth-card{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:36px;box-shadow:0 18px 60px #26342e0b}
+.auth-brand{margin:0 0 38px}
+.auth-card h1{font-size:34px;margin:9px 0}
+.auth-card>p{color:#89948b;font-size:12px;line-height:1.65;margin:0 0 24px}
+#auth-form{display:grid;gap:16px}
+#auth-form .field{gap:8px}
+#auth-form .field input{border:1px solid var(--line);border-radius:8px;padding:12px;font:13px "DM Sans";outline-color:#9fb39f}
+.auth-submit{width:100%;justify-content:center;margin-top:5px;padding:13px}
+.auth-submit:disabled{opacity:.6;cursor:wait}
+.auth-switch{font-size:11px!important;text-align:center;margin:19px 0 0!important}
+.auth-switch button{border:0;background:none;color:var(--green);font:700 11px "DM Sans";cursor:pointer}
+.auth-message{min-height:18px;color:#a45e42!important;text-align:center;font-size:11px!important;margin:12px 0 0!important}
+.auth-footnote{display:block;text-align:center;color:#a1a99f;font-size:10px;margin-top:22px}
+@media(max-width:700px){.auth-card{padding:27px 22px}.auth-brand{margin-bottom:32px}}
