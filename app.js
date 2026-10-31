@@ -2,7 +2,7 @@ const SUPABASE_URL=window.CIRES_SUPABASE_URL, SUPABASE_KEY=window.CIRES_SUPABASE
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const DAYS=["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],SLOTS=["Breakfast","Lunch","Dinner","Snack"],PHOTO_BUCKET="meal-photos";
 let user=null,meals=[],planned=[],week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer;
-const $=(s,root=document)=>root.querySelector(s),$=(s,root=document)=>[...root.querySelectorAll(s)];
+const $=(s,root=document)=>root.querySelector(s), $=(s,root=document)=>[...root.querySelectorAll(s)];
 function startWeek(d){let x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-(x.getDay()+1)%7);return x}
 function dateKey(d){return[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
 function dayDate(i){let d=new Date(week);d.setDate(d.getDate()+i);return d}
