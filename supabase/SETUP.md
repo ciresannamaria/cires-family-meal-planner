@@ -34,6 +34,29 @@ These two values are intended for the browser when Row Level Security is correct
 
 The website integration will be completed after the project exists and its URL and publishable key are available.
 
+
+## 4. Configure sign-in redirects
+
+In Supabase, open **Authentication → URL Configuration**.
+
+Set **Site URL** to:
+
+`https://ciresannamaria.github.io/cires-family-meal-planner/`
+
+Add the same address under **Redirect URLs** and save.
+
+The app uses email and password authentication. If email confirmation is enabled, new users must click the confirmation link sent by Supabase before signing in. In **Authentication → Providers → Email**, keep the Email provider enabled. For a first test, email confirmation can remain enabled; make sure the confirmation redirect URL above is configured.
+
+## 5. Deploy and test
+
+After the website changes have deployed through GitHub Pages:
+
+1. Open the website URL.
+2. Choose **Create account** and register your email and a password.
+3. If prompted, confirm your email from the message Supabase sends.
+4. Sign in and add a test meal.
+5. Refresh the page and sign in from another device to verify that the meal appears there.
+
 ## Data model
 
 - `meals`: one row per saved recipe, owned by a Supabase user.
