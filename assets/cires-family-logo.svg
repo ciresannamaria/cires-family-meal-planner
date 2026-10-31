@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 150" role="img" aria-labelledby="title desc">
+<title id="title">Cires Family Meal Planner</title><desc id="desc">A yellow cherry and a red cherry with green leaves beside the Cires Family Meal Planner name.</desc>
+<defs>
+ <linearGradient id="red" x2="0.8" y2="1"><stop stop-color="#ff6860"/><stop offset=".48" stop-color="#df171d"/><stop offset="1" stop-color="#9f0712"/></linearGradient>
+ <linearGradient id="gold" x2=".8" y2="1"><stop stop-color="#fff06b"/><stop offset=".5" stop-color="#ffc928"/><stop offset="1" stop-color="#e99b00"/></linearGradient>
+ <linearGradient id="leaf" x2="1" y2="1"><stop stop-color="#a5c85b"/><stop offset="1" stop-color="#356b35"/></linearGradient>
+</defs>
+<g transform="translate(8 8)">
+ <path d="M72 70 C82 28 103 15 139 12 C124 35 111 52 82 65" fill="url(#leaf)" stroke="#477c39" stroke-width="2"/>
+ <path d="M82 68 Q105 42 139 12" fill="none" stroke="#d5e58b" stroke-width="2"/>
+ <path d="M85 78 C91 42 112 25 139 12 C157 35 163 52 159 73" fill="none" stroke="#477c39" stroke-width="5" stroke-linecap="round"/>
+ <path d="M139 12 C145 35 159 52 177 75" fill="none" stroke="#477c39" stroke-width="5" stroke-linecap="round"/>
+ <path d="M85 78 C79 88 73 96 65 103 M159 73 C165 85 173 94 184 102" fill="none" stroke="#477c39" stroke-width="4" stroke-linecap="round"/>
+ <circle cx="63" cy="111" r="29" fill="url(#gold)" stroke="#e6a914" stroke-width="1.5"/>
+ <circle cx="187" cy="111" r="29" fill="url(#red)" stroke="#b7131c" stroke-width="1.5"/>
+ <ellipse cx="51" cy="99" rx="7" ry="12" fill="#fff8c4" opacity=".8" transform="rotate(30 51 99)"/>
+ <ellipse cx="175" cy="99" rx="7" ry="12" fill="#fff" opacity=".72" transform="rotate(30 175 99)"/>
+</g>
+<text x="235" y="78" fill="#263d2b" font-family="Georgia,serif" font-size="54" font-weight="bold">Cires Family</text>
+<path d="M238 96 H278 M575 96 H615" stroke="#6f984c" stroke-width="3" stroke-linecap="round"/>
+<text x="300" y="111" fill="#648b43" font-family="Arial,sans-serif" font-size="21" letter-spacing="5">MEAL PLANNER</text>
+</svg>
