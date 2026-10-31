@@ -66,7 +66,7 @@ $("#prev-week").onclick=()=>{week.setDate(week.getDate()-7);drawPlanner();drawSh
 $("#next-week").onclick=()=>{week.setDate(week.getDate()+7);drawPlanner();drawShopping()};
 $("#this-week").onclick=()=>{week=startWeek(new Date());drawPlanner();drawShopping()};
 $("#week-grid").onclick=plannerClick;$("#picker-search").oninput=drawPicker;
-$("#picker-meals").onclick=e=>{let b=e.target.closest("[data-pick]");if(b){addEntry(b.dataset.pick,$("#picker-day").value,$("#picker-slot").value,1);$("#picker-dialog").close()}};
+$("#picker-portions").value="1";$("#picker-meals").onclick=e=>{let b=e.target.closest("[data-pick]");if(b){let portions=Math.max(1,Math.min(99,Math.floor(Number($("#picker-portions").value)||1)));addEntry(b.dataset.pick,$("#picker-day").value,$("#picker-slot").value,portions);$("#picker-dialog").close()}};
 $("#print-menu").onclick=()=>printView("planner");$("#print-shopping").onclick=()=>printView("shopping");
 $("#export-data").onclick=exportData;$("#import-data").onchange=importData;
 $("#sign-out").onclick=async()=>{await db.auth.signOut();user=null;meals=[];planned=[];showAuth("login","You have signed out.")};
