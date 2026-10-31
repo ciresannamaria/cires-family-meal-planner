@@ -74,7 +74,7 @@
 </form></dialog>
 <dialog id="detail-dialog" class="modal detail-modal"><div id="detail-content"></div></dialog>
 <dialog id="picker-dialog" class="modal picker-modal"><div class="modal-header"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h2>Choose a meal</h2></div><button class="icon-button close-dialog">×</button></div>
-<input type="hidden" id="picker-day"><input type="hidden" id="picker-slot"><label class="search picker-search">⌕ <input id="picker-search" type="search" placeholder="Find a meal…"></label><div id="picker-meals" class="picker-meals"></div><div class="modal-footer"><button class="button light close-dialog">Close</button></div></dialog>
+<input type="hidden" id="picker-day"><input type="hidden" id="picker-slot"><label class="field portion-field">Number of portions<input id="picker-portions" type="number" min="1" max="99" step="1" value="1"></label><label class="search picker-search">⌕ <input id="picker-search" type="search" placeholder="Find a meal…"></label><div id="picker-meals" class="picker-meals"></div><div class="modal-footer"><button class="button light close-dialog">Close</button></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
