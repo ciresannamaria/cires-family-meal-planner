@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f5ef"><title>Cires Family Meal Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+<a class="brand" href="#"><span class="brand-mark">cm</span><span><strong>Cires</strong><small>FAMILY MEAL PLANNER</small></span></a>
+<div class="sidebar-label">WORKSPACE</div>
+<nav class="main-nav" aria-label="Main navigation">
+<button class="nav-link active" data-view="meals"><span>▦</span> Meals <b id="meal-count">0</b></button>
+<button class="nav-link" data-view="planner"><span>▣</span> Weekly planner</button>
+<button class="nav-link" data-view="shopping"><span>⌑</span> Shopping list</button>
+</nav>
+<div class="sidebar-bottom"><div class="storage-note"><i></i><div><strong>Saved on this device</strong><small>Your recipes stay in this browser.</small></div></div>
+<button class="text-button" id="export-data">↓ Export recipe backup</button>
+<label class="text-button import-label">↑ Import recipe backup<input id="import-data" type="file" accept="application/json"></label></div>
+</aside>
+<main class="main-content">
+<header class="topbar"><div class="breadcrumb">YOUR HOME <span>/</span> <strong id="breadcrumb-current">MEALS</strong></div><div class="top-actions"><span id="today-label"></span><span class="avatar">C</span></div></header>
+<section class="view active" id="view-meals">
+<div class="page-heading"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h1>Your meals</h1><p>A little inspiration for every day.</p></div><button class="button primary" id="add-meal">＋ Add a meal</button></div>
+<div class="toolbar"><label class="search">⌕ <input id="meal-search" type="search" placeholder="Search meals or ingredients…"></label><span id="meal-results"></span></div>
+<div class="meal-grid" id="meal-grid"></div>
+<div class="empty-state" id="meal-empty"><div class="empty-mark">✳</div><h2>Your recipe collection starts here</h2><p>Add a meal you've cooked. Give it a photo, list its ingredients and save the preparation steps.</p><button class="button primary" id="empty-add-meal">＋ Add your first meal</button></div>
+</section>
+<section class="view" id="view-planner">
+<div class="page-heading"><div><div class="eyebrow">MAKE THE WEEK EASIER</div><h1>Weekly planner</h1><p>Plan your meals, one week at a time.</p></div><button class="button light" id="print-menu">↓ Download weekly menu</button></div>
+<div class="week-controls"><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small>Saturday – Friday</small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
+<div class="week-grid" id="week-grid"></div><p class="planner-tip">✳ Add as many meal entries as you need. Portions are used to calculate your shopping list.</p>
+</section>
+<section class="view" id="view-shopping">
+<div class="page-heading"><div><div class="eyebrow">READY FOR THE STORE</div><h1>Shopping list</h1><p>Ingredients combined from your weekly plan.</p></div><button class="button light" id="print-shopping">↓ Download shopping list</button></div>
+<div class="shopping-summary" id="shopping-summary"></div><div class="shopping-list" id="shopping-list"></div>
+</section>
+</main></div>
+<dialog id="meal-dialog" class="modal"><form id="meal-form" method="dialog">
+<div class="modal-header"><div><div class="eyebrow">RECIPE DETAILS</div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<input type="hidden" id="meal-id"><div class="form-grid">
+<label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
+<label class="field full">Meal photo<input id="meal-photo" type="file" accept="image/*"><small>Choose a reasonably small image (under 1.2 MB).</small><div id="photo-preview"></div></label>
+<div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div></div>
+<label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
+<label class="field full">Notes (optional)<input id="meal-notes" placeholder="e.g. Good for meal prep"></label></div>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary">Save meal</button></div>
+</form></dialog>
+<dialog id="detail-dialog" class="modal detail-modal"><div id="detail-content"></div></dialog>
+<dialog id="picker-dialog" class="modal picker-modal"><div class="modal-header"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h2>Choose a meal</h2></div><button class="icon-button close-dialog">×</button></div>
+<input type="hidden" id="picker-day"><input type="hidden" id="picker-slot"><label class="search picker-search">⌕ <input id="picker-search" type="search" placeholder="Find a meal…"></label><div id="picker-meals" class="picker-meals"></div><div class="modal-footer"><button class="button light close-dialog">Close</button></div></dialog>
+<div class="toast" id="toast" role="status"></div><script src="app.js"></script>
+</body></html>
