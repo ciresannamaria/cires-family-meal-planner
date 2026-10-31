@@ -20,3 +20,34 @@
 .auth-message{min-height:18px;color:#a45e42!important;text-align:center;font-size:11px!important;margin:12px 0 0!important}
 .auth-footnote{display:block;text-align:center;color:#a1a99f;font-size:10px;margin-top:22px}
 @media(max-width:700px){.auth-card{padding:27px 22px}.auth-brand{margin-bottom:32px}}
+
+/* Refined sign-in experience */
+.auth-screen{min-height:100vh;padding:clamp(18px,4vw,58px);display:grid;place-items:center;background:#f6f5ef}
+.auth-layout{width:min(1120px,100%);min-height:min(700px,calc(100vh - 72px));display:grid;grid-template-columns:1.05fr .95fr;background:#fff;border:1px solid #e9e9e1;border-radius:22px;overflow:hidden;box-shadow:0 24px 80px #26342e12}
+.auth-story{position:relative;overflow:hidden;min-height:620px;padding:38px 44px;background:linear-gradient(145deg,#e8eee5 0%,#eef0e8 54%,#e2e9df 100%);display:flex;flex-direction:column}
+.auth-story-brand{display:flex;align-items:center;gap:12px;position:relative;z-index:2;color:var(--ink)}
+.auth-story-brand strong{font:700 18px "Playfair Display";display:block}
+.auth-story-brand small{font-size:9px;letter-spacing:1.5px;color:#909890;font-weight:700}
+.auth-story-copy{position:relative;z-index:2;margin-top:clamp(70px,12vh,125px);max-width:390px}
+.auth-story-copy .eyebrow{color:#718775}
+.auth-story-copy h2{font:600 clamp(42px,5vw,60px)/1.04 "Playfair Display";letter-spacing:-1.5px;color:#304538;margin:18px 0}
+.auth-story-copy h2 em{font-weight:600;color:#789078}
+.auth-story-copy p{max-width:330px;color:#718174;font-size:14px;line-height:1.8}
+.auth-food-art{position:absolute;width:410px;height:410px;right:-35px;bottom:-110px;border-radius:50%;background:#dce6d8;display:grid;place-items:center}
+.food-orbit{position:absolute;border:1px solid #aebfae;border-radius:50%}
+.orbit-one{inset:32px}.orbit-two{inset:68px;border-style:dashed;opacity:.7}
+.food-plate{width:205px;height:205px;border-radius:50%;background:radial-gradient(circle,#f8f6ec 0 48%,#e9e5d6 49% 53%,#fffdf5 54% 63%,#d0d9c9 64% 66%,#f8f6ec 67%);box-shadow:0 18px 35px #425d4720;display:grid;place-items:center;color:#839b7e;font:76px "Playfair Display"}
+.food-leaf{position:absolute;color:#819a7c}.leaf-one{font-size:44px;top:76px;right:88px;transform:rotate(20deg)}.leaf-two{font-size:55px;bottom:76px;left:72px;transform:rotate(-24deg)}
+.food-caption{position:absolute;bottom:135px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;letter-spacing:2px;font-weight:700;color:#718573}
+.auth-card{width:100%;max-width:440px;align-self:center;justify-self:center;padding:clamp(28px,5vw,62px);border:0;border-radius:0;box-shadow:none;background:transparent}
+.auth-card h1{font-size:36px;letter-spacing:-.6px;color:#304238;margin:12px 0}
+.auth-card>p:not(.auth-switch):not(.auth-message){font-size:12px;color:#879187;line-height:1.7;margin:0 0 30px}
+#auth-form .field{font-size:11px;color:#58695c;gap:9px}
+#auth-form .field input{height:47px;border-radius:8px;border:1px solid #e5e9e1;background:#fcfcfa;padding:0 14px;font-size:13px;transition:border .2s,box-shadow .2s}
+#auth-form .field input:focus{border-color:#9aaf98;box-shadow:0 0 0 3px #eaf0e9;outline:none}
+.auth-submit{height:47px;justify-content:center;border-radius:8px;font-size:12px;letter-spacing:.2px;box-shadow:0 5px 12px #52755e24;margin-top:8px}
+.auth-switch{margin-top:23px!important;color:#89938a!important;font-size:11px!important}
+.auth-switch button{font-size:11px;padding:4px}
+.auth-message{min-height:34px;padding:8px 10px;border-radius:7px;background:#f7f7f2;color:#647a67!important;line-height:1.5}
+.auth-footnote{margin-top:18px;color:#a1a99f}
+@media(max-width:760px){.auth-screen{padding:0;background:#fff;min-height:100svh;display:block}.auth-layout{min-height:100svh;display:flex;flex-direction:column;border:0;border-radius:0;box-shadow:none}.auth-story{min-height:255px;padding:24px 25px 20px}.auth-story-copy{margin-top:35px}.auth-story-copy h2{font-size:35px;margin:8px 0}.auth-story-copy p{font-size:11px;max-width:260px;margin-bottom:0}.auth-food-art{width:220px;height:220px;right:-65px;bottom:-92px;opacity:.85}.food-plate{width:112px;height:112px;font-size:42px}.orbit-one{inset:18px}.orbit-two{inset:36px}.food-caption{font-size:6px;bottom:105px}.leaf-one{font-size:25px;top:43px;right:55px}.leaf-two{font-size:30px;bottom:40px;left:36px}.auth-card{padding:32px 27px 38px;max-width:520px}.auth-card h1{font-size:30px}}
