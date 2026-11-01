@@ -158,3 +158,10 @@
  .week-grid{display:flex!important;flex-direction:column!important}
  .day-column{break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
+
+/* Separate daily nutrition totals by meal row (first lunch, second lunch, etc.) */
+.day-nutrition-list{display:grid;gap:7px;width:100%}
+.day-nutrition-row{display:grid;gap:3px}
+.day-nutrition-row>small{font-size:9px;font-weight:700;letter-spacing:.25px;color:#89948a}
+.day-nutrition-row .day-nutrition{display:flex;flex-direction:column;gap:3px}
+@media(max-width:520px){.day-nutrition-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}.day-nutrition-row .day-nutrition{flex-direction:column;gap:3px}}
