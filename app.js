@@ -207,7 +207,22 @@ $("#print-menu").onclick=()=>printView("planner");$("#print-shopping").onclick=(
 $("#profile-toggle").onclick=()=>{const menu=$("#profile-menu");menu.hidden=!menu.hidden;$("#profile-toggle").setAttribute("aria-expanded",String(!menu.hidden))};
 document.addEventListener("click",e=>{if(!e.target.closest(".profile-wrap")){$("#profile-menu").hidden=true;$("#profile-toggle").setAttribute("aria-expanded","false")}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#profile-menu").hidden){$("#profile-menu").hidden=true;$("#profile-toggle").setAttribute("aria-expanded","false")}});
-queryAll("[data-avatar]").forEach(b=>b.onclick=async()=>{const emoji=b.dataset.avatar;const result=await db.auth.updateUser({data:{avatar_emoji:emoji}});if(result.error){toast("Couldn't update your avatar: "+result.error.message);return}user=result.data.user;renderProfile();toast("Profile avatar updated.")});
+$("#profile-menu").onclick=async e=>{
+ const button=e.target.closest("[data-avatar]");if(!button)return;
+ e.preventDefault();e.stopPropagation();
+ const emoji=button.dataset.avatar,previous=user?.user_metadata?.avatar_emoji||"🌿";
+ if(emoji===previous){toast("That's already your avatar.");return}
+ queryAll("[data-avatar]").forEach(b=>b.disabled=true);
+ $("#user-avatar").textContent=emoji;$("#profile-avatar-preview").textContent=emoji;
+ try{
+  const result=await db.auth.updateUser({data:{avatar_emoji:emoji}});
+  if(result.error)throw result.error;
+  user=result.data.user;renderProfile();toast("Profile avatar updated.");
+ }catch(err){
+  $("#user-avatar").textContent=previous;$("#profile-avatar-preview").textContent=previous;renderProfile();
+  toast("Couldn't save your avatar: "+(err.message||"Please try again."));
+ }finally{queryAll("[data-avatar]").forEach(b=>b.disabled=false)}
+};
 $("#export-data").onclick=exportData;$("#import-data").onchange=importData;
 $("#sign-out").onclick=async()=>{await db.auth.signOut();user=null;meals=[];planned=[];showAuth("login","You have signed out.")};
 db.auth.onAuthStateChange(async(event,session)=>{if(session?.user){user=session.user;if($("#app-shell").hidden)await enterApp()}else if(event==="SIGNED_OUT"){user=null;showAuth("login")}});
