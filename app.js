@@ -1,7 +1,7 @@
 const SUPABASE_URL=window.CIRES_SUPABASE_URL, SUPABASE_KEY=window.CIRES_SUPABASE_PUBLISHABLE_KEY;
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const DAYS=["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],SLOTS=["Breakfast","Lunch","Dinner","Snack"],PHOTO_BUCKET="meal-photos";
-let user=null,meals=[],planned=[],familyId=null,mealFormSnapshot=null,pendingShareToken=new URLSearchParams(location.search).get('share'),week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer,mealTypeFilter="All";
+let user=null,meals=[],planned=[],plannerPeople=[],familyId=null,mealFormSnapshot=null,pendingShareToken=new URLSearchParams(location.search).get('share'),week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer,mealTypeFilter="All";
 const $=(s,root=document)=>root.querySelector(s), queryAll=(s,root=document)=>[...root.querySelectorAll(s)];
 function startWeek(d){let x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-(x.getDay()+1)%7);return x}
 function dateKey(d){return[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
@@ -13,7 +13,7 @@ function showAuth(mode="login",message=""){if($("#shared-screen"))$("#shared-scr
 function showApp(){ $("#auth-screen").hidden=true;if($("#shared-screen"))$("#shared-screen").hidden=true;$("#app-shell").hidden=false;$("#user-avatar").textContent=(user.email||"C").charAt(0).toUpperCase(); }
 async function authSubmit(e){e.preventDefault();if(!db){$("#auth-message").textContent="The sign-in service could not load. Refresh the page and try again.";return}let email=$("#auth-email").value.trim(),password=$("#auth-password").value;if(!email||!password){$("#auth-message").textContent="Please enter your email and password.";return}let button=$("#auth-submit");button.disabled=true;button.textContent=authMode==="login"?"Signing in…":"Creating account…";$("#auth-message").textContent="Connecting securely…";try{let res=authMode==="login"?await db.auth.signInWithPassword({email,password}):await db.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+window.location.pathname}});if(res.error)throw res.error;if(authMode==="signup"&&!res.data.session){showAuth("login","Your account has been created. Check your inbox (and spam folder) for the confirmation email, then sign in.");return}user=res.data.user;await enterApp()}catch(err){$("#auth-message").textContent=err.message||"Something went wrong. Please try again."}finally{button.disabled=false;button.textContent=authMode==="login"?"Sign in":"Create account"}}
 async function enterApp(){if(!user)return;showApp();$("#auth-message").textContent="";try{await loadAll();drawMeals();drawSharedMeals();drawFamilyRecipes();drawPlanner();drawShopping();if(pendingShareToken){await copySharedMeal();}}catch(err){toast("Couldn't load your data: "+err.message)}}
-async function loadAll(){let fm=await db.from("family_members").select("family_id").limit(1).maybeSingle();if(fm.error)throw fm.error;familyId=fm.data?.family_id||null;let [mr,pr]=await Promise.all([db.from("meals").select("id,owner_id,name,instructions,notes,photo_path,family_id,shared_with_family,meal_types,calories_kcal,protein_g,fiber_g,created_by,created_at,meal_ingredients(id,name,amount,unit,ingredient_group,sort_order)").order("created_at",{ascending:true}),db.from("planned_meals").select("id,meal_id,plan_date,slot,portions,person")]);if(mr.error)throw mr.error;if(pr.error)throw pr.error;meals=(mr.data||[]).map(m=>({...m,photo:"",ingredients:(m.meal_ingredients||[]).sort((a,b)=>a.sort_order-b.sort_order).map(i=>({id:i.id,name:i.name,amount:i.amount===null?"":Number(i.amount),unit:i.unit,group:i.ingredient_group}))}));planned=pr.data||[];signedPhotos={};await Promise.all(meals.map(async m=>{if(m.photo_path){let x=await db.storage.from(PHOTO_BUCKET).createSignedUrl(m.photo_path,3600);if(!x.error){m.photo=x.data.signedUrl;signedPhotos[m.id]=m.photo}}}));}
+async function loadAll(){let fm=await db.from("family_members").select("family_id").limit(1).maybeSingle();if(fm.error)throw fm.error;familyId=fm.data?.family_id||null;let [mr,pr,peopleResult]=await Promise.all([db.from("meals").select("id,owner_id,name,instructions,notes,photo_path,family_id,shared_with_family,meal_types,calories_kcal,protein_g,fiber_g,created_by,created_at,meal_ingredients(id,name,amount,unit,ingredient_group,sort_order)").order("created_at",{ascending:true}),db.from("planned_meals").select("id,meal_id,plan_date,slot,portions,person"),db.from("planner_people").select("person_key,label,sort_order,is_active").order("sort_order")]);if(mr.error)throw mr.error;if(pr.error)throw pr.error;if(peopleResult.error)throw peopleResult.error;plannerPeople=peopleResult.data||[];if(!plannerPeople.length){let defaults=[{user_id:user.id,person_key:"me",label:"Your meals",sort_order:0,is_active:true},{user_id:user.id,person_key:"daughter",label:"Daughter’s meals",sort_order:1,is_active:true}];let seeded=await db.from("planner_people").insert(defaults).select("person_key,label,sort_order,is_active");if(seeded.error)throw seeded.error;plannerPeople=seeded.data||[]}meals=(mr.data||[]).map(m=>({...m,photo:"",ingredients:(m.meal_ingredients||[]).sort((a,b)=>a.sort_order-b.sort_order).map(i=>({id:i.id,name:i.name,amount:i.amount===null?"":Number(i.amount),unit:i.unit,group:i.ingredient_group}))}));planned=pr.data||[];signedPhotos={};await Promise.all(meals.map(async m=>{if(m.photo_path){let x=await db.storage.from(PHOTO_BUCKET).createSignedUrl(m.photo_path,3600);if(!x.error){m.photo=x.data.signedUrl;signedPhotos[m.id]=m.photo}}}));}
 function view(v){queryAll(".view").forEach(x=>x.classList.toggle("active",x.id==="view-"+v));queryAll("[data-view]").forEach(x=>x.classList.toggle("active",x.dataset.view===v));$("#breadcrumb-current").textContent=v==="planner"?"WEEKLY PLANNER":v==="family"?"FAMILY RECIPES":v==="shared"?"SHARED MEALS":v==="meals"?"MY MEALS":v.toUpperCase();if(v==="planner")drawPlanner();if(v==="shopping")drawShopping();if(v==="family")drawFamilyRecipes();if(v==="shared")drawSharedMeals()}
 function img(m){return m.photo?'<img src="'+m.photo+'" alt="'+esc(m.name)+'">':'<div class="image-placeholder">✳</div>'}
 function summary(m){return(m.ingredients||[]).slice(0,4).map(x=>x.name).filter(Boolean).join(" · ")||"Recipe details"}
@@ -104,33 +104,45 @@ function dateLabel(){let a=week,b=dayDate(6),o={month:"short",day:"numeric"};ret
 function isDaughterMeal(m){return String(m.name||"").trim().startsWith("👧")}
 function mealFitsSlot(m,slot){let types=Array.isArray(m.meal_types)?m.meal_types:[];return types.length===0||types.includes(slot)}
 function drawPlanner(){
- $("#week-label").textContent=dateLabel();let today=dateKey(new Date());
+ $("#week-label").textContent=dateLabel();let today=dateKey(new Date()),activePeople=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
  $("#week-grid").innerHTML=DAYS.map((d,i)=>{
   let dt=dayDate(i),dk=dateKey(dt),items=planned.filter(e=>e.plan_date===dk);
-  const renderPerson=(person,label)=>{
-   let rowItems=items.filter(e=>(e.person||"me")===person),totals={calories:0,protein:0,fiber:0},has={calories:false,protein:false,fiber:false};
+  const renderPerson=person=>{
+   let rowItems=items.filter(e=>(e.person||"me")===person.person_key),totals={calories:0,protein:0,fiber:0},has={calories:false,protein:false,fiber:false};
    rowItems.forEach(e=>{let m=meals.find(x=>x.id===e.meal_id);if(!m)return;[["calories_kcal","calories"],["protein_g","protein"],["fiber_g","fiber"]].forEach(([key,target])=>{if(m[key]!==null&&m[key]!==undefined&&m[key]!==""&&Number.isFinite(Number(m[key]))){totals[target]+=Number(m[key])*Number(e.portions||1);has[target]=true}})});
    let nutrition=(has.calories?'<span><strong>'+Math.round(totals.calories).toLocaleString()+'</strong> kcal</span>':"")+(has.protein?'<span><strong>'+Math.round(totals.protein*10)/10+'</strong> g protein</span>':"")+(has.fiber?'<span><strong>'+Math.round(totals.fiber*10)/10+'</strong> g fibre</span>':"");
-   return '<div class="day-meal-row '+(person==="daughter"?"daughter-row":"my-row")+'"><div class="meal-row-heading"><strong>'+label+'</strong>'+(nutrition?'<div class="day-nutrition">'+nutrition+'</div>':'')+'</div><div class="day-slots">'+SLOTS.map(slot=>'<div class="slot"><div class="slot-name">'+slot+'</div>'+rowItems.filter(e=>e.slot===slot).map(e=>{let m=meals.find(x=>x.id===e.meal_id);return m?'<div class="planned-meal">'+(m.photo?'<img class="planned-thumb" src="'+m.photo+'" alt="'+esc(m.name)+'">':"")+'<strong>'+esc(m.name)+'</strong><small>'+e.portions+' '+(Number(e.portions)===1?"portion":"portions")+'</small><div class="meal-actions"><button data-act="edit" data-entry="'+e.id+'">Edit</button><button data-act="remove" data-entry="'+e.id+'">×</button></div></div>':""}).join("")+'<button class="add-slot" data-day="'+dk+'" data-slot="'+slot+'" data-person="'+person+'">＋ Add</button></div>').join("")+'</div></div>';
+   return '<div class="day-meal-row"><div class="meal-row-heading"><div class="person-heading-tools"><strong>'+esc(person.label)+'</strong><span><button class="person-edit" data-person-action="rename" data-person="'+esc(person.person_key)+'" title="Rename person" aria-label="Rename '+esc(person.label)+'">✎</button><button class="person-remove" data-person-action="remove" data-person="'+esc(person.person_key)+'" title="Remove person" aria-label="Remove '+esc(person.label)+'">×</button></span></div>'+(nutrition?'<div class="day-nutrition">'+nutrition+'</div>':'')+'</div><div class="day-slots">'+SLOTS.map(slot=>'<div class="slot"><div class="slot-name">'+slot+'</div>'+rowItems.filter(e=>e.slot===slot).map(e=>{let m=meals.find(x=>x.id===e.meal_id);return m?'<div class="planned-meal">'+(m.photo?'<img class="planned-thumb" src="'+m.photo+'" alt="'+esc(m.name)+'">':"")+'<strong>'+esc(m.name)+'</strong><small>'+e.portions+' '+(Number(e.portions)===1?"portion":"portions")+'</small><div class="meal-actions"><button data-act="edit" data-entry="'+e.id+'">Edit</button><button data-act="remove" data-entry="'+e.id+'">×</button></div></div>':""}).join("")+'<button class="add-slot" data-day="'+dk+'" data-slot="'+slot+'" data-person="'+esc(person.person_key)+'">＋ Add</button></div>').join("")+'</div></div>';
   };
-  return '<section class="day-column day-'+i+(dk===today?" today-day":"")+'"><div class="day-heading"><div class="day-date"><strong>'+d+'</strong><small>'+dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</small></div></div><div class="day-people">'+renderPerson("me","Your meals")+renderPerson("daughter","👧 Daughter’s meals")+'</div></section>';
+  return '<section class="day-column day-'+i+(dk===today?" today-day":"")+'"><div class="day-heading"><div class="day-date"><strong>'+d+'</strong><small>'+dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</small></div></div><div class="day-people">'+activePeople.map(renderPerson).join("")+'</div></section>';
  }).join("");
 }
+async function addPlannerPerson(){
+ let label=prompt("What should this person’s row be called?");if(label===null)return;label=label.trim();if(!label){toast("Please enter a name.");return}
+ let existing=plannerPeople.find(p=>!p.is_active&&p.label.toLowerCase()===label.toLowerCase());
+ if(existing){let r=await db.from("planner_people").update({is_active:true}).eq("user_id",user.id).eq("person_key",existing.person_key);if(r.error){toast(r.error.message);return}existing.is_active=true;existing.sort_order=plannerPeople.filter(p=>p.is_active).length;drawPlanner();toast("Person added again. Their previous planned meals are still here.");return}
+ let key="p"+crypto.randomUUID().replace(/-/g,"").slice(0,16),sort_order=plannerPeople.length;
+ let r=await db.from("planner_people").insert({user_id:user.id,person_key:key,label,sort_order,is_active:true}).select("person_key,label,sort_order,is_active").single();if(r.error){toast(r.error.message);return}plannerPeople.push(r.data);drawPlanner();toast(label+" added to your planner.");
+}
+async function updatePlannerPerson(key,action){
+ let person=plannerPeople.find(p=>p.person_key===key);if(!person)return;
+ if(action==="remove"){if(!confirm("Remove "+person.label+" from the planner? Their planned meals will be kept and can be restored by adding this person again."))return;let r=await db.from("planner_people").update({is_active:false}).eq("user_id",user.id).eq("person_key",key);if(r.error){toast(r.error.message);return}person.is_active=false;drawPlanner();toast(person.label+" hidden. Their planned meals are preserved.");return}
+ let label=prompt("Edit this person’s name:",person.label);if(label===null)return;label=label.trim();if(!label){toast("Please enter a name.");return}let r=await db.from("planner_people").update({label}).eq("user_id",user.id).eq("person_key",key);if(r.error){toast(r.error.message);return}person.label=label;drawPlanner();toast("Name updated.");
+}
 async function shuffleWeek(){
- const ownMeals=meals.filter(m=>m.owner_id===user.id);
+ const ownMeals=meals.filter(m=>m.owner_id===user.id),activePeople=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
  if(!ownMeals.length){toast("Add some recipes to My Meals first.");view("meals");return}
  const startDate=dateKey(week),endDate=dateKey(dayDate(6));
  if(!confirm("Create a new week from your My Meals recipes? Your current planned meals for this week will be replaced. Snacks will be left empty."))return;
  const counts=new Map(),lastUsed=new Map(),generated=[],days=Array.from({length:7},(_,i)=>dateKey(dayDate(i)));
  for(let dayIndex=0;dayIndex<7;dayIndex++){
   const usedToday=new Set();
-  for(const person of ["me","daughter"])for(const slot of ["Breakfast","Lunch","Dinner"]){
-   let candidates=ownMeals.filter(m=>mealFitsSlot(m,slot)&&(person==="daughter"||!isDaughterMeal(m)));
+  for(const person of activePeople)for(const slot of ["Breakfast","Lunch","Dinner"]){
+   let candidates=ownMeals.filter(m=>mealFitsSlot(m,slot)&&(person.person_key!=="me"||!isDaughterMeal(m)));
    if(!candidates.length)continue;
    let available=candidates.filter(m=>!usedToday.has(m.id));if(!available.length)available=candidates;
-   const ranked=available.map(m=>{const key=person+"|"+slot+"|"+m.id,uses=counts.get(key)||0,last=lastUsed.get(key),girlPenalty=person==="daughter"&&!isDaughterMeal(m)?2.5:0,recentPenalty=last===dayIndex-1?1.25:0;return{m,score:uses*2+girlPenalty+recentPenalty+Math.random()*1.2}}).sort((x,y)=>x.score-y.score);
-   const chosen=ranked[0].m,key=person+"|"+slot+"|"+chosen.id;
-   generated.push({owner_id:user.id,meal_id:chosen.id,plan_date:days[dayIndex],slot,portions:1,person});
+   const ranked=available.map(m=>{const key=person.person_key+"|"+slot+"|"+m.id,uses=counts.get(key)||0,last=lastUsed.get(key),recentPenalty=last===dayIndex-1?1.25:0;return{m,score:uses*2+recentPenalty+Math.random()*1.2}}).sort((x,y)=>x.score-y.score);
+   const chosen=ranked[0].m,key=person.person_key+"|"+slot+"|"+chosen.id;
+   generated.push({owner_id:user.id,meal_id:chosen.id,plan_date:days[dayIndex],slot,portions:1,person:person.person_key});
    counts.set(key,(counts.get(key)||0)+1);lastUsed.set(key,dayIndex);usedToday.add(chosen.id);
   }
  }
@@ -169,7 +181,7 @@ document.addEventListener("click",e=>{if(e.target instanceof HTMLDialogElement&&
 $("#prev-week").onclick=()=>{week.setDate(week.getDate()-7);drawPlanner();drawShopping()};
 $("#next-week").onclick=()=>{week.setDate(week.getDate()+7);drawPlanner();drawShopping()};
 $("#this-week").onclick=()=>{week=startWeek(new Date());drawPlanner();drawShopping()};
-$("#week-grid").onclick=plannerClick;$("#picker-search").oninput=drawPicker;$("#shuffle-week").onclick=shuffleWeek;
+$("#week-grid").onclick=e=>{let control=e.target.closest("[data-person-action]");if(control){updatePlannerPerson(control.dataset.person,control.dataset.personAction);return}plannerClick(e)};$("#add-planner-person").onclick=addPlannerPerson;$("#picker-search").oninput=drawPicker;$("#shuffle-week").onclick=shuffleWeek;
 $("#picker-portions").value="1";$("#picker-meals").onclick=e=>{let b=e.target.closest("[data-pick]");if(b){let portions=Math.max(1,Math.min(99,Math.floor(Number($("#picker-portions").value)||1)));addEntry(b.dataset.pick,$("#picker-day").value,$("#picker-slot").value,portions,$("#picker-person").value||"me");$("#picker-dialog").close()}};
 $("#print-menu").onclick=()=>printView("planner");$("#print-shopping").onclick=()=>printView("shopping");
 $("#export-data").onclick=exportData;$("#import-data").onchange=importData;
