@@ -221,3 +221,9 @@
 .week-controls .clear-week-button{width:36px;height:36px;flex:0 0 36px;color:#9b796d;font-size:15px;border:1px solid #eadfda;background:#fff;border-radius:8px}
 .week-controls .clear-week-button:hover{background:#fbf1ed;border-color:#dfc9bf;color:#895d4e}
 .week-controls .clear-week-button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+/* Rotating weekly planner: highlight today and soften completed days */
+.today-label{display:inline-flex;align-items:center;margin-left:8px;padding:3px 7px;border-radius:12px;background:#e5eee3;color:#48634d;font:700 9px "DM Sans";letter-spacing:.35px;vertical-align:middle;text-transform:uppercase}
+.day-column.past-day{filter:grayscale(.82);opacity:.68}
+.day-column.past-day .day-heading .day-date strong{color:#7d847d}
+.day-column.today-day{box-shadow:inset 3px 0 0 var(--green),0 0 0 1px rgba(75,111,78,.12)}
