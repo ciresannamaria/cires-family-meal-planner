@@ -106,18 +106,17 @@ function drawPlanner(){
   let today=dateKey(new Date());
   $("#week-grid").innerHTML=DAYS.map((d,i)=>{
     let dt=dayDate(i),dk=dateKey(dt),items=planned.filter(e=>e.plan_date===dk);
-    let totals={calories:0,protein:0,fiber:0},has={calories:false,protein:false,fiber:false};
-    items.forEach(e=>{
-      let m=meals.find(x=>x.id===e.meal_id);if(!m)return;
-      [["calories_kcal","calories"],["protein_g","protein"],["fiber_g","fiber"]].forEach(([key,target])=>{
-        if(m[key]!==null&&m[key]!==undefined&&m[key]!==""&&Number.isFinite(Number(m[key]))){
-          totals[target]+=Number(m[key])*Number(e.portions||1);has[target]=true;
-        }
+    let slotRows=SLOTS.map(s=>items.filter(e=>e.slot===s)),rowCount=Math.max(0,...slotRows.map(row=>row.length));
+    let nutrition=rowCount?'<div class="day-nutrition-list">'+Array.from({length:rowCount},(_,rowIndex)=>{
+      let totals={calories:0,protein:0,fiber:0},has={calories:false,protein:false,fiber:false};
+      slotRows.forEach(row=>{let e=row[rowIndex];if(!e)return;let m=meals.find(x=>x.id===e.meal_id);if(!m)return;
+        [["calories_kcal","calories"],["protein_g","protein"],["fiber_g","fiber"]].forEach(([key,target])=>{
+          if(m[key]!==null&&m[key]!==undefined&&m[key]!==""&&Number.isFinite(Number(m[key]))){totals[target]+=Number(m[key])*Number(e.portions||1);has[target]=true;}
+        });
       });
-    });
-    let nutrition=has.calories||has.protein||has.fiber
-      ?'<div class="day-nutrition">'+(has.calories?'<span><strong>'+Math.round(totals.calories).toLocaleString()+'</strong> kcal</span>':"")+(has.protein?'<span><strong>'+Math.round(totals.protein*10)/10+'</strong> g protein</span>':"")+(has.fiber?'<span><strong>'+Math.round(totals.fiber*10)/10+'</strong> g fibre</span>':"")+'</div>'
-      :'<div class="day-nutrition day-nutrition-empty">Nutrition not entered</div>';
+      let values=(has.calories?'<span><strong>'+Math.round(totals.calories).toLocaleString()+'</strong> kcal</span>':"")+(has.protein?'<span><strong>'+Math.round(totals.protein*10)/10+'</strong> g protein</span>':"")+(has.fiber?'<span><strong>'+Math.round(totals.fiber*10)/10+'</strong> g fibre</span>':"");
+      return values?'<div class="day-nutrition-row"><small>Meal line '+(rowIndex+1)+'</small><div class="day-nutrition">'+values+'</div></div>':'';
+    }).join("")+'</div>':'<div class="day-nutrition day-nutrition-empty">Nutrition not entered</div>';
     return '<section class="day-column day-'+i+(dk===today?" today-day":"")+'"><div class="day-heading '+(dk===today?"today":"")+'"><div class="day-date"><strong>'+d+'</strong><small>'+dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</small></div>'+nutrition+'</div><div class="day-slots">'+SLOTS.map(s=>'<div class="slot"><div class="slot-name">'+s+'</div>'+items.filter(e=>e.slot===s).map(e=>{let m=meals.find(x=>x.id===e.meal_id);return m?'<div class="planned-meal">'+(m.photo?'<img class="planned-thumb" src="'+m.photo+'" alt="'+esc(m.name)+'">':"")+'<strong>'+esc(m.name)+'</strong><small>'+e.portions+' '+(e.portions===1?"portion":"portions")+'</small><div class="meal-actions"><button data-act="edit" data-entry="'+e.id+'">Edit</button><button data-act="remove" data-entry="'+e.id+'">×</button></div></div>':""}).join("")+'<button class="add-slot" data-day="'+dk+'" data-slot="'+s+'">＋ Add</button></div>').join("")+'</div></section>';
   }).join("");
 }
