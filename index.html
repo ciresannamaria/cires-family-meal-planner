@@ -38,6 +38,7 @@
 <div class="sidebar-label">WORKSPACE</div>
 <nav class="main-nav" aria-label="Main navigation">
 <button class="nav-link active" data-view="meals"><span>▦</span> Meals <b id="meal-count">0</b></button>
+<button class="nav-link" data-view="family"><span>♡</span> Family Recipes <b id="family-count">0</b></button>
 <button class="nav-link" data-view="planner"><span>▣</span> Weekly planner</button>
 <button class="nav-link" data-view="shopping"><span>⌑</span> Shopping list</button>
 </nav>
@@ -54,6 +55,10 @@
 <div class="meal-grid" id="meal-grid"></div>
 <div class="empty-state" id="meal-empty"><div class="empty-mark">✳</div><h2>Your recipe collection starts here</h2><p>Add a meal you've cooked. Give it a photo, list its ingredients and save the preparation steps.</p><button class="button primary" id="empty-add-meal">＋ Add your first meal</button></div>
 </section>
+<section class="view" id="view-family">
+<div class="page-heading"><div><div class="eyebrow">CIRES FAMILY</div><h1>Family recipes</h1><p>Recipes we keep and cook together.</p></div><button class="button primary" id="family-add-meal">＋ Add a family recipe</button></div>
+<div class="toolbar"><span id="family-results"></span></div><div class="meal-grid" id="family-grid"></div><div class="empty-state" id="family-empty"><div class="empty-mark">♡</div><h2>No family recipes yet</h2><p>Save a meal and switch on “Add to Cires Family” to share it here.</p><button class="button primary" id="family-empty-add">＋ Add a family recipe</button></div>
+</section>
 <section class="view" id="view-planner">
 <div class="page-heading"><div><div class="eyebrow">MAKE THE WEEK EASIER</div><h1>Weekly planner</h1><p>Plan your meals, one week at a time.</p></div><button class="button light" id="print-menu">↓ Download weekly menu</button></div>
 <div class="week-controls"><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small>Saturday – Friday</small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
@@ -68,6 +73,7 @@
 <div class="modal-header"><div><div class="eyebrow">RECIPE DETAILS</div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <input type="hidden" id="meal-id"><div class="form-grid">
 <label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
+<label class="field full family-toggle-row"><span><strong>Add to Cires Family</strong><small>Share this recipe with your sister in the Family Recipes tab.</small></span><input id="meal-family" type="checkbox"></label>
 <div class="field full"><span class="field-label">Meal photo</span><div class="photo-actions"><label class="button light photo-choice">Choose a photo<input id="meal-photo" type="file" accept="image/*"></label><label class="button light photo-choice">Take a photo<input id="meal-camera" type="file" accept="image/*" capture="environment"></label></div><small>Choose an existing photo or open your phone camera. Photos are automatically resized and compressed before upload (original up to 20 MB).</small><div id="photo-preview"></div></div>
 <div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div></div>
 <label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
