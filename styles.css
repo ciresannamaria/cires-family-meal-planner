@@ -165,3 +165,22 @@
 .day-nutrition-row>small{font-size:9px;font-weight:700;letter-spacing:.25px;color:#89948a}
 .day-nutrition-row .day-nutrition{display:flex;flex-direction:column;gap:3px}
 @media(max-width:520px){.day-nutrition-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}.day-nutrition-row .day-nutrition{flex-direction:column;gap:3px}}
+
+/* Weekly planner: separate personal and daughter's meal rows */
+.day-column{grid-template-columns:minmax(145px,175px) minmax(0,1fr);align-items:start}
+.day-heading{border-right:1px solid rgba(90,105,88,.16);border-bottom:0;min-height:100%;justify-content:flex-start;padding-top:10px}
+.day-people{display:grid;gap:12px;min-width:0}
+.day-meal-row{display:grid;grid-template-columns:minmax(115px,145px) minmax(0,1fr);gap:10px;align-items:start;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.48);border:1px solid rgba(90,105,88,.10)}
+.meal-row-heading{display:grid;gap:7px;padding:5px 4px}
+.meal-row-heading>strong{font-size:12px;color:var(--dark)}
+.meal-row-heading .day-nutrition{display:flex;flex-direction:column;gap:3px;font-size:9px}
+.day-meal-row .day-slots{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.day-meal-row .slot{min-width:0}
+.day-meal-row .slot-name{font-size:10px}
+.day-meal-row .planned-meal{padding:7px}
+.day-meal-row .planned-meal strong{font-size:10px}
+.day-meal-row .planned-thumb{height:48px}
+.day-meal-row .add-slot{font-size:10px;padding:6px 4px}
+.daughter-row{background:rgba(255,255,255,.62)}
+@media(max-width:1050px){.day-column{grid-template-columns:1fr}.day-heading{border-right:0;border-bottom:1px solid rgba(90,105,88,.16);min-height:0;padding:2px 4px 9px}.day-meal-row{grid-template-columns:105px minmax(0,1fr)}}
+@media(max-width:700px){.day-meal-row{grid-template-columns:1fr}.meal-row-heading{padding:2px 3px}.meal-row-heading .day-nutrition{flex-direction:row;flex-wrap:wrap;gap:5px 10px}.day-meal-row .day-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.week-controls{flex-wrap:wrap}}
