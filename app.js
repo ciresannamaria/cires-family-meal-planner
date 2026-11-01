@@ -12,7 +12,7 @@ function toast(s){let t=$("#toast");t.textContent=s;t.classList.add("show");clea
 function showAuth(mode="login",message=""){if($("#shared-screen"))$("#shared-screen").hidden=true;authMode=mode;$("#auth-screen").hidden=false;$("#app-shell").hidden=true;$("#auth-title").textContent=mode==="login"?"Welcome back":"Create your account";$("#auth-description").textContent=mode==="login"?"Sign in to access your meals and weekly plans on all your devices.":"Create an account to keep your recipes safely synced across your devices." ;$("#auth-submit").textContent=mode==="login"?"Sign in":"Create account";$("#auth-switch-label").textContent=mode==="login"?"Don't have an account?":"Already have an account?";$("#auth-switch").textContent=mode==="login"?"Create account":"Sign in";$("#auth-password").autocomplete=mode==="login"?"current-password":"new-password";$("#auth-message").textContent=message}
 const PROFILE_AVATARS=["🌿","🍒","🍓","🍋","🥑","🍊","🫐","🌸","🌻","🐝","🦋","🐱","🐻","🦊","🐼","🐸"];
 function profileName(){return user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split("@")[0]||"Your profile"}
-function renderProfile(){const avatar=user?.user_metadata?.avatar_emoji||"🌿";$("#user-avatar").textContent=avatar;$("#profile-avatar-preview").textContent=avatar;$("#profile-name").textContent=profileName();$("#profile-email").textContent=user?.email||"";queryAll("[data-avatar]").forEach(b=>{b.classList.toggle("selected",b.dataset.avatar===avatar);b.setAttribute("aria-pressed",String(b.dataset.avatar===avatar))})}
+function renderProfile(){const avatar=user?.user_metadata?.avatar_emoji||"🌿";$("#profile-toggle").textContent=avatar;$("#profile-avatar-preview").textContent=avatar;$("#profile-name").textContent=profileName();$("#profile-email").textContent=user?.email||"";queryAll("[data-avatar]").forEach(b=>{b.classList.toggle("selected",b.dataset.avatar===avatar);b.setAttribute("aria-pressed",String(b.dataset.avatar===avatar))})}
 function showApp(){ $("#auth-screen").hidden=true;if($("#shared-screen"))$("#shared-screen").hidden=true;$("#app-shell").hidden=false;renderProfile(); }
 async function authSubmit(e){e.preventDefault();if(!db){$("#auth-message").textContent="The sign-in service could not load. Refresh the page and try again.";return}let email=$("#auth-email").value.trim(),password=$("#auth-password").value;if(!email||!password){$("#auth-message").textContent="Please enter your email and password.";return}let button=$("#auth-submit");button.disabled=true;button.textContent=authMode==="login"?"Signing in…":"Creating account…";$("#auth-message").textContent="Connecting securely…";try{let res=authMode==="login"?await db.auth.signInWithPassword({email,password}):await db.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin+window.location.pathname}});if(res.error)throw res.error;if(authMode==="signup"&&!res.data.session){showAuth("login","Your account has been created. Check your inbox (and spam folder) for the confirmation email, then sign in.");return}user=res.data.user;await enterApp()}catch(err){$("#auth-message").textContent=err.message||"Something went wrong. Please try again."}finally{button.disabled=false;button.textContent=authMode==="login"?"Sign in":"Create account"}}
 async function enterApp(){if(!user)return;showApp();$("#auth-message").textContent="";try{await loadAll();drawMeals();drawSharedMeals();drawFamilyRecipes();drawPlanner();drawShopping();if(!location.hash)history.replaceState({view:"planner"},"",location.pathname+location.search+"#planner");view(currentView(),false);if(pendingShareToken){await copySharedMeal();}}catch(err){toast("Couldn't load your data: "+err.message)}}
@@ -213,13 +213,13 @@ $("#profile-menu").onclick=async e=>{
  const emoji=button.dataset.avatar,previous=user?.user_metadata?.avatar_emoji||"🌿";
  if(emoji===previous){toast("That's already your avatar.");return}
  queryAll("[data-avatar]").forEach(b=>b.disabled=true);
- $("#user-avatar").textContent=emoji;$("#profile-avatar-preview").textContent=emoji;
+ $("#profile-toggle").textContent=emoji;$("#profile-avatar-preview").textContent=emoji;
  try{
   const result=await db.auth.updateUser({data:{avatar_emoji:emoji}});
   if(result.error)throw result.error;
   user=result.data.user;renderProfile();toast("Profile avatar updated.");
  }catch(err){
-  $("#user-avatar").textContent=previous;$("#profile-avatar-preview").textContent=previous;renderProfile();
+  $("#profile-toggle").textContent=previous;$("#profile-avatar-preview").textContent=previous;renderProfile();
   toast("Couldn't save your avatar: "+(err.message||"Please try again."));
  }finally{queryAll("[data-avatar]").forEach(b=>b.disabled=false)}
 };
