@@ -184,3 +184,13 @@
 .daughter-row{background:rgba(255,255,255,.62)}
 @media(max-width:1050px){.day-column{grid-template-columns:1fr}.day-heading{border-right:0;border-bottom:1px solid rgba(90,105,88,.16);min-height:0;padding:2px 4px 9px}.day-meal-row{grid-template-columns:105px minmax(0,1fr)}}
 @media(max-width:700px){.day-meal-row{grid-template-columns:1fr}.meal-row-heading{padding:2px 3px}.meal-row-heading .day-nutrition{flex-direction:row;flex-wrap:wrap;gap:5px 10px}.day-meal-row .day-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.week-controls{flex-wrap:wrap}}
+
+/* Custom household members in the weekly planner */
+.person-heading-tools{display:flex;align-items:center;justify-content:space-between;gap:5px;min-width:0}
+.person-heading-tools>strong{font-size:12px;color:var(--dark);overflow-wrap:anywhere}
+.person-heading-tools>span{display:flex;gap:2px;flex-shrink:0}
+.person-heading-tools button{width:22px;height:22px;border:0;border-radius:6px;background:rgba(255,255,255,.75);color:#7c897d;font:14px "DM Sans";cursor:pointer;line-height:1}
+.person-heading-tools button:hover{background:#e8eee6;color:var(--green)}
+.person-heading-tools .person-remove{font-size:17px;color:#9b796d}
+#add-planner-person{white-space:nowrap}
+@media(max-width:700px){#add-planner-person{order:2}.week-controls{gap:8px}}
