@@ -97,7 +97,7 @@ $("#today-label").textContent=new Date().toLocaleDateString("en-US",{weekday:"sh
 queryAll("[data-view]").forEach(b=>b.onclick=()=>view(b.dataset.view));
 $("#add-meal").onclick=$("#empty-add-meal").onclick=()=>openForm();
 $("#meal-search").oninput=drawMeals;$("#meal-form").onsubmit=saveMeal;$("#add-ingredient").onclick=()=>ingredientRow();
-$("#meal-photo").onchange=e=>{let f=e.target.files[0];if(!f)return;if(f.size>20*1024*1024){toast("Choose an original photo under 20 MB.");e.target.value="";return}photoFile=f;let reader=new FileReader();reader.onload=()=>{$("#photo-preview").innerHTML='<img src="'+reader.result+'" alt="Preview">'};reader.readAsDataURL(f)};
+function selectMealPhoto(e){let f=e.target.files[0];if(!f)return;if(f.size>20*1024*1024){toast("Choose an original photo under 20 MB.");e.target.value="";return}photoFile=f;let reader=new FileReader();reader.onload=()=>{$("#photo-preview").innerHTML='<img src="'+reader.result+'" alt="Preview">'};reader.readAsDataURL(f)};$("#meal-photo").onchange=selectMealPhoto;$("#meal-camera").onchange=selectMealPhoto;
 $("#meal-grid").onclick=e=>{let c=e.target.closest("[data-meal]");if(c)detail(c.dataset.meal)};
 document.addEventListener("click",e=>{if(e.target instanceof HTMLDialogElement&&e.target.open){e.target.close();return}let b=e.target.closest(".close-dialog");if(b)b.closest("dialog").close()});
 $("#prev-week").onclick=()=>{week.setDate(week.getDate()-7);drawPlanner();drawShopping()};
