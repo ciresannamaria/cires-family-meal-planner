@@ -225,7 +225,7 @@ $("#profile-menu").onclick=async e=>{
 };
 $("#export-data").onclick=exportData;$("#import-data").onchange=importData;
 $("#sign-out").onclick=async()=>{await db.auth.signOut();user=null;meals=[];planned=[];showAuth("login","You have signed out.")};
-db.auth.onAuthStateChange(async(event,session)=>{if(session?.user){user=session.user;if($("#app-shell").hidden)await enterApp()}else if(event==="SIGNED_OUT"){user=null;showAuth("login")}});
+db.auth.onAuthStateChange((event,session)=>{if(event==="INITIAL_SESSION")return;if(session?.user){user=session.user;if($("#app-shell").hidden){const sessionUserId=session.user.id;window.setTimeout(()=>{if(user?.id===sessionUserId&&$("#app-shell").hidden)enterApp()},0)}}else if(event==="SIGNED_OUT"){user=null;meals=[];planned=[];showAuth("login")}});
 let {data:{session},error}=await db.auth.getSession();if(error){showAuth("login",error.message);return}if(session?.user){user=session.user;await enterApp()}else showAuth("login")
 }
 document.addEventListener("DOMContentLoaded",init);
