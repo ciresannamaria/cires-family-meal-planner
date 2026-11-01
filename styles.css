@@ -194,3 +194,25 @@
 .person-heading-tools .person-remove{font-size:17px;color:#9b796d}
 #add-planner-person{white-space:nowrap}
 @media(max-width:700px){#add-planner-person{order:2}.week-controls{gap:8px}}
+
+/* Make the "This week" navigation control visibly button-like */
+.week-controls #this-week{
+ border:1px solid var(--line);
+ background:#fff;
+ color:var(--green);
+ border-radius:8px;
+ padding:9px 13px;
+ min-height:35px;
+ font:600 11px "DM Sans";
+ cursor:pointer;
+ transition:background .15s,border-color .15s,box-shadow .15s;
+}
+.week-controls #this-week:hover{
+ background:#f0f4ee;
+ border-color:#cbd7c8;
+ box-shadow:0 2px 7px rgba(38,52,46,.08);
+}
+.week-controls #this-week:focus-visible{
+ outline:2px solid var(--green);
+ outline-offset:2px;
+}
