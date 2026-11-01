@@ -68,7 +68,7 @@
 <div class="modal-header"><div><div class="eyebrow">RECIPE DETAILS</div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <input type="hidden" id="meal-id"><div class="form-grid">
 <label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
-<label class="field full">Meal photo<input id="meal-photo" type="file" accept="image/*"><small>Photos are automatically resized and compressed before upload (original up to 20 MB).</small><div id="photo-preview"></div></label>
+<div class="field full"><span class="field-label">Meal photo</span><div class="photo-actions"><label class="button light photo-choice">Choose a photo<input id="meal-photo" type="file" accept="image/*"></label><label class="button light photo-choice">Take a photo<input id="meal-camera" type="file" accept="image/*" capture="environment"></label></div><small>Choose an existing photo or open your phone camera. Photos are automatically resized and compressed before upload (original up to 20 MB).</small><div id="photo-preview"></div></div>
 <div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div></div>
 <label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
 <label class="field full">Notes (optional)<input id="meal-notes" placeholder="e.g. Good for meal prep"></label></div>
