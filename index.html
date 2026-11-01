@@ -67,7 +67,7 @@
 </section>
 <section class="view" id="view-planner">
 <div class="page-heading"><div><div class="eyebrow">MAKE THE WEEK EASIER</div><h1>Weekly planner</h1><p>Plan your meals, one week at a time.</p></div><button class="button light" id="print-menu">↓ Download weekly menu</button></div>
-<div class="week-controls"><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small>Saturday – Friday</small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
+<div class="week-controls"><button class="button primary" id="shuffle-week">✦ Shuffle Week</button><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small>Saturday – Friday</small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
 <div class="week-grid" id="week-grid"></div><p class="planner-tip">✳ Add as many meal entries as you need. Portions are used to calculate your shopping list.</p>
 </section>
 <section class="view" id="view-shopping">
@@ -89,9 +89,9 @@
 </form></dialog>
 <dialog id="detail-dialog" class="modal detail-modal"><div id="detail-content"></div></dialog>
 <dialog id="picker-dialog" class="modal picker-modal"><div class="modal-header"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h2>Choose a meal</h2></div><button class="icon-button close-dialog">×</button></div>
-<input type="hidden" id="picker-day"><input type="hidden" id="picker-slot"><label class="field portion-field">Number of portions<input id="picker-portions" type="number" min="1" max="99" step="1" value="1"></label><label class="search picker-search">⌕ <input id="picker-search" type="search" placeholder="Find a meal…"></label><div id="picker-meals" class="picker-meals"></div><div class="modal-footer"><button class="button light close-dialog">Close</button></div></dialog>
+<input type="hidden" id="picker-day"><input type="hidden" id="picker-slot"><input type="hidden" id="picker-person" value="me"><label class="field portion-field">Number of portions<input id="picker-portions" type="number" min="1" max="99" step="1" value="1"></label><label class="search picker-search">⌕ <input id="picker-search" type="search" placeholder="Find a meal…"></label><div id="picker-meals" class="picker-meals"></div><div class="modal-footer"><button class="button light close-dialog">Close</button></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261101-9"></script>
+<script src="app.js?v=20261101-10"></script>
 </body></html>
