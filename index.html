@@ -67,7 +67,7 @@
 </section>
 <section class="view active" id="view-planner">
 <div class="page-heading"><div><div class="eyebrow">MAKE THE WEEK EASIER</div><h1>Weekly planner</h1><p>Plan your meals, one week at a time.</p></div><button class="button light" id="print-menu">↓ Download weekly menu</button></div>
-<div class="week-controls"><button class="button primary" id="shuffle-week">✦ Plan My Week</button><button class="button light" id="add-planner-person">＋ Add one more person</button><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small>Saturday – Friday</small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
+<div class="week-controls"><button class="button primary" id="shuffle-week">✦ Plan My Week</button><button class="icon-button clear-week-button" id="clear-week" type="button" aria-label="Clear the currently displayed week" title="Clear the currently displayed week">🗑</button><button class="button light" id="add-planner-person">＋ Add one more person</button><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small>Saturday – Friday</small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
 <div class="week-grid" id="week-grid"></div><p class="planner-tip">✳ Add as many meal entries as you need. Portions are used to calculate your shopping list.</p>
 </section>
 <section class="view" id="view-shopping">
@@ -93,5 +93,5 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261101-16"></script>
+<script src="app.js?v=20261101-17"></script>
 </body></html>
