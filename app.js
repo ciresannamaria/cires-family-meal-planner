@@ -104,16 +104,21 @@ function dateLabel(){let a=week,b=dayDate(6),o={month:"short",day:"numeric"};ret
 function isDaughterMeal(m){return String(m.name||"").trim().startsWith("👧")}
 function mealFitsSlot(m,slot){let types=Array.isArray(m.meal_types)?m.meal_types:[];return types.length===0||types.includes(slot)}
 function drawPlanner(){
- $("#week-label").textContent=dateLabel();let today=dateKey(new Date()),activePeople=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
- $("#week-grid").innerHTML=DAYS.map((d,i)=>{
-  let dt=dayDate(i),dk=dateKey(dt),items=planned.filter(e=>e.plan_date===dk);
+ $("#week-label").textContent=dateLabel();
+ const todayDate=new Date();todayDate.setHours(0,0,0,0);
+ const today=dateKey(todayDate),todayIndex=(todayDate.getDay()+1)%7;
+ const order=Array.from({length:7},(_,n)=>(todayIndex+n)%7);
+ const activePeople=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
+ $("#week-grid").innerHTML=order.map(i=>{
+  const d=DAYS[i],dt=dayDate(i),dk=dateKey(dt),items=planned.filter(e=>e.plan_date===dk);
+  const isToday=dk===today,isPast=dk<today;
   const renderPerson=person=>{
    let rowItems=items.filter(e=>(e.person||"me")===person.person_key),totals={calories:0,protein:0,fiber:0},has={calories:false,protein:false,fiber:false};
    rowItems.forEach(e=>{let m=meals.find(x=>x.id===e.meal_id);if(!m)return;[["calories_kcal","calories"],["protein_g","protein"],["fiber_g","fiber"]].forEach(([key,target])=>{if(m[key]!==null&&m[key]!==undefined&&m[key]!==""&&Number.isFinite(Number(m[key]))){totals[target]+=Number(m[key])*Number(e.portions||1);has[target]=true}})});
    let nutrition=(has.calories?'<span><strong>'+Math.round(totals.calories).toLocaleString()+'</strong> kcal</span>':"")+(has.protein?'<span><strong>'+Math.round(totals.protein*10)/10+'</strong> g protein</span>':"")+(has.fiber?'<span><strong>'+Math.round(totals.fiber*10)/10+'</strong> g fibre</span>':"");
-   return '<div class="day-meal-row"><div class="meal-row-heading"><div class="person-heading-tools"><strong>'+esc(person.label)+'</strong><span><button class="person-edit" data-person-action="rename" data-person="'+esc(person.person_key)+'" title="Rename person" aria-label="Rename '+esc(person.label)+'">✎</button><button class="person-remove" data-person-action="remove" data-person="'+esc(person.person_key)+'" title="Remove person" aria-label="Remove '+esc(person.label)+'">×</button></span></div>'+(nutrition?'<div class="day-nutrition">'+nutrition+'</div>':'')+'</div><div class="day-slots">'+SLOTS.map(slot=>'<div class="slot"><div class="slot-name">'+slot+'</div>'+rowItems.filter(e=>e.slot===slot).map(e=>{let m=meals.find(x=>x.id===e.meal_id);return m?'<div class="planned-meal">'+(m.photo?'<img class="planned-thumb" src="'+m.photo+'" alt="'+esc(m.name)+'">':"")+'<strong>'+esc(m.name)+'</strong><small>'+e.portions+' '+(Number(e.portions)===1?"portion":"portions")+'</small><div class="meal-actions"><button data-act="edit" data-entry="'+e.id+'">Edit</button><button data-act="remove" data-entry="'+e.id+'">×</button></div></div>':""}).join("")+'<button class="add-slot" data-day="'+dk+'" data-slot="'+slot+'" data-person="'+esc(person.person_key)+'">＋ Add</button></div>').join("")+'</div></div>';
+   return '<div class="day-meal-row"><div class="meal-row-heading"><div class="person-heading-tools"><strong>'+esc(person.label)+'</strong><span><button class="person-edit" data-person-action="rename" data-person="'+esc(person.person_key)+'" title="Rename person" aria-label="Rename '+esc(person.label)+'">✎</button><button class="person-remove" data-person-action="remove" data-person="'+esc(person.person_key)+'" title="Remove person" aria-label="Remove '+esc(person.label)+'">×</button></span></div>'+(nutrition?'<div class="day-nutrition">'+nutrition+'</div>':"")+'</div><div class="day-slots">'+SLOTS.map(slot=>'<div class="slot"><div class="slot-name">'+slot+'</div>'+rowItems.filter(e=>e.slot===slot).map(e=>{let m=meals.find(x=>x.id===e.meal_id);return m?'<div class="planned-meal">'+(m.photo?'<img class="planned-thumb" src="'+m.photo+'" alt="'+esc(m.name)+'">':"")+'<strong>'+esc(m.name)+'</strong><small>'+e.portions+' '+(Number(e.portions)===1?"portion":"portions")+'</small><div class="meal-actions"><button data-act="edit" data-entry="'+e.id+'">Edit</button><button data-act="remove" data-entry="'+e.id+'">×</button></div></div>':""}).join("")+'<button class="add-slot" data-day="'+dk+'" data-slot="'+slot+'" data-person="'+esc(person.person_key)+'">＋ Add</button></div>').join("")+'</div></div>';
   };
-  return '<section class="day-column day-'+i+(dk===today?" today-day":"")+'"><div class="day-heading"><div class="day-date"><strong>'+d+'</strong><small>'+dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</small></div></div><div class="day-people">'+activePeople.map(renderPerson).join("")+'</div></section>';
+  return '<section class="day-column day-'+i+(isToday?" today-day":"")+(isPast?" past-day":"")+'"><div class="day-heading"><div class="day-date"><strong>'+d+'</strong>'+(isToday?'<span class="today-label">Today</span>':"")+'<small>'+dt.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</small></div></div><div class="day-people">'+activePeople.map(renderPerson).join("")+'</div></section>';
  }).join("");
 }
 async function addPlannerPerson(){
