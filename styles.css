@@ -216,3 +216,8 @@
  outline:2px solid var(--green);
  outline-offset:2px;
 }
+
+/* Clear only the currently displayed planner week */
+.week-controls .clear-week-button{width:36px;height:36px;flex:0 0 36px;color:#9b796d;font-size:15px;border:1px solid #eadfda;background:#fff;border-radius:8px}
+.week-controls .clear-week-button:hover{background:#fbf1ed;border-color:#dfc9bf;color:#895d4e}
+.week-controls .clear-week-button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
