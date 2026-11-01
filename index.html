@@ -6,7 +6,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2"><title>Cires Family Meal Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261101-4">
+<link rel="stylesheet" href="styles.css?v=20261101-5">
 </head>
 <body>
 <section id="auth-screen" class="auth-screen">
@@ -43,13 +43,10 @@
 <button class="nav-link" data-view="family"><span>♡</span> Family Recipes <b id="family-count">0</b></button>
 <button class="nav-link" data-view="shared"><span>↗</span> Shared Meals <b id="shared-count">0</b></button>
 </nav>
-<div class="sidebar-bottom"><div class="storage-note"><i></i><div><strong>Synced online</strong><small>Your recipes are available on your devices.</small></div></div>
-<button class="text-button" id="export-data">↓ Export recipe backup</button>
-<label class="text-button import-label">↑ Import recipe backup<input id="import-data" type="file" accept="application/json"></label>
-<button class="text-button" id="sign-out">↪ Sign out</button></div>
+
 </aside>
 <main class="main-content">
-<header class="topbar"><div class="breadcrumb">YOUR HOME <span>/</span> <strong id="breadcrumb-current">MEALS</strong></div><div class="top-actions"><span id="today-label"></span><span class="avatar" id="user-avatar">C</span></div></header>
+<header class="topbar"><div class="breadcrumb">YOUR HOME <span>/</span> <strong id="breadcrumb-current">MEALS</strong></div><div class="top-actions"><span id="today-label"></span><div class="profile-wrap"><button class="avatar profile-toggle" id="profile-toggle" type="button" aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false">🌿</button><section class="profile-menu" id="profile-menu" hidden><div class="profile-heading"><div class="profile-avatar-preview" id="profile-avatar-preview" aria-hidden="true">🌿</div><div class="profile-identity"><strong id="profile-name">Your profile</strong><small id="profile-email"></small></div></div><div class="avatar-picker-label">Choose your avatar</div><div class="avatar-picker" aria-label="Choose a profile avatar"><button type="button" data-avatar="🌿" aria-label="Use 🌿 as avatar" aria-pressed="false">🌿</button><button type="button" data-avatar="🍒" aria-label="Use 🍒 as avatar" aria-pressed="false">🍒</button><button type="button" data-avatar="🍓" aria-label="Use 🍓 as avatar" aria-pressed="false">🍓</button><button type="button" data-avatar="🍋" aria-label="Use 🍋 as avatar" aria-pressed="false">🍋</button><button type="button" data-avatar="🥑" aria-label="Use 🥑 as avatar" aria-pressed="false">🥑</button><button type="button" data-avatar="🍊" aria-label="Use 🍊 as avatar" aria-pressed="false">🍊</button><button type="button" data-avatar="🫐" aria-label="Use 🫐 as avatar" aria-pressed="false">🫐</button><button type="button" data-avatar="🌸" aria-label="Use 🌸 as avatar" aria-pressed="false">🌸</button><button type="button" data-avatar="🌻" aria-label="Use 🌻 as avatar" aria-pressed="false">🌻</button><button type="button" data-avatar="🐝" aria-label="Use 🐝 as avatar" aria-pressed="false">🐝</button><button type="button" data-avatar="🦋" aria-label="Use 🦋 as avatar" aria-pressed="false">🦋</button><button type="button" data-avatar="🐱" aria-label="Use 🐱 as avatar" aria-pressed="false">🐱</button><button type="button" data-avatar="🐻" aria-label="Use 🐻 as avatar" aria-pressed="false">🐻</button><button type="button" data-avatar="🦊" aria-label="Use 🦊 as avatar" aria-pressed="false">🦊</button><button type="button" data-avatar="🐼" aria-label="Use 🐼 as avatar" aria-pressed="false">🐼</button><button type="button" data-avatar="🐸" aria-label="Use 🐸 as avatar" aria-pressed="false">🐸</button></div><div class="profile-menu-actions"><button class="text-button" id="export-data" type="button">↓ Export recipe backup</button><label class="text-button import-label">↑ Import recipe backup<input id="import-data" type="file" accept="application/json"></label><button class="text-button" id="sign-out" type="button">↪ Sign out</button></div></section></div></div></header>
 <section class="view" id="view-meals">
 <div class="page-heading"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h1>My Meals</h1><p>A little inspiration for every day.</p></div><button class="button primary" id="add-meal">＋ Add a meal</button></div>
 <div class="toolbar"><label class="search">⌕ <input id="meal-search" type="search" placeholder="Search meals or ingredients…"></label><span id="meal-results"></span></div>
@@ -93,5 +90,5 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261101-18"></script>
+<script src="app.js?v=20261101-19"></script>
 </body></html>
