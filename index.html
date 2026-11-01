@@ -37,7 +37,8 @@
 <a class="brand" href="#" aria-label="Cires Family Meal Planner home"><img src="assets/cires-family-logo.webp" alt="Cires Family Meal Planner"></a>
 <div class="sidebar-label">WORKSPACE</div>
 <nav class="main-nav" aria-label="Main navigation">
-<button class="nav-link active" data-view="meals"><span>▦</span> Meals <b id="meal-count">0</b></button>
+<button class="nav-link active" data-view="meals"><span>▦</span> My Meals <b id="meal-count">0</b></button>
+<button class="nav-link" data-view="shared"><span>↗</span> Shared Meals <b id="shared-count">0</b></button>
 <button class="nav-link" data-view="family"><span>♡</span> Family Recipes <b id="family-count">0</b></button>
 <button class="nav-link" data-view="planner"><span>▣</span> Weekly planner</button>
 <button class="nav-link" data-view="shopping"><span>⌑</span> Shopping list</button>
@@ -50,11 +51,15 @@
 <main class="main-content">
 <header class="topbar"><div class="breadcrumb">YOUR HOME <span>/</span> <strong id="breadcrumb-current">MEALS</strong></div><div class="top-actions"><span id="today-label"></span><span class="avatar" id="user-avatar">C</span></div></header>
 <section class="view active" id="view-meals">
-<div class="page-heading"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h1>Your meals</h1><p>A little inspiration for every day.</p></div><button class="button primary" id="add-meal">＋ Add a meal</button></div>
+<div class="page-heading"><div><div class="eyebrow">YOUR RECIPE COLLECTION</div><h1>My Meals</h1><p>A little inspiration for every day.</p></div><button class="button primary" id="add-meal">＋ Add a meal</button></div>
 <div class="toolbar"><label class="search">⌕ <input id="meal-search" type="search" placeholder="Search meals or ingredients…"></label><span id="meal-results"></span></div>
 <div class="meal-type-filters" aria-label="Filter meals by type"><button type="button" data-meal-filter="All" class="active" aria-pressed="true">All</button><button type="button" data-meal-filter="Breakfast" aria-pressed="false">🍳 Breakfast</button><button type="button" data-meal-filter="Lunch" aria-pressed="false">🥗 Lunch</button><button type="button" data-meal-filter="Dinner" aria-pressed="false">🍽️ Dinner</button><button type="button" data-meal-filter="Snack" aria-pressed="false">🍎 Snack</button></div>
 <div class="meal-grid" id="meal-grid"></div>
 <div class="empty-state" id="meal-empty"><div class="empty-mark">✳</div><h2>Your recipe collection starts here</h2><p>Add a meal you've cooked. Give it a photo, list its ingredients and save the preparation steps.</p><button class="button primary" id="empty-add-meal">＋ Add your first meal</button></div>
+</section>
+<section class="view" id="view-shared">
+<div class="page-heading"><div><div class="eyebrow">SHARED WITH YOU</div><h1>Shared Meals</h1><p>Recipes your sister has chosen to share with you.</p></div></div>
+<div class="toolbar"><span id="shared-results"></span></div><div class="meal-type-filters" aria-label="Filter shared meals by type"><button type="button" data-meal-filter="All" class="active" aria-pressed="true">All</button><button type="button" data-meal-filter="Breakfast" aria-pressed="false">🍳 Breakfast</button><button type="button" data-meal-filter="Lunch" aria-pressed="false">🥗 Lunch</button><button type="button" data-meal-filter="Dinner" aria-pressed="false">🍽️ Dinner</button><button type="button" data-meal-filter="Snack" aria-pressed="false">🍎 Snack</button></div><div class="meal-grid" id="shared-grid"></div><div class="empty-state" id="shared-empty"><div class="empty-mark">↗</div><h2>No shared meals yet</h2><p>When your sister shares a recipe with you, it will appear here.</p></div>
 </section>
 <section class="view" id="view-family">
 <div class="page-heading"><div><div class="eyebrow">CIRES FAMILY</div><h1>Family recipes</h1><p>Recipes we keep and cook together.</p></div><button class="button primary" id="family-add-meal">＋ Add a family recipe</button></div>
@@ -75,7 +80,7 @@
 <input type="hidden" id="meal-id"><div class="form-grid">
 <label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
 <div class="field full meal-type-field"><span class="field-label">Meal type <small>(choose one or more)</small></span><div class="meal-type-options"><label class="meal-type-option"><input type="checkbox" value="Breakfast"><span>🍳 Breakfast</span></label><label class="meal-type-option"><input type="checkbox" value="Lunch"><span>🥗 Lunch</span></label><label class="meal-type-option"><input type="checkbox" value="Dinner"><span>🍽️ Dinner</span></label><label class="meal-type-option"><input type="checkbox" value="Snack"><span>🍎 Snack</span></label></div><small>Use these categories to filter your recipe collection.</small></div>
-<div class="field full nutrition-entry"><label class="family-toggle-row"><span>Add to Cires Family</span><input id="meal-family" type="checkbox"></label><div class="nutrition-inputs"><label class="field"><span>Calories <small>(kcal)</small></span><input id="meal-calories" type="number" min="0" step="1" inputmode="decimal" placeholder="e.g. 450"></label><label class="field"><span>Protein <small>(g)</small></span><input id="meal-protein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 25"></label><label class="field"><span>Fibre <small>(g)</small></span><input id="meal-fiber" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6"></label></div></div>
+<div class="field full nutrition-entry"><div class="sharing-options"><label class="family-toggle-row"><span>Share with Sister</span><input id="meal-shared" type="checkbox"></label><label class="family-toggle-row"><span>Add to Cires Family</span><input id="meal-family" type="checkbox"></label></div><div class="nutrition-inputs"><label class="field"><span>Calories <small>(kcal)</small></span><input id="meal-calories" type="number" min="0" step="1" inputmode="decimal" placeholder="e.g. 450"></label><label class="field"><span>Protein <small>(g)</small></span><input id="meal-protein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 25"></label><label class="field"><span>Fibre <small>(g)</small></span><input id="meal-fiber" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6"></label></div></div>
 <div class="field full"><span class="field-label">Meal photo</span><div class="photo-actions"><label class="button light photo-choice">Choose a photo<input id="meal-photo" type="file" accept="image/*"></label><label class="button light photo-choice">Take a photo<input id="meal-camera" type="file" accept="image/*" capture="environment"></label></div><small>Choose an existing photo or open your phone camera. Photos are automatically resized and compressed before upload (original up to 20 MB).</small><div id="photo-preview"></div></div>
 <div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div></div>
 <label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
@@ -88,5 +93,5 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261101-4"></script>
+<script src="app.js?v=20261101-5"></script>
 </body></html>
