@@ -118,3 +118,43 @@
 .meal-nutrition{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin-top:7px;color:#718174;font-size:10px;line-height:1.4;font-weight:500}.meal-nutrition .nutrition-separator{color:#b4bdb2}.detail-nutrition{margin-top:20px;padding:14px 15px;background:#f5f7f2;border:1px solid #e9eee6;border-radius:10px}.detail-nutrition h3{margin:0 0 11px!important}.nutrition-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.nutrition-summary-item{display:grid;gap:3px;min-width:0}.nutrition-summary-item strong{font:600 20px "Playfair Display";color:#304538}.nutrition-summary-item span{font-size:10px;color:#879187}.nutrition-note{margin:10px 0 0;color:#9aa198;font-size:9px;line-height:1.4}@media(max-width:420px){.meal-nutrition{font-size:9px;gap:3px 4px}.nutrition-summary-item strong{font-size:17px}.detail-nutrition{padding:12px}}
 
 .sharing-options{display:flex;flex-wrap:wrap;gap:10px;align-items:center}#shared-grid.meal-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}@media(max-width:700px){#shared-grid.meal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}@media(min-width:1500px){#shared-grid.meal-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}.detail-actions{flex-wrap:wrap}
+
+
+/* Weekly planner: one colored horizontal row per day */
+.week-grid{display:flex!important;flex-direction:column;gap:12px;overflow:visible!important}
+.day-column{display:grid;grid-template-columns:minmax(165px,205px) minmax(0,1fr);gap:14px;align-items:stretch;min-height:0;padding:12px 14px;border-radius:13px}
+.day-heading{display:flex;flex-direction:column;justify-content:center;gap:9px;margin:0;padding:5px 12px 5px 3px;border:0;border-right:1px solid rgba(90,105,88,.16)}
+.day-heading .day-date strong{font-size:17px}
+.day-heading .day-date small{display:block;margin-top:3px}
+.day-nutrition{display:flex;flex-direction:column;gap:4px;color:#647366;font-size:10px;line-height:1.35}
+.day-nutrition span strong{font-weight:700;color:#405344}
+.day-nutrition-empty{color:#929b92;font-style:italic}
+.day-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;min-width:0}
+.day-slots .slot{min-width:0;margin:0;padding:3px 0}
+.day-slots .slot-name{margin-bottom:7px}
+.day-slots .planned-meal{height:auto;min-width:0}
+.day-slots .planned-meal strong{font-size:11px}
+.day-slots .planned-thumb{height:58px}
+.day-slots .add-slot{margin-top:3px}
+.day-column.day-0{background:#f4f0fa;border-color:#e8dff3}
+.day-column.day-1{background:#eef4fa;border-color:#dce8f3}
+.day-column.day-2{background:#edf5f0;border-color:#dcebe1}
+.day-column.day-3{background:#fbf1e9;border-color:#f0e1d3}
+.day-column.day-4{background:#f8f2e5;border-color:#eee3c9}
+.day-column.day-5{background:#f8edf0;border-color:#eedde3}
+.day-column.day-6{background:#eff1f7;border-color:#dfe3ef}
+.day-column.today-day{box-shadow:inset 3px 0 0 var(--green)}
+@media(max-width:900px){
+ .day-column{grid-template-columns:140px minmax(0,1fr);gap:10px;padding:10px}
+ .day-slots{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:12px}
+}
+@media(max-width:520px){
+ .day-column{grid-template-columns:1fr;gap:8px}
+ .day-heading{border-right:0;border-bottom:1px solid rgba(90,105,88,.16);padding:2px 2px 9px}
+ .day-nutrition{flex-direction:row;flex-wrap:wrap;gap:5px 12px}
+ .day-slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media print{
+ .week-grid{display:flex!important;flex-direction:column!important}
+ .day-column{break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
