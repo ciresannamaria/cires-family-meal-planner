@@ -194,7 +194,7 @@ async function loadSpiceCards(){
  if(!spiceCards.length){
   const seed={owner_id:user.id,title:"Pumpkin",description:"Pumpkin has a mild, naturally sweet, earthy flavor and becomes soft and buttery when cooked. Its gentle sweetness works in two directions: warm spices can deepen its sweet, comforting character, while toasted spices and green herbs bring out a more savory, earthy side. These are useful starting points rather than strict rules.",ingredients:[
    {group:"Warm & sweet",name:"Cinnamon stick"},{group:"Warm & sweet",name:"Fresh ginger"},{group:"Warm & sweet",name:"Nutmeg"},{group:"Warm & sweet",name:"Whole cloves"},
-   {group:"Savory & earthy",name:"Cumin seeds"},{group:"Savory & earthy",name:"Coriander seeds"},{group:"Savory & earthy",name:"Smoked paprika"},{group:"Savory & earthy",name:"Fresh sage leaves"},{group:"Savory & earthy",name:"Thyme"},{group:"Savory & earthy",name:"Black pepper"}
+   {group:"Savory & earthy",name:"Cumin seeds"},{group:"Savory & earthy",name:"Coriander seeds"},{group:"Savory & earthy",name:"Dried smoked chili"},{group:"Savory & earthy",name:"Fresh sage leaves"},{group:"Savory & earthy",name:"Thyme"},{group:"Savory & earthy",name:"Black pepper"}
   ],notes:"Try the two directions separately first. For a warm version, use cinnamon, ginger and a little nutmeg. For a savory version, toast cumin and coriander seeds briefly, then add smoked paprika, black pepper and sage or thyme.\n\nLater, add your own shop links or links to ready-made spice blends here."};
   const created=await db.from("spice_cards").insert(seed).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();
   if(created.error)throw created.error;
