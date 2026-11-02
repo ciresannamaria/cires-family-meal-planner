@@ -270,3 +270,10 @@
 .spice-welcome p{max-width:620px;color:#69776b;font-size:13px;line-height:1.8;margin:0 0 10px}
 .spice-welcome .spice-welcome-note{font-size:11px;color:#899387;margin-top:16px}
 @media(max-width:600px){.spice-welcome{grid-template-columns:1fr;gap:18px}.spice-welcome-art{width:88px;height:88px;font-size:52px}}
+
+
+/* Mobile navigation: show every section without horizontal scrolling */
+@media(max-width:700px){
+  .main-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%}
+  .nav-link{min-width:0;width:100%;justify-content:flex-start;white-space:nowrap;padding:10px 11px;font-size:11px}
+}
