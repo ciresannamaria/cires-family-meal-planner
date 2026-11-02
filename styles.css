@@ -248,3 +248,12 @@
 .profile-menu-actions{display:grid;gap:9px;padding-top:11px;border-top:1px solid var(--line)}
 .profile-menu-actions .text-button{width:100%;padding:4px 2px}
 @media(max-width:520px){.profile-menu{right:-5px}}
+
+/* Ingredient calorie calculator: per-100 g reference sits beneath each calculated value */
+.ingredient-row{grid-template-columns:minmax(0,1.55fr) .65fr .65fr minmax(86px,.9fr) 28px;align-items:center}
+.ing-calories{display:grid;gap:3px;min-width:0;text-align:center}
+.ing-kcal-value{font-size:11px;line-height:1.2;color:var(--dark);white-space:nowrap}
+.ing-kcal-per100{width:100%;min-width:0;border:0!important;background:transparent!important;padding:2px 1px!important;text-align:center;font:9px "DM Sans"!important;color:#9aa198!important;outline:none}
+.ing-kcal-per100::placeholder{color:#a7afa5;opacity:1}
+.detail-ingredient-kcal{display:block;margin-top:3px;font-size:9px;color:#9aa198;font-weight:400}
+@media(max-width:520px){.ingredient-row{grid-template-columns:minmax(0,1.25fr) .6fr .6fr minmax(75px,.8fr) 25px;gap:4px}.ing-kcal-value{font-size:10px}.ing-kcal-per100{font-size:8px!important}}
