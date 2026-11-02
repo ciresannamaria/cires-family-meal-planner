@@ -242,13 +242,13 @@ async function compressSpiceImage(file){
 async function saveSpiceCard(e){
  e.preventDefault();const button=$("#save-spice-card");button.disabled=true;button.textContent="Saving…";
  try{
-  const existing=spiceCards.find(x=>x.id===spiceEditingId);let imagePath=existing?.image_path||null;
+  const existing=spiceCards.find(x=>x.id===spiceEditingId);let imagePath=existing?.image_path||(existing?.image_url?.startsWith("data:")?existing.image_url:null);
   if(spiceImageFile){button.textContent="Preparing photo…";const blob=await compressSpiceImage(spiceImageFile);imagePath=user.id+"/spice-"+(spiceEditingId||Date.now())+"-"+Date.now()+".jpg";button.textContent="Uploading photo…";const upload=await db.storage.from(PHOTO_BUCKET).upload(imagePath,blob,{upsert:true,contentType:"image/jpeg",cacheControl:"3600"});if(upload.error)throw upload.error;}
   const payload={owner_id:user.id,title:$("#spice-title").value.trim(),description:$("#spice-description").value.trim(),ingredients:parseSpiceIngredients($("#spice-ingredients").value),notes:$("#spice-notes").value.trim(),image_url:imagePath,updated_at:new Date().toISOString()};
   let saved;
   if(spiceEditingId){const r=await db.from("spice_cards").update(payload).eq("id",spiceEditingId).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();if(r.error)throw r.error;saved=r.data;spiceCards=spiceCards.map(x=>x.id===spiceEditingId?{...saved,image_path:imagePath}:x);}
   else{const r=await db.from("spice_cards").insert(payload).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();if(r.error)throw r.error;saved=r.data;spiceCards.unshift({...saved,image_path:imagePath});}
-  if(imagePath){const signed=await db.storage.from(PHOTO_BUCKET).createSignedUrl(imagePath,3600);if(!signed.error){const target=spiceCards.find(x=>x.id===saved.id);if(target)target.image_url=signed.data.signedUrl;}}
+  if(imagePath&&!imagePath.startsWith("data:")){const signed=await db.storage.from(PHOTO_BUCKET).createSignedUrl(imagePath,3600);if(!signed.error){const target=spiceCards.find(x=>x.id===saved.id);if(target)target.image_url=signed.data.signedUrl;}}
   $("#spice-form-dialog").close();$("#spice-detail-dialog").close();drawSpiceCards();toast("Flavour card saved.");
  }catch(err){toast("Couldn't save the card: "+(err.message||"Please try again."));}
  finally{button.disabled=false;button.textContent="Save card";}
