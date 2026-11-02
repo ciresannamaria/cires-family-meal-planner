@@ -6,7 +6,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2"><title>Cires Family Meal Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261101-5">
+<link rel="stylesheet" href="styles.css?v=20261102-6">
 </head>
 <body>
 <section id="auth-screen" class="auth-screen">
@@ -42,6 +42,7 @@
 <button class="nav-link" data-view="shopping"><span>⌑</span> Shopping list</button>
 <button class="nav-link" data-view="family"><span>♡</span> Family Recipes <b id="family-count">0</b></button>
 <button class="nav-link" data-view="shared"><span>↗</span> Shared Meals <b id="shared-count">0</b></button>
+<button class="nav-link" data-view="spices"><span>✿</span> Spices</button>
 </nav>
 
 </aside>
@@ -71,6 +72,13 @@
 <div class="page-heading"><div><div class="eyebrow">READY FOR THE STORE</div><h1>Shopping list</h1><p>Ingredients combined from your weekly plan.</p></div><button class="button light" id="print-shopping">↓ Download shopping list</button></div>
 <div class="shopping-summary" id="shopping-summary"></div><div class="shopping-list" id="shopping-list"></div>
 </section>
+<section class="view" id="view-spices">
+<div class="page-heading"><div><div class="eyebrow">EXPLORE FLAVOUR</div><h1>Spices</h1><p>Your personal space for discovering spices and learning how to use them in everyday cooking.</p></div></div>
+<div class="spice-welcome">
+  <div class="spice-welcome-art" aria-hidden="true">✿</div>
+  <div><div class="eyebrow">YOUR SPICE JOURNAL</div><h2>Every good discovery starts with a little curiosity.</h2><p>This section will grow with the spices you discover. When you learn something new, tell me and we can add it here with its flavour, the meals it suits, and combinations worth trying.</p><p class="spice-welcome-note">No big catalogue for now — just a place for your discoveries.</p></div>
+</div>
+</section>
 </main></div>
 <dialog id="meal-dialog" class="modal"><form id="meal-form" method="dialog">
 <div class="modal-header"><div><div class="eyebrow">RECIPE DETAILS</div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
@@ -90,5 +98,5 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261102-4"></script>
+<script src="app.js?v=20261102-5"></script>
 </body></html>
