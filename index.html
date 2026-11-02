@@ -73,13 +73,21 @@
 <div class="shopping-summary" id="shopping-summary"></div><div class="shopping-list" id="shopping-list"></div>
 </section>
 <section class="view" id="view-spices">
-<div class="page-heading"><div><div class="eyebrow">EXPLORE FLAVOUR</div><h1>Spices</h1><p>Your personal space for discovering spices and learning how to use them in everyday cooking.</p></div></div>
-<div class="spice-welcome">
-  <div class="spice-welcome-art" aria-hidden="true">✿</div>
-  <div><div class="eyebrow">YOUR SPICE JOURNAL</div><h2>Every good discovery starts with a little curiosity.</h2><p>This section will grow with the spices you discover. When you learn something new, tell me and we can add it here with its flavour, the meals it suits, and combinations worth trying.</p><p class="spice-welcome-note">No big catalogue for now — just a place for your discoveries.</p></div>
-</div>
+<div class="page-heading"><div><div class="eyebrow">EXPLORE FLAVOUR</div><h1>Spices & pairings</h1><p>Build your own guide to ingredients, aromas and combinations worth exploring.</p></div><button class="button primary" id="add-spice-card">＋ Add a card</button></div>
+<div class="spice-journal-intro"><span>✿</span><p>Start with one ingredient, explore what traditionally goes with it, and keep your own notes and useful shopping links.</p><small id="spice-card-count">0 cards</small></div>
+<div class="spice-card-grid" id="spice-card-grid"></div>
+<div class="spice-empty" id="spice-empty" hidden><h2>Your flavour journal is ready</h2><p>Add an ingredient card to start collecting pairings.</p></div>
 </section>
 </main></div>
+<dialog id="spice-form-dialog" class="modal spice-form-dialog"><form id="spice-form">
+<div class="modal-header"><div><div class="eyebrow">YOUR FLAVOUR JOURNAL</div><h2 id="spice-form-title">Add a flavour card</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<label class="field full">Ingredient or product name<input id="spice-title" maxlength="90" required placeholder="e.g. Pumpkin"></label>
+<label class="field full">Flavor and aroma description<textarea id="spice-description" rows="4" required placeholder="Describe its taste, aroma and texture, and why certain pairings work…"></textarea></label>
+<label class="field full">Ingredients that pair well <small>One per line. Optional group labels can be written like “Warm & sweet: cinnamon stick”.</small><textarea id="spice-ingredients" rows="7" placeholder="Warm & sweet: cinnamon stick&#10;Warm & sweet: fresh ginger&#10;Savory & earthy: cumin seeds"></textarea></label>
+<label class="field full">Notes and shop links<textarea id="spice-notes" rows="4" placeholder="Add your observations, spice-blend ideas, or links to shops…"></textarea></label>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-spice-card">Save card</button></div>
+</form></dialog>
+<dialog id="spice-detail-dialog" class="modal spice-detail-dialog"><div id="spice-detail-content"></div></dialog>
 <dialog id="meal-dialog" class="modal"><form id="meal-form" method="dialog">
 <div class="modal-header"><div><div class="eyebrow">RECIPE DETAILS</div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <input type="hidden" id="meal-id"><div class="form-grid">
@@ -98,5 +106,5 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261102-5"></script>
+<script src="app.js?v=20261102-6"></script>
 </body></html>
