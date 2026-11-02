@@ -296,3 +296,5 @@
 .spice-form-dialog{width:min(650px,calc(100% - 24px))}.spice-form-dialog form{display:grid;gap:15px}.spice-form-dialog .field{width:100%}
 @media(max-width:950px){.spice-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.spice-card-grid{grid-template-columns:1fr}.spice-card-image{height:210px}.spice-journal-intro{align-items:flex-start;flex-wrap:wrap}.spice-journal-intro p{min-width:70%}.spice-detail-group ul{grid-template-columns:1fr}.spice-detail-hero{height:180px}.spice-detail-inner{padding:19px}}
+
+.spice-photo-preview{width:100%;margin-top:-8px}.spice-photo-preview:empty{display:none}.spice-photo-preview img{display:block;width:auto;max-width:min(100%,360px);max-height:210px;object-fit:cover;border:1px solid var(--line);border-radius:9px}
