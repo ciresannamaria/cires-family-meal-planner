@@ -1,7 +1,7 @@
 const SUPABASE_URL=window.CIRES_SUPABASE_URL, SUPABASE_KEY=window.CIRES_SUPABASE_PUBLISHABLE_KEY;
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const DAYS=["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],SLOTS=["Breakfast","Lunch","Dinner","Snack"],PHOTO_BUCKET="meal-photos";
-let user=null,meals=[],planned=[],plannerPeople=[],spiceCards=[],spiceEditingId=null,familyId=null,mealFormSnapshot=null,pendingShareToken=new URLSearchParams(location.search).get('share'),week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer,mealTypeFilter="All";
+let user=null,meals=[],planned=[],plannerPeople=[],spiceCards=[],spiceEditingId=null,spiceImageFile=null,familyId=null,mealFormSnapshot=null,pendingShareToken=new URLSearchParams(location.search).get('share'),week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer,mealTypeFilter="All";
 const $=(s,root=document)=>root.querySelector(s), queryAll=(s,root=document)=>[...root.querySelectorAll(s)];
 function startWeek(d){let x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-(x.getDay()+1)%7);return x}
 function dateKey(d){return[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
@@ -191,6 +191,7 @@ async function loadSpiceCards(){
  let result=await db.from("spice_cards").select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").order("updated_at",{ascending:false});
  if(result.error)throw result.error;
  spiceCards=result.data||[];
+ await Promise.all(spiceCards.map(async card=>{card.image_path=card.image_url||null;if(card.image_path&&!/^https?:|^data:/.test(card.image_path)){const signed=await db.storage.from(PHOTO_BUCKET).createSignedUrl(card.image_path,3600);card.image_url=signed.error?"":signed.data.signedUrl;}}));
  if(!spiceCards.length){
   const seed={owner_id:user.id,title:"Pumpkin",description:"Pumpkin has a mild, naturally sweet, earthy flavor and becomes soft and buttery when cooked. Its gentle sweetness works in two directions: warm spices can deepen its sweet, comforting character, while toasted spices and green herbs bring out a more savory, earthy side. These are useful starting points rather than strict rules.",ingredients:[
    {group:"Warm & sweet",name:"Cinnamon stick"},{group:"Warm & sweet",name:"Fresh ginger"},{group:"Warm & sweet",name:"Nutmeg"},{group:"Warm & sweet",name:"Whole cloves"},
@@ -198,7 +199,7 @@ async function loadSpiceCards(){
   ],notes:"Try the two directions separately first. For a warm version, use cinnamon, ginger and a little nutmeg. For a savory version, toast cumin and coriander seeds briefly, then add smoked paprika, black pepper and sage or thyme.\n\nLater, add your own shop links or links to ready-made spice blends here."};
   const created=await db.from("spice_cards").insert(seed).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();
   if(created.error)throw created.error;
-  spiceCards=[created.data];
+  spiceCards=[{...created.data,image_path:created.data.image_url||null}];
  }
 }
 function spiceCardMarkup(card){
@@ -223,19 +224,31 @@ function parseSpiceIngredients(value){
  return value.split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{const i=line.indexOf(":");return i>0?{group:line.slice(0,i).trim(),name:line.slice(i+1).trim()}:{group:"Ingredients",name:line}}).filter(x=>x.name);
 }
 function openSpiceForm(card){
- spiceEditingId=card?.id||null;
+ spiceEditingId=card?.id||null;spiceImageFile=null;
  $("#spice-form").reset();$("#spice-form-title").textContent=card?"Edit flavour card":"Add a flavour card";
  $("#spice-title").value=card?.title||"";$("#spice-description").value=card?.description||"";
+ $("#spice-photo-preview").innerHTML=card?.image_url?'<img src="'+esc(card.image_url)+'" alt="Photo preview">':"";
  $("#spice-ingredients").value=(card?.ingredients||[]).map(x=>(x.group&&x.group!=="Ingredients"?x.group+": ":"")+x.name).join("\n");
  $("#spice-notes").value=card?.notes||"";
  $("#spice-form-dialog").showModal();
 }
+async function compressSpiceImage(file){
+ if(file.size>20*1024*1024)throw new Error("Choose a photo smaller than 20 MB.");
+ const bitmap=await createImageBitmap(file),scale=Math.min(1,1400/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement("canvas");
+ canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+ canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close?.();
+ return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Could not prepare this photo.")),"image/jpeg",.82));
+}
 async function saveSpiceCard(e){
  e.preventDefault();const button=$("#save-spice-card");button.disabled=true;button.textContent="Saving…";
  try{
-  const payload={owner_id:user.id,title:$("#spice-title").value.trim(),description:$("#spice-description").value.trim(),ingredients:parseSpiceIngredients($("#spice-ingredients").value),notes:$("#spice-notes").value.trim(),updated_at:new Date().toISOString()};
-  if(spiceEditingId){const r=await db.from("spice_cards").update(payload).eq("id",spiceEditingId).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();if(r.error)throw r.error;spiceCards=spiceCards.map(x=>x.id===spiceEditingId?r.data:x);}
-  else{const r=await db.from("spice_cards").insert(payload).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();if(r.error)throw r.error;spiceCards.unshift(r.data);}
+  const existing=spiceCards.find(x=>x.id===spiceEditingId);let imagePath=existing?.image_path||null;
+  if(spiceImageFile){button.textContent="Preparing photo…";const blob=await compressSpiceImage(spiceImageFile);imagePath=user.id+"/spice-"+(spiceEditingId||Date.now())+"-"+Date.now()+".jpg";button.textContent="Uploading photo…";const upload=await db.storage.from(PHOTO_BUCKET).upload(imagePath,blob,{upsert:true,contentType:"image/jpeg",cacheControl:"3600"});if(upload.error)throw upload.error;}
+  const payload={owner_id:user.id,title:$("#spice-title").value.trim(),description:$("#spice-description").value.trim(),ingredients:parseSpiceIngredients($("#spice-ingredients").value),notes:$("#spice-notes").value.trim(),image_url:imagePath,updated_at:new Date().toISOString()};
+  let saved;
+  if(spiceEditingId){const r=await db.from("spice_cards").update(payload).eq("id",spiceEditingId).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();if(r.error)throw r.error;saved=r.data;spiceCards=spiceCards.map(x=>x.id===spiceEditingId?{...saved,image_path:imagePath}:x);}
+  else{const r=await db.from("spice_cards").insert(payload).select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").single();if(r.error)throw r.error;saved=r.data;spiceCards.unshift({...saved,image_path:imagePath});}
+  if(imagePath){const signed=await db.storage.from(PHOTO_BUCKET).createSignedUrl(imagePath,3600);if(!signed.error){const target=spiceCards.find(x=>x.id===saved.id);if(target)target.image_url=signed.data.signedUrl;}}
   $("#spice-form-dialog").close();$("#spice-detail-dialog").close();drawSpiceCards();toast("Flavour card saved.");
  }catch(err){toast("Couldn't save the card: "+(err.message||"Please try again."));}
  finally{button.disabled=false;button.textContent="Save card";}
@@ -255,7 +268,7 @@ $("#auth-switch").onclick=()=>{showAuth(authMode==="login"?"signup":"login");$("
 if(!db){showAuth("login","The sign-in service did not load. Please refresh the page. If this continues, tell me.");return}
 if(pendingShareToken){await openSharedMeal();const {data:{session}}=await db.auth.getSession();if(session?.user){user=session.user;}return}
 $("#today-label").textContent=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
-queryAll("[data-view]").forEach(b=>b.onclick=()=>view(b.dataset.view));$("#add-spice-card").onclick=()=>openSpiceForm();$("#spice-form").onsubmit=saveSpiceCard;$("#spice-card-grid").onclick=e=>{const c=e.target.closest("[data-spice-card]");if(c)openSpiceDetail(c.dataset.spiceCard)};$("#spice-card-grid").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest("[data-spice-card]");if(c){e.preventDefault();openSpiceDetail(c.dataset.spiceCard)}}};$("#spice-detail-content").onclick=e=>{const edit=e.target.closest("[data-spice-edit]"),del=e.target.closest("[data-spice-delete]");if(edit){const c=spiceCards.find(x=>x.id===edit.dataset.spiceEdit);$("#spice-detail-dialog").close();openSpiceForm(c)}if(del)deleteSpiceCard(del.dataset.spiceDelete);if(e.target.closest("[data-spice-close]"))$("#spice-detail-dialog").close()};window.addEventListener("popstate",()=>{if(user&&!$("#app-shell").hidden)view(currentView(),false)});window.addEventListener("hashchange",()=>{if(user&&!$("#app-shell").hidden)view(currentView(),false)});
+queryAll("[data-view]").forEach(b=>b.onclick=()=>view(b.dataset.view));$("#add-spice-card").onclick=()=>openSpiceForm();$("#spice-form").onsubmit=saveSpiceCard;$("#spice-photo").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;spiceImageFile=file;$("#spice-photo-preview").innerHTML="<small>Preparing preview…</small>";try{const blob=await compressSpiceImage(file);const reader=new FileReader();reader.onload=()=>$("#spice-photo-preview").innerHTML='<img src="'+reader.result+'" alt="Photo preview">';reader.readAsDataURL(blob);}catch(err){spiceImageFile=null;$("#spice-photo-preview").textContent=err.message;}};$("#spice-card-grid").onclick=e=>{const c=e.target.closest("[data-spice-card]");if(c)openSpiceDetail(c.dataset.spiceCard)};$("#spice-card-grid").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest("[data-spice-card]");if(c){e.preventDefault();openSpiceDetail(c.dataset.spiceCard)}}};$("#spice-detail-content").onclick=e=>{const edit=e.target.closest("[data-spice-edit]"),del=e.target.closest("[data-spice-delete]");if(edit){const c=spiceCards.find(x=>x.id===edit.dataset.spiceEdit);$("#spice-detail-dialog").close();openSpiceForm(c)}if(del)deleteSpiceCard(del.dataset.spiceDelete);if(e.target.closest("[data-spice-close]"))$("#spice-detail-dialog").close()};window.addEventListener("popstate",()=>{if(user&&!$("#app-shell").hidden)view(currentView(),false)});window.addEventListener("hashchange",()=>{if(user&&!$("#app-shell").hidden)view(currentView(),false)});
 $("#add-meal").onclick=$("#empty-add-meal").onclick=()=>openForm();$("#family-add-meal").onclick=$("#family-empty-add").onclick=()=>{openForm();$("#meal-family").checked=true;};
 $("#meal-search").oninput=drawMeals;queryAll("[data-meal-filter]").forEach(b=>b.onclick=()=>{mealTypeFilter=b.dataset.mealFilter;drawMeals();drawFamilyRecipes()});$("#meal-form").onsubmit=saveMeal;$("#add-ingredient").onclick=()=>ingredientRow();
 function selectMealPhoto(e){let f=e.target.files[0];if(!f)return;if(f.size>20*1024*1024){toast("Choose an original photo under 20 MB.");e.target.value="";return}photoFile=f;let reader=new FileReader();reader.onload=()=>{$("#photo-preview").innerHTML='<img src="'+reader.result+'" alt="Preview">'};reader.readAsDataURL(f)};$("#meal-photo").onchange=selectMealPhoto;$("#meal-camera").onchange=selectMealPhoto;
