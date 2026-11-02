@@ -257,3 +257,8 @@
 .ing-kcal-per100::placeholder{color:#a7afa5;opacity:1}
 .detail-ingredient-kcal{display:block;margin-top:3px;font-size:9px;color:#9aa198;font-weight:400}
 @media(max-width:520px){.ingredient-row{grid-template-columns:minmax(0,1.25fr) .6fr .6fr minmax(75px,.8fr) 25px;gap:4px}.ing-kcal-value{font-size:10px}.ing-kcal-per100{font-size:8px!important}}
+
+/* Planned meal cards open the same recipe details as cards in My Meals */
+.planned-meal[data-meal]{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.planned-meal[data-meal]:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.09)}
+.planned-meal[data-meal]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
