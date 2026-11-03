@@ -325,3 +325,22 @@
 .cycle-day:not(.period) small{color:#788477}
 
 .cycle-day{width:100%;font:inherit;text-align:left;cursor:pointer}.cycle-day:not(.empty):hover{box-shadow:0 3px 12px #26342e18}.cycle-day:focus-visible{outline:2px solid var(--green);outline-offset:2px}.cycle-tap-hint{font-size:10px;color:var(--muted);margin:10px 0 0}.cycle-day-dialog{width:min(420px,calc(100% - 28px));padding:0;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 60px #18251d30}.cycle-day-dialog::backdrop{background:#15201970}.cycle-day-dialog-inner{padding:26px}.cycle-day-dialog-inner h2{font:600 25px "Playfair Display";margin:9px 0}.cycle-day-dialog-inner p{font-size:13px;line-height:1.6;color:var(--muted)}.cycle-day-dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:9px;margin-top:22px}@media(max-width:480px){.cycle-day-dialog-actions{flex-direction:column-reverse}.cycle-day-dialog-actions button{width:100%}}
+
+/* Cycle-stage insight button and details */
+.cycle-insight-trigger{justify-self:start;max-width:100%;border:1px solid #eadde8;background:#fbf5fa;color:#80627b;border-radius:8px;padding:6px 8px;font:600 9px "DM Sans",sans-serif;line-height:1.35;text-align:left;cursor:pointer;white-space:normal}
+.cycle-insight-trigger:hover{background:#f5eaf3;border-color:#d9c5d8}
+.cycle-stage-menstrual{background:#fbefee;border-color:#efd5d2;color:#9b6865}
+.cycle-stage-follicular{background:#f0f6ed;border-color:#dce9d7;color:#617c5d}
+.cycle-stage-ovulatory{background:#faf5e7;border-color:#eee2bd;color:#947b42}
+.cycle-stage-luteal,.cycle-stage-premenstrual{background:#f6f0fa;border-color:#e7d9ef;color:#806b96}
+.cycle-stage-late,.cycle-stage-empty{background:#f6f7f3;border-color:#e6e9e1;color:#788477}
+.cycle-insight-dialog{width:min(560px,calc(100% - 28px))}
+.cycle-insight-dialog .modal-header{margin-bottom:15px}
+.cycle-insight-dialog .modal-header h2{font:600 24px "Playfair Display";margin:5px 0 0}
+.cycle-insight-dialog h2{font:600 25px "Playfair Display";margin:5px 0 8px}
+.cycle-insight-day{font-size:12px;color:var(--green);font-weight:700;margin:0 0 18px}
+.cycle-insight-section{padding:14px 15px;margin-top:10px;background:#f7f8f4;border:1px solid #edf0e9;border-radius:10px}
+.cycle-insight-section h3{font:700 12px "DM Sans";margin:0 0 7px;color:var(--dark)}
+.cycle-insight-section p,.cycle-insight-dialog #cycle-insight-content>p{font-size:12px;line-height:1.7;color:#6f7b71;margin:0}
+.cycle-insight-note{margin-top:14px!important;font-size:10px!important;color:#929b92!important;line-height:1.6!important}
+@media(max-width:700px){.cycle-insight-trigger{font-size:10px}.cycle-insight-dialog{padding:20px}}
