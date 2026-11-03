@@ -323,3 +323,5 @@
 .cycle-day:not(.empty):hover{box-shadow:0 2px 9px #26342e16;transform:translateY(-1px)}
 .cycle-day:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 .cycle-day:not(.period) small{color:#788477}
+
+.cycle-day{width:100%;font:inherit;text-align:left;cursor:pointer}.cycle-day:not(.empty):hover{box-shadow:0 3px 12px #26342e18}.cycle-day:focus-visible{outline:2px solid var(--green);outline-offset:2px}.cycle-tap-hint{font-size:10px;color:var(--muted);margin:10px 0 0}.cycle-day-dialog{width:min(420px,calc(100% - 28px));padding:0;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 60px #18251d30}.cycle-day-dialog::backdrop{background:#15201970}.cycle-day-dialog-inner{padding:26px}.cycle-day-dialog-inner h2{font:600 25px "Playfair Display";margin:9px 0}.cycle-day-dialog-inner p{font-size:13px;line-height:1.6;color:var(--muted)}.cycle-day-dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:9px;margin-top:22px}@media(max-width:480px){.cycle-day-dialog-actions{flex-direction:column-reverse}.cycle-day-dialog-actions button{width:100%}}
