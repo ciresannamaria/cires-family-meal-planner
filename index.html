@@ -6,7 +6,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2"><title>Cires Family Meal Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261103-1">
+<link rel="stylesheet" href="styles.css?v=20261103-2">
 </head>
 <body>
 <section id="auth-screen" class="auth-screen">
@@ -80,6 +80,7 @@
 <div class="spice-empty" id="spice-empty" hidden><h2>Your flavour journal is ready</h2><p>Add an ingredient card to start collecting pairings.</p></div>
 </section>
 </main></div>
+<dialog id="cycle-insight-dialog" class="modal cycle-insight-dialog"><div class="modal-header"><div><div class="eyebrow">YOUR CYCLE & WELLBEING</div><h2>Cycle stage</h2></div><button type="button" class="icon-button" data-cycle-insight-close aria-label="Close">×</button></div><div id="cycle-insight-content"></div><div class="modal-footer"><button type="button" class="button light" data-cycle-insight-close>Close</button></div></dialog>
 <dialog id="spice-form-dialog" class="modal spice-form-dialog"><form id="spice-form">
 <div class="modal-header"><div><div class="eyebrow">YOUR FLAVOUR JOURNAL</div><h2 id="spice-form-title">Add a flavour card</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <label class="field full">Ingredient or product name<input id="spice-title" maxlength="90" required placeholder="e.g. Pumpkin"></label>
@@ -109,5 +110,5 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261103-1"></script>
+<script src="app.js?v=20261103-2"></script>
 </body></html>
