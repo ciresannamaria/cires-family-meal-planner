@@ -317,3 +317,9 @@
 .cycle-history{margin-top:20px}.cycle-history h3{font-size:12px}.cycle-history-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:11px}.cycle-history-row button{border:0;background:transparent;color:#9b6969;font-size:18px;cursor:pointer}
 .planner-cycle-note{display:inline-flex;margin:0 0 10px;padding:5px 8px;border-radius:7px;background:#f8f0f4;color:#8c667c;font-size:10px}
 @media(max-width:800px){.cycle-layout{grid-template-columns:1fr}.cycle-settings,.cycle-calendar-panel{padding:17px}.cycle-day{min-height:55px;padding:5px}.cycle-day small{font-size:8px}}
+
+/* Calendar days are tappable period-entry controls */
+.cycle-day{width:100%;font:inherit;text-align:left;cursor:pointer;appearance:none;-webkit-appearance:none;color:var(--ink);transition:transform .12s,box-shadow .12s}
+.cycle-day:not(.empty):hover{box-shadow:0 2px 9px #26342e16;transform:translateY(-1px)}
+.cycle-day:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.cycle-day:not(.period) small{color:#788477}
