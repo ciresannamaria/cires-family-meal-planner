@@ -369,3 +369,10 @@
 .spice-product-form-dialog .field{width:100%}
 @media(max-width:950px){.spice-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.spice-product-grid{grid-template-columns:1fr}.spice-section-heading{align-items:flex-start;flex-direction:column}.spice-tabs{width:100%}.spice-tabs button{flex:1}}
+
+/* Homemade spice blends */
+.homemade-spice-ingredients{list-style:none;margin:12px 0 15px;padding:0;border-top:1px solid #eff0eb}
+.homemade-spice-ingredients li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #eff0eb;color:#68766a;font-size:11px}
+.homemade-spice-ingredients li strong{color:var(--ink);white-space:nowrap;font-weight:600}
+.homemade-spice-card .spice-product-body>p{margin:12px 0 0}
+@media(max-width:600px){.spice-tabs button{padding:10px 12px;font-size:12px}}
