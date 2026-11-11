@@ -376,3 +376,25 @@
 .homemade-spice-ingredients li strong{color:var(--ink);white-space:nowrap;font-weight:600}
 .homemade-spice-card .spice-product-body>p{margin:12px 0 0}
 @media(max-width:600px){.spice-tabs button{padding:10px 12px;font-size:12px}}
+
+/* Flip cards for homemade spice blends */
+.homemade-spice-card{position:relative;min-width:0;min-height:420px;perspective:1100px;cursor:pointer;outline:none}
+.homemade-spice-flipper{position:relative;width:100%;min-height:420px;height:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.75,.25,1)}
+.homemade-spice-card.is-flipped .homemade-spice-flipper{transform:rotateY(180deg)}
+.homemade-spice-face{position:absolute;inset:0;min-height:420px;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 3px 12px #26342e08}
+.homemade-spice-front{display:flex;flex-direction:column}
+.homemade-spice-front .spice-product-image{height:320px;flex:1;min-height:300px}
+.homemade-spice-front .spice-product-image img{width:100%;height:100%;object-fit:cover;padding:0}
+.homemade-spice-front-title{padding:17px 18px 19px;text-align:center;background:#fff}
+.homemade-spice-front-title h2{font:600 21px "Playfair Display";color:var(--ink);margin:0 0 7px}
+.homemade-spice-front-title span,.homemade-spice-flip-hint{font-size:11px;color:var(--muted)}
+.homemade-spice-back{transform:rotateY(180deg);overflow-y:auto}
+.homemade-spice-back-inner{padding:20px;height:100%;box-sizing:border-box}
+.homemade-spice-back-inner h2{font:600 21px "Playfair Display";margin:6px 0 15px;color:var(--ink)}
+.homemade-spice-back-inner h3{font-size:13px;margin:0 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.homemade-spice-back-inner>p{font-size:12px;line-height:1.55;color:var(--muted);margin:12px 0}
+.homemade-spice-back-inner .homemade-spice-ingredients{margin:0 0 12px}
+.homemade-spice-back-inner .spice-product-actions{margin-top:14px}
+.homemade-spice-card:focus-visible .homemade-spice-face{outline:3px solid #8da994;outline-offset:3px}
+@media(max-width:600px){.homemade-spice-card,.homemade-spice-flipper,.homemade-spice-face{min-height:390px}.homemade-spice-front .spice-product-image{min-height:275px}}
+@media(prefers-reduced-motion:reduce){.homemade-spice-flipper{transition:none}}
