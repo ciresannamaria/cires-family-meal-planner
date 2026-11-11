@@ -279,12 +279,6 @@ async function loadSpiceProducts(){
   spiceProducts.unshift({...added.data,image_path:added.data.image_url});
  }
 }
-
- const r=await db.from("spice_products").select("id,owner_id,title,product_url,image_url,notes,created_at,updated_at").order("created_at",{ascending:false});
- if(r.error)throw r.error;
- spiceProducts=r.data||[];
- await Promise.all(spiceProducts.map(async p=>{p.image_path=p.image_url||null;if(p.image_path&&!/^https?:|^data:/.test(p.image_path)){const signed=await db.storage.from(PHOTO_BUCKET).createSignedUrl(p.image_path,3600);p.image_url=signed.error?"":signed.data.signedUrl;}}));
-}
 function drawSpiceProducts(){
  const grid=$("#spice-product-grid");if(!grid)return;
  grid.innerHTML=spiceProducts.map(p=>'<article class="spice-product-card"><div class="spice-product-image">'+(p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">':'<div class="spice-image-placeholder"><span>✿</span><small>Add a product photo</small></div>')+'</div><div class="spice-product-body"><h2>'+esc(p.title)+'</h2>'+(p.notes?'<p>'+esc(p.notes)+'</p>':'')+'<div class="spice-product-actions"><a class="button primary" href="'+esc(p.product_url)+'" target="_blank" rel="noopener noreferrer">View product ↗</a><button type="button" class="button light" data-spice-product-edit="'+p.id+'">Edit</button><button type="button" class="button light" data-spice-product-delete="'+p.id+'">Delete</button></div></div></article>').join("");
