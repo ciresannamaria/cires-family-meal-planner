@@ -76,12 +76,18 @@
 </section>
 <section class="view" id="view-spices">
 <div class="page-heading"><div><div class="eyebrow">EXPLORE FLAVOUR</div><h1>Spices & pairings</h1><p>Build your own guide to ingredients, aromas and combinations worth exploring.</p></div><button class="button primary" id="add-spice-card">＋ Add a card</button></div>
-<div class="spice-tabs" role="tablist" aria-label="Spices sections"><button type="button" class="active" data-spice-tab="products">Spices</button><button type="button" data-spice-tab="pairings">Pairings</button></div>
+<div class="spice-tabs" role="tablist" aria-label="Spices sections"><button type="button" class="active" data-spice-tab="products">Spices</button><button type="button" data-spice-tab="mine">My Blends</button><button type="button" data-spice-tab="pairings">Pairings</button></div>
 <div id="spice-products-panel">
  <div class="spice-section-heading"><div><h2>My Spices</h2><p>Products and spice blends you want to keep.</p></div><button class="button primary" id="add-spice-product" type="button">＋ Add a spice</button></div>
  <div class="spice-count" id="spice-product-count">0 spices</div>
  <div class="spice-product-grid" id="spice-product-grid"></div>
  <div class="spice-empty" id="spice-product-empty" hidden><h2>Your spice collection is ready</h2><p>Add a spice with its photo and a link to the shop.</p></div>
+</div>
+<div id="my-spices-panel" hidden>
+ <div class="spice-section-heading"><div><h2>My Homemade Blends</h2><p>Your own seasoning recipes, with photos and exact ingredient amounts.</p></div><button class="button primary" id="add-my-spice" type="button">＋ Add my blend</button></div>
+ <div class="spice-count" id="my-spice-count">0 blends</div>
+ <div class="spice-product-grid" id="my-spice-grid"></div>
+ <div class="spice-empty" id="my-spice-empty" hidden><h2>Your blend collection is ready</h2><p>Add your first homemade spice blend.</p></div>
 </div>
 <div id="spice-pairings-panel" hidden>
  <div class="spice-journal-intro"><span>✿</span><p>Explore ingredients, aromas and combinations worth trying.</p><small id="spice-card-count">0 cards</small></div>
@@ -101,6 +107,17 @@
 <div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-spice-card">Save card</button></div>
 </form></dialog>
 <dialog id="spice-detail-dialog" class="modal spice-detail-dialog"><div id="spice-detail-content"></div></dialog>
+<dialog id="my-spice-form-dialog" class="modal spice-product-form-dialog"><form id="my-spice-form">
+<div class="modal-header"><div><div class="eyebrow">MY HOMEMADE SPICE BLENDS</div><h2 id="my-spice-form-title">Add your own spice blend</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<label class="field full">Spice blend name<input id="my-spice-title" maxlength="120" required placeholder="e.g. Savory Pumpkin Spice Blend"></label>
+<label class="field full">Photo <small>Upload a photo of your finished spice blend or its ingredients.</small><input id="my-spice-photo" type="file" accept="image/*"></label><div id="my-spice-photo-preview" class="spice-photo-preview"></div>
+<label class="field full">Ingredients and amounts <small>Enter one ingredient per line, for example: Smoked paprika — 2 tbsp</small><textarea id="my-spice-ingredients" rows="7" required placeholder="Smoked paprika — 2 tbsp&#10;Ground cumin — 1 tbsp&#10;Garlic powder — 2 tsp"></textarea></label>
+<label class="field full">How to prepare <textarea id="my-spice-instructions" rows="3" placeholder="Mix thoroughly and store in an airtight jar…"></textarea></label>
+<label class="field full">What to use it with <textarea id="my-spice-uses" rows="2" placeholder="Pumpkin, potatoes, carrots…"></textarea></label>
+<label class="field full">Storage and shelf life <textarea id="my-spice-storage" rows="3" placeholder="Keep in a cool, dry, dark cupboard…"></textarea></label>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-my-spice">Save blend</button></div>
+</form></dialog>
+
 <dialog id="spice-product-form-dialog" class="modal spice-product-form-dialog"><form id="spice-product-form">
 <div class="modal-header"><div><div class="eyebrow">MY SPICE COLLECTION</div><h2 id="spice-product-form-title">Add a spice</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <label class="field full">Spice or product name<input id="spice-product-title" maxlength="120" required placeholder="e.g. Ostmann – Let’s Do Mischungen"></label>
