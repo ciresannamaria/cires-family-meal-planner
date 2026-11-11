@@ -76,9 +76,18 @@
 </section>
 <section class="view" id="view-spices">
 <div class="page-heading"><div><div class="eyebrow">EXPLORE FLAVOUR</div><h1>Spices & pairings</h1><p>Build your own guide to ingredients, aromas and combinations worth exploring.</p></div><button class="button primary" id="add-spice-card">＋ Add a card</button></div>
-<div class="spice-journal-intro"><span>✿</span><p>Start with one ingredient, explore what traditionally goes with it, and keep your own notes and useful shopping links.</p><small id="spice-card-count">0 cards</small></div>
-<div class="spice-card-grid" id="spice-card-grid"></div>
-<div class="spice-empty" id="spice-empty" hidden><h2>Your flavour journal is ready</h2><p>Add an ingredient card to start collecting pairings.</p></div>
+<div class="spice-tabs" role="tablist" aria-label="Spices sections"><button type="button" class="active" data-spice-tab="products">Spices</button><button type="button" data-spice-tab="pairings">Pairings</button></div>
+<div id="spice-products-panel">
+ <div class="spice-section-heading"><div><h2>My Spices</h2><p>Products and spice blends you want to keep.</p></div><button class="button primary" id="add-spice-product" type="button">＋ Add a spice</button></div>
+ <div class="spice-count" id="spice-product-count">0 spices</div>
+ <div class="spice-product-grid" id="spice-product-grid"></div>
+ <div class="spice-empty" id="spice-product-empty" hidden><h2>Your spice collection is ready</h2><p>Add a spice with its photo and a link to the shop.</p></div>
+</div>
+<div id="spice-pairings-panel" hidden>
+ <div class="spice-journal-intro"><span>✿</span><p>Explore ingredients, aromas and combinations worth trying.</p><small id="spice-card-count">0 cards</small></div>
+ <div class="spice-card-grid" id="spice-card-grid"></div>
+ <div class="spice-empty" id="spice-empty" hidden><h2>Your flavour journal is ready</h2><p>Add an ingredient card to start collecting pairings.</p></div>
+</div>
 </section>
 </main></div>
 <dialog id="cycle-insight-dialog" class="modal cycle-insight-dialog"><div class="modal-header"><div><div class="eyebrow">YOUR CYCLE & WELLBEING</div><h2>Cycle stage</h2></div><button type="button" class="icon-button" data-cycle-insight-close aria-label="Close">×</button></div><div id="cycle-insight-content"></div><div class="modal-footer"><button type="button" class="button light" data-cycle-insight-close>Close</button></div></dialog>
@@ -92,6 +101,15 @@
 <div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-spice-card">Save card</button></div>
 </form></dialog>
 <dialog id="spice-detail-dialog" class="modal spice-detail-dialog"><div id="spice-detail-content"></div></dialog>
+<dialog id="spice-product-form-dialog" class="modal spice-product-form-dialog"><form id="spice-product-form">
+<div class="modal-header"><div><div class="eyebrow">MY SPICE COLLECTION</div><h2 id="spice-product-form-title">Add a spice</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<label class="field full">Spice or product name<input id="spice-product-title" maxlength="120" required placeholder="e.g. Ostmann – Let’s Do Mischungen"></label>
+<label class="field full">Link to the shop page<input id="spice-product-url" type="url" required placeholder="https://…"></label>
+<label class="field full">Product photo <small>Upload a photo from your device. JPG, PNG or WebP.</small><input id="spice-product-photo" type="file" accept="image/*"></label><div id="spice-product-photo-preview" class="spice-photo-preview"></div>
+<label class="field full">My notes <small>Optional</small><textarea id="spice-product-notes" rows="3" placeholder="What you like about it, which dishes you use it for…"></textarea></label>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-spice-product">Save spice</button></div>
+</form></dialog>
+
 <dialog id="meal-dialog" class="modal"><form id="meal-form" method="dialog">
 <div class="modal-header"><div><div class="eyebrow">RECIPE DETAILS</div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <input type="hidden" id="meal-id"><div class="form-grid">
