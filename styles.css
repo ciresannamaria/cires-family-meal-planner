@@ -348,7 +348,7 @@
 
 /* Personal spice collection and section tabs */
 .spice-tabs{display:flex;gap:8px;padding:6px;background:#f0eee7;border:1px solid var(--line);border-radius:13px;width:max-content;max-width:100%;margin:22px 0 26px}
-.spice-tabs button{border:0;background:transparent;color:var(--muted);padding:11px 24px;border-radius:9px;font:600 14px inherit;cursor:pointer}
+.spice-tabs button{border:0;background:transparent;color:var(--muted);padding:11px 24px;border-radius:9px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer}
 .spice-tabs button.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px #26342e10}
 .spice-section-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:8px 0 12px}
 .spice-section-heading h2{font:600 25px "Playfair Display";margin:0 0 5px;color:var(--ink)}
