@@ -398,3 +398,12 @@
 .homemade-spice-card:focus-visible .homemade-spice-face{outline:3px solid #8da994;outline-offset:3px}
 @media(max-width:600px){.homemade-spice-card,.homemade-spice-flipper,.homemade-spice-face{min-height:390px}.homemade-spice-front .spice-product-image{min-height:275px}}
 @media(prefers-reduced-motion:reduce){.homemade-spice-flipper{transition:none}}
+
+/* Shared Books library */
+.books-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;margin-top:28px}
+.book-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;overflow:hidden}
+.book-card-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.book-card-heading h2{font:600 25px "Playfair Display";color:var(--ink);margin:5px 0 0}
+.book-embed-wrap{position:relative;width:100%;height:min(78vh,900px);min-height:520px;background:#f3f1eb;border-radius:10px;overflow:hidden}
+.book-embed-wrap iframe{width:100%;height:100%;border:0;display:block}
+@media(max-width:600px){.book-card{padding:12px}.book-card-heading{align-items:flex-start;flex-direction:column}.book-embed-wrap{height:75vh;min-height:450px}}
