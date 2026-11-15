@@ -407,3 +407,48 @@
 .book-embed-wrap{position:relative;width:100%;height:min(78vh,900px);min-height:520px;background:#f3f1eb;border-radius:10px;overflow:hidden}
 .book-embed-wrap iframe{width:100%;height:100%;border:0;display:block}
 @media(max-width:600px){.book-card{padding:12px}.book-card-heading{align-items:flex-start;flex-direction:column}.book-embed-wrap{height:75vh;min-height:450px}}
+
+
+/* Mobile app experience: thumb-friendly navigation and compact layouts */
+@media (max-width: 700px){
+  html{ -webkit-text-size-adjust:100%; scroll-padding-top:76px; }
+  body{font-size:14px;background:#f7f5ef;}
+  .app-shell{display:block;min-height:100dvh;}
+  .sidebar{position:fixed;z-index:1000;left:0;right:0;top:auto;bottom:0;width:100%;height:auto;min-height:0;padding:7px 5px calc(7px + env(safe-area-inset-bottom));display:block;background:rgba(255,255,255,.97);border-top:1px solid #e8e5dc;box-shadow:0 -5px 22px #26342e12;backdrop-filter:blur(14px);}
+  .sidebar .brand,.sidebar .sidebar-label{display:none;}
+  .main-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;margin:0;padding:0;}
+  .nav-link{min-width:0;min-height:54px;padding:5px 2px;border:0;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;line-height:1.1;text-align:center;white-space:normal;background:transparent;color:#788278;}
+  .nav-link>span{font-size:19px;line-height:1.2;}
+  .nav-link b{display:none;}
+  .nav-link.active{background:#edf2eb;color:#3e6249;font-weight:700;}
+  .main-content{width:100%;min-width:0;margin:0;padding:0 14px calc(88px + env(safe-area-inset-bottom));}
+  .topbar{position:sticky;top:0;z-index:900;min-height:58px;margin:0 -14px 18px;padding:10px 15px;background:rgba(251,250,247,.94);border-bottom:1px solid #ebe9e2;backdrop-filter:blur(12px);}
+  .breadcrumb{font-size:9px;letter-spacing:.08em;}
+  .top-actions{gap:8px;}
+  #today-label{display:none;}
+  .avatar{width:36px;height:36px;}
+  .page-heading,.section-heading,.planner-heading,.meals-heading{gap:10px;align-items:flex-start;flex-wrap:wrap;}
+  h1{font-size:27px!important;line-height:1.15;}
+  h2{scroll-margin-top:75px;}
+  .button,button.button{min-height:42px;}
+  input,select,textarea{font-size:16px!important;}
+  .meal-grid,.meals-grid,.recipe-grid,.spice-card-grid,.spice-product-grid{grid-template-columns:1fr!important;gap:12px;}
+  .meal-card,.recipe-card,.planner-card,.book-card{border-radius:15px;}
+  .meal-card,.recipe-card{padding:14px;}
+  .spice-tabs{position:sticky;top:58px;z-index:20;overflow-x:auto;white-space:nowrap;}
+  .spice-tabs button{flex:0 0 auto;}
+  dialog{max-width:calc(100vw - 20px)!important;max-height:88dvh;overflow:auto;border-radius:18px;}
+  .modal-header{position:sticky;top:0;z-index:2;background:#fff;padding-bottom:10px;}
+  .form-actions,.dialog-actions{display:flex;flex-direction:column-reverse;gap:8px;}
+  .form-actions .button,.dialog-actions .button{width:100%;}
+  .cycle-layout{grid-template-columns:1fr;}
+  .cycle-settings,.cycle-calendar-panel{padding:14px;}
+  .cycle-calendar-grid{gap:3px;}
+  .cycle-day{min-height:46px;padding:4px;}
+  .cycle-day small{display:none;}
+}
+@media (max-width:380px){
+  .main-content{padding-left:11px;padding-right:11px;}
+  .nav-link{font-size:8px;}
+  .nav-link>span{font-size:17px;}
+}
