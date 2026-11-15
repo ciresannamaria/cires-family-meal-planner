@@ -436,6 +436,8 @@ $("#profile-toggle").onclick=()=>{const menu=$("#profile-menu");menu.hidden=!men
 document.addEventListener("click",e=>{if(!e.target.closest(".profile-wrap")){$("#profile-menu").hidden=true;$("#profile-toggle").setAttribute("aria-expanded","false")}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#profile-menu").hidden){$("#profile-menu").hidden=true;$("#profile-toggle").setAttribute("aria-expanded","false")}});
 $("#profile-menu").onclick=async e=>{
+ const profileView=e.target.closest("[data-profile-view]");
+ if(profileView){e.preventDefault();e.stopPropagation();const target=profileView.dataset.profileView;$("#profile-menu").hidden=true;$("#profile-toggle").setAttribute("aria-expanded","false");view(target);return;}
  const button=e.target.closest("[data-avatar]");if(!button)return;
  e.preventDefault();e.stopPropagation();
  const emoji=button.dataset.avatar,previous=user?.user_metadata?.avatar_emoji||"🌿";
