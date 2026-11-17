@@ -180,7 +180,7 @@
 .day-meal-row .planned-meal{padding:7px}
 .day-meal-row .planned-meal strong{font-size:10px}
 .day-meal-row .planned-thumb{height:48px}
-.day-meal-row .add-slot{font-size:10px;padding:6px 4px}
+.day-meal-row .add-slot{font-size:10px;padding:6px 8px;width:fit-content;min-width:0;max-width:100%;white-space:nowrap;text-align:left}.day-meal-row .slot:has(.planned-meal) .add-slot{width:100%;text-align:center}
 .daughter-row{background:rgba(255,255,255,.62)}
 @media(max-width:1050px){.day-column{grid-template-columns:1fr}.day-heading{border-right:0;border-bottom:1px solid rgba(90,105,88,.16);min-height:0;padding:2px 4px 9px}.day-meal-row{grid-template-columns:105px minmax(0,1fr)}}
 @media(max-width:700px){.day-meal-row{grid-template-columns:1fr}.meal-row-heading{padding:2px 3px}.meal-row-heading .day-nutrition{flex-direction:row;flex-wrap:wrap;gap:5px 10px}.day-meal-row .day-slots{grid-template-columns:repeat(2,minmax(0,1fr))}.week-controls{flex-wrap:wrap}}
