@@ -1,11 +1,13 @@
 const SUPABASE_URL=window.CIRES_SUPABASE_URL, SUPABASE_KEY=window.CIRES_SUPABASE_PUBLISHABLE_KEY;
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
 const DAYS=["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],SLOTS=["Breakfast","Lunch","Dinner","Snack","Dessert"],PHOTO_BUCKET="meal-photos";
+let plannerWeekStartDay=6;
 let cycleProfile={usual_period_days:5,average_cycle_days:28},cyclePeriods=[],cycleMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),user=null,meals=[],planned=[],plannerPeople=[],spiceCards=[],spiceProducts=[],mySpiceBlends=[],mySpiceEditingId=null,mySpiceImageFile=null,spiceProductEditingId=null,spiceProductImageFile=null,spiceEditingId=null,spiceImageFile=null,familyId=null,mealFormSnapshot=null,pendingShareToken=new URLSearchParams(location.search).get('share'),week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer,mealTypeFilter="All",mealAudienceFilter="All";
 const $=(s,root=document)=>root.querySelector(s), queryAll=(s,root=document)=>[...root.querySelectorAll(s)];
-function startWeek(d){let x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-(x.getDay()+1)%7);return x}
+function startWeek(d){let x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-((x.getDay()-plannerWeekStartDay+7)%7));return x}
 function dateKey(d){return[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
 function dayDate(i){let d=new Date(week);d.setDate(d.getDate()+i);return d}
+function weekRangeText(){return DAYS[(plannerWeekStartDay+6)%7]===undefined?"":new Date(2026,0,plannerWeekStartDay+4).toLocaleDateString("en-US",{weekday:"long"})+" – "+new Date(2026,0,plannerWeekStartDay+10).toLocaleDateString("en-US",{weekday:"long"})}
 function id(){return"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function esc(x=""){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function toast(s){let t=$("#toast");t.textContent=s;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
@@ -15,7 +17,7 @@ function profileName(){return user?.user_metadata?.full_name||user?.user_metadat
 function renderProfile(){const avatar=user?.user_metadata?.avatar_emoji||"🌿";$("#profile-toggle").textContent=avatar;$("#profile-avatar-preview").textContent=avatar;$("#profile-name").textContent=profileName();$("#profile-email").textContent=user?.email||"";queryAll("[data-avatar]").forEach(b=>{b.classList.toggle("selected",b.dataset.avatar===avatar);b.setAttribute("aria-pressed",String(b.dataset.avatar===avatar))})}
 function showApp(){ $("#auth-screen").hidden=true;if($("#shared-screen"))$("#shared-screen").hidden=true;$("#app-shell").hidden=false;renderProfile(); }
 async function authSubmit(e){e.preventDefault();if(!db){$("#auth-message").textContent="The sign-in service could not load. Refresh the page and try again.";return}let email=$("#auth-email").value.trim(),password=$("#auth-password").value;if(!email||!password){$("#auth-message").textContent="Please enter your email and password.";return}let button=$("#auth-submit");button.disabled=true;button.textContent="Signing in…";$("#auth-message").textContent="Connecting securely…";try{const res=await db.auth.signInWithPassword({email,password});if(res.error)throw res.error;user=res.data.user;await enterApp()}catch(err){$("#auth-message").textContent=err.message||"Something went wrong. Please try again."}finally{button.disabled=false;button.textContent="Sign in"}}
-async function enterApp(){if(!user)return;showApp();$("#auth-message").textContent="";try{await loadAll();await loadCycleData();await loadSpiceCards();await loadSpiceProducts();await loadMySpiceBlends();drawSpiceCards();drawSpiceProducts();drawMySpiceBlends();drawMeals();drawSharedMeals();drawFamilyRecipes();drawPlanner();drawShopping();if(!location.hash)history.replaceState({view:"planner"},"",location.pathname+location.search+"#planner");view(currentView(),false);if(pendingShareToken){await copySharedMeal();}}catch(err){toast("Couldn't load your data: "+err.message)}}
+async function enterApp(){if(!user)return;plannerWeekStartDay=Number(user.user_metadata?.planner_week_start_day??6);if(![0,1,2,3,4,5,6].includes(plannerWeekStartDay))plannerWeekStartDay=6;week=startWeek(new Date());showApp();$("#auth-message").textContent="";try{await loadAll();await loadCycleData();await loadSpiceCards();await loadSpiceProducts();await loadMySpiceBlends();drawSpiceCards();drawSpiceProducts();drawMySpiceBlends();drawMeals();drawSharedMeals();drawFamilyRecipes();drawPlanner();drawShopping();if(!location.hash)history.replaceState({view:"planner"},"",location.pathname+location.search+"#planner");view(currentView(),false);if(pendingShareToken){await copySharedMeal();}}catch(err){toast("Couldn't load your data: "+err.message)}}
 async function loadAll(){let fm=await db.from("family_members").select("family_id").limit(1).maybeSingle();if(fm.error)throw fm.error;familyId=fm.data?.family_id||null;let [mr,pr,peopleResult]=await Promise.all([db.from("meals").select("id,owner_id,name,instructions,notes,photo_path,family_id,shared_with_family,meal_types,audience,calories_kcal,protein_g,fiber_g,created_by,created_at,meal_ingredients(id,name,amount,unit,calories_per_100g,ingredient_group,sort_order)").order("created_at",{ascending:true}),db.from("planned_meals").select("id,meal_id,plan_date,slot,portions,person"),db.from("planner_people").select("person_key,label,sort_order,is_active,person_type").order("sort_order")]);if(mr.error)throw mr.error;if(pr.error)throw pr.error;if(peopleResult.error)throw peopleResult.error;plannerPeople=peopleResult.data||[];if(!plannerPeople.length){let defaults=[{user_id:user.id,person_key:"me",label:"Your meals",sort_order:0,is_active:true,person_type:"adult"},{user_id:user.id,person_key:"daughter",label:"Daughter’s meals",sort_order:1,is_active:true,person_type:"child"}];let seeded=await db.from("planner_people").insert(defaults).select("person_key,label,sort_order,is_active,person_type");if(seeded.error)throw seeded.error;plannerPeople=seeded.data||[]}meals=(mr.data||[]).map(m=>({...m,photo:"",ingredients:(m.meal_ingredients||[]).sort((a,b)=>a.sort_order-b.sort_order).map(i=>({id:i.id,name:i.name,amount:i.amount===null?"":Number(i.amount),unit:i.unit,caloriesPer100:i.calories_per_100g===null?"":Number(i.calories_per_100g),group:i.ingredient_group}))}));planned=pr.data||[];signedPhotos={};await Promise.all(meals.map(async m=>{if(m.photo_path){let x=await db.storage.from(PHOTO_BUCKET).createSignedUrl(m.photo_path,3600);if(!x.error){m.photo=x.data.signedUrl;signedPhotos[m.id]=m.photo}}}));}
 const APP_VIEWS=["planner","meals","shared","family","shopping","spices","books","cycle","settings"];function currentView(){let v=location.hash.replace(/^#/,"").toLowerCase();return APP_VIEWS.includes(v)?v:"planner"}function view(v,updateUrl=true){if(!APP_VIEWS.includes(v))v="planner";if(updateUrl&&location.hash!=="#"+v)history.pushState({view:v},"","#"+v);queryAll(".view").forEach(x=>x.classList.toggle("active",x.id==="view-"+v));queryAll("[data-view]").forEach(x=>x.classList.toggle("active",x.dataset.view===v));$("#breadcrumb-current").textContent=v==="planner"?"WEEKLY PLANNER":v==="family"?"FAMILY RECIPES":v==="shared"?"SHARED MEALS":v==="meals"?"MY MEALS":v==="spices"?"SPICES":v==="books"?"BOOKS":v==="cycle"?"MY CYCLE CALENDAR":v.toUpperCase();if(v==="cycle")drawCycleCalendar();if(v==="planner")drawPlanner();if(v==="shopping")drawShopping();if(v==="family")drawFamilyRecipes();if(v==="shared")drawSharedMeals()}
 
@@ -170,16 +172,17 @@ async function copySharedMeal(){
 }
 
 function dateLabel(){let a=week,b=dayDate(6),o={month:"short",day:"numeric"};return a.toLocaleDateString("en-US",o)+" – "+b.toLocaleDateString("en-US",{...o,year:"numeric"})}
+function updateWeekRangeLabels(){const first=new Date(2026,0,4+plannerWeekStartDay);const last=new Date(first);last.setDate(last.getDate()+6);const label=first.toLocaleDateString("en-US",{weekday:"long"})+" – "+last.toLocaleDateString("en-US",{weekday:"long"});$("#planner-week-range").textContent=label;$("#shopping-week-range").textContent=label;$("#planner-week-start").value=String(plannerWeekStartDay)}
 function mealFitsPerson(m,person){let audience=m.audience||"everyone";return audience==="everyone"||(person?.person_type==="adult"&&audience==="adults")||(person?.person_type==="child"&&audience==="children")}
 function mealFitsSlot(m,slot){let types=Array.isArray(m.meal_types)?m.meal_types:[];return types.length===0||types.includes(slot)}
 function drawPlanner(){
- $("#week-label").textContent=dateLabel();
+ $("#week-label").textContent=dateLabel();updateWeekRangeLabels();
  const todayDate=new Date();todayDate.setHours(0,0,0,0);
- const today=dateKey(todayDate),todayIndex=(todayDate.getDay()+1)%7;
+ const today=dateKey(todayDate),todayIndex=(todayDate.getDay()-plannerWeekStartDay+7)%7;
  const order=Array.from({length:7},(_,n)=>(todayIndex+n)%7);
  const activePeople=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
  $("#week-grid").innerHTML=order.map(i=>{
-  const d=DAYS[i],dt=dayDate(i),dk=dateKey(dt),items=planned.filter(e=>e.plan_date===dk);
+  const dt=dayDate(i),d=dt.toLocaleDateString("en-US",{weekday:"long"}),dk=dateKey(dt),items=planned.filter(e=>e.plan_date===dk);
   const isToday=dk===today,isPast=dk<today;
   const renderPerson=person=>{
    let rowItems=items.filter(e=>(e.person||"me")===person.person_key),totals={calories:0,protein:0,fiber:0},has={calories:false,protein:false,fiber:false};
@@ -316,6 +319,7 @@ function readShoppingChecks(){try{return JSON.parse(localStorage.getItem(shoppin
 function saveShoppingCheck(key,value){let state=readShoppingChecks();state[key]=value;try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state))}catch(err){toast("Couldn't save shopping checks on this device.")}}
 function shoppingItemKey(i){return i.key||normalizeShoppingIngredient(i.name)+"|"+shoppingUnit(i.unit||"g").family}
 function drawShopping(){
+ updateWeekRangeLabels();
  const shoppingLabel=$("#shopping-week-label");if(shoppingLabel)shoppingLabel.textContent=dateLabel();
  let items=amounts(),n=weekItems().length,state=readShoppingChecks();
  let migrated=false;
@@ -533,6 +537,7 @@ $("#profile-menu").onclick=async e=>{
  }finally{queryAll("[data-avatar]").forEach(b=>b.disabled=false)}
 };
 $("#export-data").onclick=exportData;$("#import-data").onchange=importData;
+$("#planner-week-start").onchange=async e=>{const selected=Number(e.target.value),previous=plannerWeekStartDay;if(![0,1,2,3,4,5,6].includes(selected))return;plannerWeekStartDay=selected;e.target.disabled=true;try{const result=await db.auth.updateUser({data:{planner_week_start_day:selected}});if(result.error)throw result.error;user=result.data.user;week=startWeek(week);drawPlanner();drawShopping();toast("Your week now starts on "+new Date(2026,0,4+selected).toLocaleDateString("en-US",{weekday:"long"})+".");}catch(err){plannerWeekStartDay=previous;e.target.value=String(previous);toast("Couldn’t save your planner preference: "+(err.message||"Please try again."));}finally{e.target.disabled=false}};
 $("#sign-out").onclick=async()=>{await db.auth.signOut();user=null;meals=[];planned=[];spiceCards=[];showAuth("login","You have signed out.")};
 db.auth.onAuthStateChange((event,session)=>{if(event==="INITIAL_SESSION")return;if(session?.user){user=session.user;if($("#app-shell").hidden){const sessionUserId=session.user.id;window.setTimeout(()=>{if(user?.id===sessionUserId&&$("#app-shell").hidden)enterApp()},0)}}else if(event==="SIGNED_OUT"){user=null;meals=[];planned=[];showAuth("login")}});
 let {data:{session},error}=await db.auth.getSession();if(error){showAuth("login",error.message);return}if(session?.user){user=session.user;await enterApp()}else showAuth("login")
