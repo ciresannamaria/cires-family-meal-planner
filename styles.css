@@ -569,3 +569,8 @@
 .shopping-week-controls>div{min-width:155px;text-align:center}
 .shopping-week-controls .text-button{margin-left:4px}
 @media(max-width:520px){.shopping-week-controls{gap:8px}.shopping-week-controls>div{min-width:0;flex:1}.shopping-week-controls .text-button{margin-left:0}}
+
+
+/* Live recipe total displayed immediately beneath the ingredient list */
+.ingredient-total{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#f7f8f4;color:var(--dark);font:600 11px "DM Sans",sans-serif}
+.ingredient-total strong{font-size:14px;font-variant-numeric:tabular-nums;color:var(--green)}
