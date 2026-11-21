@@ -514,3 +514,38 @@
 .picker-type-filters button.active{background:#52755e;border-color:#52755e;color:#fff;box-shadow:0 2px 5px #52755e24}
 .picker-meals{max-height:48vh}
 @media(max-width:600px){.picker-modal{padding:18px}.picker-controls{gap:9px}.picker-controls .portion-field{width:94px;flex-basis:94px}.picker-controls .picker-search{flex:1;max-width:none}.picker-type-filters{gap:6px}.picker-type-filters button{padding:8px 10px;font-size:10px}}
+
+
+/* Recipe editor: grouped sections for a clearer form */
+#meal-dialog .form-grid{display:grid;gap:15px}
+#meal-dialog .form-section{
+  grid-column:1/-1;min-width:0;padding:17px 18px 18px;
+  border:1px solid #e8e4da;border-radius:14px;
+  background:linear-gradient(180deg,#fffefa 0%,#fff 100%);
+}
+#meal-dialog .form-section-heading{
+  display:flex;align-items:center;gap:11px;
+  padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid #eee9df
+}
+#meal-dialog .section-number{
+  display:grid;place-items:center;flex:0 0 30px;height:30px;
+  border-radius:9px;background:#edf3e9;color:#52755e;
+  font:700 10px "DM Sans",sans-serif;letter-spacing:.04em
+}
+#meal-dialog .form-section-heading h3{
+  margin:0;color:#4f604f;font:700 13px "DM Sans",sans-serif
+}
+#meal-dialog .form-section-heading p{
+  margin:3px 0 0;color:#92978b;font:400 10px "DM Sans",sans-serif
+}
+#meal-dialog .form-section-content{display:grid;gap:13px;min-width:0}
+#meal-dialog .form-section-content>.field{margin:0}
+#meal-dialog .form-section-content .nutrition-entry{padding:0;border:0;background:transparent}
+#meal-dialog .form-section-content .nutrition-inputs{margin-top:10px}
+#meal-dialog .form-section-content .photo-actions{margin:0}
+#meal-dialog .form-section-content #ingredient-rows{width:100%}
+@media(max-width:600px){
+  #meal-dialog .form-section{padding:14px 13px}
+  #meal-dialog .form-grid{gap:11px}
+  #meal-dialog .form-section-heading{margin-bottom:11px}
+}
