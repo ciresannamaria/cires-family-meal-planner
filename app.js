@@ -231,7 +231,7 @@ async function shuffleWeek(){
   const counts=new Map(),lastUsed=new Map(),generated=[],days=singleDay?[shuffleTargetDate]:Array.from({length:7},(_,i)=>dateKey(dayDate(i)));
   for(let dayIndex=0;dayIndex<days.length;dayIndex++){
     const usedToday=new Set();
-    for(const person of targetPeople)for(const slot of ["Breakfast","Lunch","Dinner"]){
+    for(const person of targetPeople)for(const slot of ["Breakfast","Lunch","Dinner","Snack"]){
       let candidates=ownMeals.filter(m=>mealFitsSlot(m,slot)&&mealFitsPerson(m,person));
       if(!candidates.length)continue;
       let available=candidates.filter(m=>!usedToday.has(m.id));if(!available.length)available=candidates;
@@ -241,7 +241,7 @@ async function shuffleWeek(){
       counts.set(key,(counts.get(key)||0)+1);lastUsed.set(key,dayIndex);usedToday.add(chosen.id);
     }
   }
-  if(!generated.length){toast("No suitable breakfast, lunch, or dinner recipes were found for this selection.");return}
+  if(!generated.length){toast("No suitable breakfast, lunch, dinner, or snack recipes were found for this selection.");return}
   const label=selected==="everyone"?"everyone":targetPeople[0].label;
   const dayLabel=singleDay?new Date(shuffleTargetDate+"T12:00:00").toLocaleDateString("en-US",{weekday:"long"}):"this week";
   const question=singleDay?"Generate a new plan for "+dayLabel+" for "+label+"? Only their existing meals for "+dayLabel+" will be replaced.":"Generate a new week for "+label+"? Only their existing meals for this week will be replaced.";
