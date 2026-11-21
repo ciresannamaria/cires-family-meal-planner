@@ -174,7 +174,7 @@ async function copySharedMeal(){
 function dateLabel(){let a=week,b=dayDate(6),o={month:"short",day:"numeric"};return a.toLocaleDateString("en-US",o)+" – "+b.toLocaleDateString("en-US",{...o,year:"numeric"})}
 function updateWeekRangeLabels(){const first=new Date(2026,0,4+plannerWeekStartDay);const last=new Date(first);last.setDate(last.getDate()+6);const label=first.toLocaleDateString("en-US",{weekday:"long"})+" – "+last.toLocaleDateString("en-US",{weekday:"long"});$("#planner-week-range").textContent=label;$("#shopping-week-range").textContent=label;$("#planner-week-start").value=String(plannerWeekStartDay);$("#planner-display-mode").value=plannerDisplayMode}
 function mealFitsPerson(m,person){let audience=m.audience||"everyone";return audience==="everyone"||(person?.person_type==="adult"&&audience==="adults")||(person?.person_type==="child"&&audience==="children")}
-function mealFitsSlot(m,slot){let types=Array.isArray(m.meal_types)?m.meal_types:[];return types.length===0||types.includes(slot)}
+function mealFitsSlot(m,slot){const types=Array.isArray(m.meal_types)?m.meal_types:[];if(!types.length)return false;if(slot==="Snack")return types.includes("Snack")||types.includes("Dessert");return types.includes(slot)}
 function drawPlanner(){
  $("#week-label").textContent=dateLabel();updateWeekRangeLabels();
  const todayDate=new Date();todayDate.setHours(0,0,0,0);
