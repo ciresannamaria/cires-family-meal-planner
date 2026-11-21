@@ -316,6 +316,7 @@ function readShoppingChecks(){try{return JSON.parse(localStorage.getItem(shoppin
 function saveShoppingCheck(key,value){let state=readShoppingChecks();state[key]=value;try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state))}catch(err){toast("Couldn't save shopping checks on this device.")}}
 function shoppingItemKey(i){return i.key||normalizeShoppingIngredient(i.name)+"|"+shoppingUnit(i.unit||"g").family}
 function drawShopping(){
+ const shoppingLabel=$("#shopping-week-label");if(shoppingLabel)shoppingLabel.textContent=dateLabel();
  let items=amounts(),n=weekItems().length,state=readShoppingChecks();
  let migrated=false;
  items.forEach(i=>{const key=shoppingItemKey(i);if(state[key]===undefined){const legacy=[...i.legacyKeys].find(k=>state[k]===true);if(legacy){state[key]=true;migrated=true;}}i.legacyKeys.forEach(k=>{if(k!==key&&Object.prototype.hasOwnProperty.call(state,k)){delete state[k];migrated=true;}});});
@@ -502,6 +503,9 @@ document.addEventListener("click",e=>{if(e.target instanceof HTMLDialogElement&&
 $("#prev-week").onclick=()=>{week.setDate(week.getDate()-7);drawPlanner();drawShopping()};
 $("#next-week").onclick=()=>{week.setDate(week.getDate()+7);drawPlanner();drawShopping()};
 $("#this-week").onclick=()=>{week=startWeek(new Date());drawPlanner();drawShopping()};
+$("#shopping-prev-week").onclick=()=>{week.setDate(week.getDate()-7);drawPlanner();drawShopping()};
+$("#shopping-next-week").onclick=()=>{week.setDate(week.getDate()+7);drawPlanner();drawShopping()};
+$("#shopping-this-week").onclick=()=>{week=startWeek(new Date());drawPlanner();drawShopping()};
 $("#week-grid").onclick=e=>{let cycle=e.target.closest("[data-cycle-insight]");if(cycle){const parts=cycle.dataset.cycleInsight.split("-").map(Number),date=new Date(parts[0],parts[1]-1,parts[2],12);openCycleInsights(date);return}let control=e.target.closest("[data-person-action]");if(control){updatePlannerPerson(control.dataset.person,control.dataset.personAction);return}let card=e.target.closest(".planned-meal[data-meal]");if(card&&!e.target.closest("button")){detail(card.dataset.meal);return}plannerClick(e)};$("#week-grid").onkeydown=e=>{if(e.key!=="Enter"&&e.key!==" ")return;let card=e.target.closest(".planned-meal[data-meal]");if(card){e.preventDefault();detail(card.dataset.meal)}};$("#add-planner-person").onclick=addPlannerPerson;$("#picker-search").oninput=drawPicker;queryAll("[data-picker-type]").forEach(b=>b.onclick=()=>{pickerTypeFilter=b.dataset.pickerType;queryAll("[data-picker-type]").forEach(x=>{let active=x===b;x.classList.toggle("active",active);x.setAttribute("aria-pressed",String(active))});drawPicker()});$("#shuffle-week").onclick=openShuffleDialog;$("#shuffle-generate").onclick=shuffleWeek;
 $("#clear-week").onclick=clearWeek;$("#picker-portions").value="1";$("#picker-meals").onclick=e=>{let b=e.target.closest("[data-pick]");if(b){let portions=Math.max(1,Math.min(99,Math.floor(Number($("#picker-portions").value)||1)));addEntry(b.dataset.pick,$("#picker-day").value,$("#picker-slot").value,portions,$("#picker-person").value||"me");$("#picker-dialog").close()}};
 $("#print-menu").onclick=()=>printView("planner");$("#print-shopping").onclick=()=>printView("shopping");
