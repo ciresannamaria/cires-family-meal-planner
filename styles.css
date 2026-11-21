@@ -563,3 +563,9 @@
 .picker-meal-body strong{display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;font:600 12px/1.35 "DM Sans",sans-serif;color:#38483c}
 .picker-meal-body small{align-self:flex-start;padding:3px 7px;border-radius:10px;background:#f0f4ed;color:#718174;font:600 9px "DM Sans",sans-serif}
 @media(max-width:560px){.picker-meals{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:55vh}.picker-meal-image{height:116px}.picker-meal-body{padding:8px}}
+
+/* Shopping list week navigation mirrors the weekly planner */
+.shopping-week-controls{margin:4px 0 22px;flex-wrap:wrap}
+.shopping-week-controls>div{min-width:155px;text-align:center}
+.shopping-week-controls .text-button{margin-left:4px}
+@media(max-width:520px){.shopping-week-controls{gap:8px}.shopping-week-controls>div{min-width:0;flex:1}.shopping-week-controls .text-button{margin-left:0}}
