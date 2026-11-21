@@ -593,3 +593,15 @@
 .day-meal-row.child-row{background-color:#fff9fc;background-image:radial-gradient(circle at 12px 12px,rgba(207,143,174,.19) 1.2px,transparent 1.7px),radial-gradient(circle at 33px 29px,rgba(145,160,205,.16) 1.4px,transparent 2px),linear-gradient(135deg,rgba(255,249,252,.98),rgba(255,251,241,.96));background-size:42px 42px,42px 42px,100% 100%;border:1px solid rgba(205,157,184,.38);box-shadow:inset 3px 0 0 rgba(205,157,184,.5)}
 .day-meal-row.child-row .person-type-label{color:#a36d8a;font-weight:650}
 .day-meal-row.child-row .person-heading-tools button{background:rgba(255,255,255,.82)}
+
+
+/* Compact settings layout */
+.settings-sections{gap:10px}
+.settings-section{padding:14px 18px;border-radius:11px}
+.settings-section-heading h2{margin:0;font-size:18px}
+.settings-actions{margin-top:7px}
+.settings-action{padding:8px 0;gap:12px}
+.settings-action h3{margin:0;font-size:12px}
+.settings-select{padding:8px 30px 8px 10px}
+.settings-section .settings-action:only-child{padding-top:7px}
+@media(max-width:560px){.settings-section{padding:12px 14px}.settings-action{padding:8px 0}}
