@@ -13,6 +13,9 @@ create table if not exists public.meals (
   updated_at timestamptz not null default now()
 );
 
+alter table public.meals add constraint meals_meal_types_valid
+  check (meal_types <@ array['Breakfast','Lunch','Dinner','Snack','Dessert']::text[] and cardinality(meal_types) <= 5);
+
 create table if not exists public.meal_ingredients (
   id uuid primary key default gen_random_uuid(),
   meal_id uuid not null references public.meals(id) on delete cascade,
@@ -30,7 +33,7 @@ create table if not exists public.planned_meals (
   owner_id uuid not null references auth.users(id) on delete cascade,
   meal_id uuid not null references public.meals(id) on delete cascade,
   plan_date date not null,
-  slot text not null check (slot in ('Breakfast', 'Lunch', 'Dinner', 'Snack')),
+  slot text not null check (slot in ('Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert')),
   portions numeric not null default 1 check (portions > 0),
   created_at timestamptz not null default now()
 );
