@@ -205,16 +205,27 @@ async function updatePlannerPerson(key,action){
  let type=prompt("Is this person an adult or a child? Type adult or child.",person.person_type||"adult");if(type===null)return;type=type.trim().toLowerCase();if(!["adult","child"].includes(type)){toast("Please enter adult or child.");return}
  let r=await db.from("planner_people").update({label,person_type:type}).eq("user_id",user.id).eq("person_key",key);if(r.error){toast(r.error.message);return}person.label=label;person.person_type=type;drawPlanner();toast("Person updated.");
 }
+function openShuffleDialog(){
+ const active=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
+ if(!meals.some(m=>m.owner_id===user.id)){toast("Add some recipes to My Meals first.");view("meals");return}
+ if(!active.length){toast("Add at least one person to your planner first.");return}
+ const select=$("#shuffle-person");
+ select.innerHTML='<option value="everyone">Everyone in my planner</option>'+active.map(p=>'<option value="'+esc(p.person_key)+'">'+esc(p.label)+' · '+(p.person_type==="child"?"Child":"Adult")+'</option>').join("");
+ $("#shuffle-description").textContent="Choose who you want to plan meals for. The other people's plans will stay untouched.";
+ $("#shuffle-dialog").showModal();
+}
 async function shuffleWeek(){
- const ownMeals=meals.filter(m=>m.owner_id===user.id),activePeople=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
- if(!ownMeals.length){toast("Add some recipes to My Meals first.");view("meals");return}
- if(!activePeople.length){toast("Add at least one person to your planner first.");return}
+ const active=plannerPeople.filter(p=>p.is_active).sort((a,b)=>a.sort_order-b.sort_order);
+ const selected=$("#shuffle-person").value||"everyone";
+ const targetPeople=selected==="everyone"?active:active.filter(p=>p.person_key===selected);
+ if(!targetPeople.length){toast("Choose someone in your planner.");return}
+ const ownMeals=meals.filter(m=>m.owner_id===user.id);
  const startDate=dateKey(week),endDate=dateKey(dayDate(6));
- if(!confirm("Create a new week from your My Meals recipes? Your current planned meals for this week will be replaced. Snacks will be left empty."))return;
+ const targetKeys=targetPeople.map(p=>p.person_key);
  const counts=new Map(),lastUsed=new Map(),generated=[],days=Array.from({length:7},(_,i)=>dateKey(dayDate(i)));
  for(let dayIndex=0;dayIndex<7;dayIndex++){
   const usedToday=new Set();
-  for(const person of activePeople)for(const slot of ["Breakfast","Lunch","Dinner"]){
+  for(const person of targetPeople)for(const slot of ["Breakfast","Lunch","Dinner"]){
    let candidates=ownMeals.filter(m=>mealFitsSlot(m,slot)&&mealFitsPerson(m,person));
    if(!candidates.length)continue;
    let available=candidates.filter(m=>!usedToday.has(m.id));if(!available.length)available=candidates;
@@ -224,14 +235,20 @@ async function shuffleWeek(){
    counts.set(key,(counts.get(key)||0)+1);lastUsed.set(key,dayIndex);usedToday.add(chosen.id);
   }
  }
- if(!generated.length){toast("No suitable breakfast, lunch, or dinner recipes were found.");return}
+ if(!generated.length){toast("No suitable breakfast, lunch, or dinner recipes were found for this selection.");return}
+ const label=selected==="everyone"?"everyone":targetPeople[0].label;
+ const question="Generate a new week for "+label+"? Only their existing meals for this week will be replaced.";
+ if(!confirm(question))return;
+ const button=$("#shuffle-generate");button.disabled=true;button.textContent="Creating…";
  try{
   const inserted=await db.from("planned_meals").insert(generated).select("id,meal_id,plan_date,slot,portions,person");if(inserted.error)throw inserted.error;
-  const oldDelete=await db.from("planned_meals").delete().eq("owner_id",user.id).gte("plan_date",startDate).lte("plan_date",endDate).not("id","in","("+inserted.data.map(x=>x.id).join(",")+")");
+  const oldDelete=await db.from("planned_meals").delete().eq("owner_id",user.id).gte("plan_date",startDate).lte("plan_date",endDate).in("person",targetKeys).not("id","in","("+inserted.data.map(x=>x.id).join(",")+")");
   if(oldDelete.error){await db.from("planned_meals").delete().in("id",inserted.data.map(x=>x.id));throw oldDelete.error}
-  planned=planned.filter(e=>e.plan_date<startDate||e.plan_date>endDate).concat(inserted.data);drawPlanner();drawShopping();
-  toast(generated.length<42?"New week created. Some slots stayed empty because no suitable recipes were available.":"Your new week is ready!");
- }catch(err){toast("Couldn't shuffle the week: "+(err.message||"Please try again."))}
+  planned=planned.filter(e=>e.plan_date<startDate||e.plan_date>endDate||!targetKeys.includes(e.person||"me")).concat(inserted.data);
+  drawPlanner();drawShopping();$("#shuffle-dialog").close();
+  toast(generated.length<targetPeople.length*21?"Plan created. Some slots stayed empty because no suitable recipes were available.":"Your new week is ready!");
+ }catch(err){toast("Couldn't create the plan: "+(err.message||"Please try again."))}
+ finally{button.disabled=false;button.textContent="✦ Generate plan"}
 }
 function pick(d,slot,mealId=null,person="me"){$("#picker-day").value=d||dateKey(week);$("#picker-slot").value=slot||"Dinner";$("#picker-person").value=person;$("#picker-search").value="";drawPicker();$("#picker-dialog").showModal();if(mealId){let target=$("#picker-meals [data-pick=\""+mealId+"\"]");if(target)target.click()}}
 function drawPicker(){let q=$("#picker-search").value.toLowerCase().trim(),person=$("#picker-person").value||"me",personInfo=plannerPeople.find(p=>p.person_key===person),items=meals.filter(m=>mealFitsPerson(m,personInfo)&&(m.name+" "+summary(m)).toLowerCase().includes(q));$("#picker-meals").innerHTML=items.length?items.map(m=>'<button class="picker-meal" data-pick="'+m.id+'">'+(m.photo?'<img class="picker-thumb" src="'+m.photo+'">':'<span class="picker-placeholder">✳</span>')+'<span><strong>'+esc(m.name)+'</strong><small>'+esc(summary(m))+'</small></span></button>').join(""):'<div class="shopping-empty">No saved meals yet.</div>'}
@@ -432,7 +449,7 @@ document.addEventListener("click",e=>{if(e.target instanceof HTMLDialogElement&&
 $("#prev-week").onclick=()=>{week.setDate(week.getDate()-7);drawPlanner();drawShopping()};
 $("#next-week").onclick=()=>{week.setDate(week.getDate()+7);drawPlanner();drawShopping()};
 $("#this-week").onclick=()=>{week=startWeek(new Date());drawPlanner();drawShopping()};
-$("#week-grid").onclick=e=>{let cycle=e.target.closest("[data-cycle-insight]");if(cycle){const parts=cycle.dataset.cycleInsight.split("-").map(Number),date=new Date(parts[0],parts[1]-1,parts[2],12);openCycleInsights(date);return}let control=e.target.closest("[data-person-action]");if(control){updatePlannerPerson(control.dataset.person,control.dataset.personAction);return}let card=e.target.closest(".planned-meal[data-meal]");if(card&&!e.target.closest("button")){detail(card.dataset.meal);return}plannerClick(e)};$("#week-grid").onkeydown=e=>{if(e.key!=="Enter"&&e.key!==" ")return;let card=e.target.closest(".planned-meal[data-meal]");if(card){e.preventDefault();detail(card.dataset.meal)}};$("#add-planner-person").onclick=addPlannerPerson;$("#picker-search").oninput=drawPicker;$("#shuffle-week").onclick=shuffleWeek;
+$("#week-grid").onclick=e=>{let cycle=e.target.closest("[data-cycle-insight]");if(cycle){const parts=cycle.dataset.cycleInsight.split("-").map(Number),date=new Date(parts[0],parts[1]-1,parts[2],12);openCycleInsights(date);return}let control=e.target.closest("[data-person-action]");if(control){updatePlannerPerson(control.dataset.person,control.dataset.personAction);return}let card=e.target.closest(".planned-meal[data-meal]");if(card&&!e.target.closest("button")){detail(card.dataset.meal);return}plannerClick(e)};$("#week-grid").onkeydown=e=>{if(e.key!=="Enter"&&e.key!==" ")return;let card=e.target.closest(".planned-meal[data-meal]");if(card){e.preventDefault();detail(card.dataset.meal)}};$("#add-planner-person").onclick=addPlannerPerson;$("#picker-search").oninput=drawPicker;$("#shuffle-week").onclick=openShuffleDialog;$("#shuffle-generate").onclick=shuffleWeek;
 $("#clear-week").onclick=clearWeek;$("#picker-portions").value="1";$("#picker-meals").onclick=e=>{let b=e.target.closest("[data-pick]");if(b){let portions=Math.max(1,Math.min(99,Math.floor(Number($("#picker-portions").value)||1)));addEntry(b.dataset.pick,$("#picker-day").value,$("#picker-slot").value,portions,$("#picker-person").value||"me");$("#picker-dialog").close()}};
 $("#print-menu").onclick=()=>printView("planner");$("#print-shopping").onclick=()=>printView("shopping");
 $("#open-cycle-calendar").onclick=()=>{ $("#profile-menu").hidden=true;view("cycle"); };$("#cycle-settings-form").onsubmit=saveCycleSettings;$("#cycle-period-form").onsubmit=addCyclePeriod;$("#cycle-prev-month").onclick=()=>{cycleMonth.setMonth(cycleMonth.getMonth()-1);drawCycleCalendar()};$("#cycle-next-month").onclick=()=>{cycleMonth.setMonth(cycleMonth.getMonth()+1);drawCycleCalendar()};$("#cycle-period-history").onclick=e=>{const b=e.target.closest("[data-cycle-delete]");if(b)deleteCyclePeriod(b.dataset.cycleDelete)};$("#cycle-calendar-grid").onclick=e=>{const day=e.target.closest("[data-cycle-date]");if(day)openCycleDay(day.dataset.cycleDate)};$("#cycle-day-no").onclick=()=>$("#cycle-day-dialog").close();$("#cycle-day-yes").onclick=async()=>{if(selectedCycleDate){const saved=await saveCyclePeriodDate(selectedCycleDate);if(saved)$("#cycle-day-dialog").close()}};$("#cycle-calendar-grid").onclick=e=>{const day=e.target.closest("[data-cycle-date]");if(day)addCyclePeriodFromCalendar(day.dataset.cycleDate)};document.addEventListener("click",e=>{const close=e.target.closest("[data-cycle-insight-close]");if(close)$("#cycle-insight-dialog").close()});
