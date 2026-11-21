@@ -499,3 +499,18 @@
 #meal-dialog .meal-type-option:hover{background:#f7faf5;border-color:#cbd9c8}
 #meal-dialog .meal-type-option:has(input:checked){box-shadow:0 1px 4px #52755e12}
 @media(max-width:700px){#meal-dialog .nutrition-inputs{grid-template-columns:1fr}#meal-dialog .nutrition-inputs>.field{grid-template-rows:auto 42px}}
+
+
+/* Weekly planner recipe picker: compact controls and meal-type filters */
+.picker-modal{width:min(620px,calc(100% - 28px));padding:24px}
+.picker-controls{display:flex;align-items:end;gap:12px;margin:15px 0 14px}
+.picker-controls .portion-field{width:112px;flex:0 0 112px;margin:0;display:grid;gap:6px}
+.picker-controls .portion-field input{width:100%;min-width:0;height:39px;padding:8px 10px;border:1px solid #dedfd5;border-radius:9px;background:#fff}
+.picker-controls .picker-search{width:auto;max-width:220px;flex:0 1 220px;margin:0;min-height:39px}
+.picker-controls .picker-search input{min-width:0}
+.picker-type-filters{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 15px}
+.picker-type-filters button{border:1px solid #dfe5da;background:#f8faf6;color:#68766a;border-radius:20px;padding:8px 13px;font:600 11px "DM Sans",sans-serif;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.picker-type-filters button:hover{background:#eef4eb;border-color:#c4d4c0;color:#45694d}
+.picker-type-filters button.active{background:#52755e;border-color:#52755e;color:#fff;box-shadow:0 2px 5px #52755e24}
+.picker-meals{max-height:48vh}
+@media(max-width:600px){.picker-modal{padding:18px}.picker-controls{gap:9px}.picker-controls .portion-field{width:94px;flex-basis:94px}.picker-controls .picker-search{flex:1;max-width:none}.picker-type-filters{gap:6px}.picker-type-filters button{padding:8px 10px;font-size:10px}}
