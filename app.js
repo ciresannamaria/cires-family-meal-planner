@@ -344,11 +344,12 @@ function drawShopping(){
  const categoryOrder=["Fruit & Vegetables","Meat & Poultry","Fish & Seafood","Dairy & Eggs","Bakery & Bread","Pasta, Rice & Grains","Canned & Jarred","Oils, Sauces & Condiments","Spices & Seasonings","Nuts, Seeds & Spreads","Other","Uncategorised"];
  const groups=new Map(categoryOrder.map(category=>[category,[]]));
  items.forEach(i=>{const category=groups.has(i.category)?i.category:"Uncategorised";groups.get(category).push(i);});
- const sections=categoryOrder.filter(category=>groups.get(category).length).map(category=>{
+ const sections=categoryOrder.map(category=>{
   const group=groups.get(category).sort((a,b)=>Number(isChecked(a))-Number(isChecked(b))||a.name.localeCompare(b.name));
-  return '<section class="shopping-category"><h3 class="shopping-category-title"><span>'+esc(category)+'</span><small>'+group.length+' '+(group.length===1?'item':'items')+'</small></h3>'+group.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row'+(isChecked(i)?' checked':'')+'"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join("")+'</section>';
+  const rows=group.length?group.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row'+(isChecked(i)?' checked':'')+'"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-category-empty">No ingredients planned</div>';
+  return '<section class="shopping-category"><h3 class="shopping-category-title"><span>'+esc(category)+'</span><small>'+group.length+' '+(group.length===1?'item':'items')+'</small></h3>'+rows+'</section>';
  }).join("");
- $("#shopping-list").innerHTML=items.length?sections:'<div class="shopping-empty">Your shopping list is empty.<br>Add meals to your weekly planner to calculate ingredients.</div>';
+ $("#shopping-list").innerHTML=sections;
  $("#shopping-list").onchange=e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input){saveShoppingCheck(input.dataset.shoppingKey,input.checked);drawShopping();}};
 }
 
