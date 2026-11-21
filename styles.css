@@ -473,3 +473,29 @@
 .shuffle-dialog-note{margin-top:14px;padding:12px 14px;border-radius:12px;background:#eef2e9;color:#52664f;font-size:12px;line-height:1.5}
 .shuffle-modal .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 @media(max-width:600px){.shuffle-modal{padding:19px}.shuffle-modal .modal-footer{flex-direction:column-reverse}.shuffle-modal .modal-footer .button{width:100%}}
+
+
+/* Recipe editor refinements */
+#meal-dialog .modal-header{margin-bottom:20px}
+#meal-dialog .modal-header h2{margin:0;font-size:27px}
+#meal-dialog #meal-audience{
+  appearance:none;-webkit-appearance:none;width:100%;min-height:44px;
+  padding:11px 42px 11px 13px;border:1px solid #dce5da;border-radius:11px;
+  color:#3c6048;background-color:#f8faf6;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2352755e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+  font:600 12px "DM Sans";cursor:pointer;transition:border-color .15s,box-shadow .15s,background-color .15s
+}
+#meal-dialog #meal-audience:hover{border-color:#b9cbb8;background-color:#f1f6ef}
+#meal-dialog #meal-audience:focus{outline:0;border-color:#86a68a;box-shadow:0 0 0 3px #52755e1a}
+#meal-dialog .nutrition-inputs{align-items:start}
+#meal-dialog .nutrition-inputs>.field{display:grid;grid-template-rows:auto 42px;align-content:start;gap:7px}
+#meal-dialog .nutrition-inputs>.field>span{min-height:18px;display:flex;align-items:center;gap:4px}
+#meal-dialog .nutrition-inputs>.field input{height:42px;min-width:0}
+#meal-dialog .nutrition-inputs>.field small{display:none}
+#meal-dialog .photo-choice{background:#edf4eb;border:1px solid #cbdcc9;color:#3f694a;padding:11px 16px;min-height:40px;box-shadow:0 1px 2px #26342e08}
+#meal-dialog .photo-choice:hover{background:#e2eee0;border-color:#a9c3a7}
+#meal-dialog .meal-type-option{transition:background .15s,border-color .15s,box-shadow .15s}
+#meal-dialog .meal-type-option:hover{background:#f7faf5;border-color:#cbd9c8}
+#meal-dialog .meal-type-option:has(input:checked){box-shadow:0 1px 4px #52755e12}
+@media(max-width:700px){#meal-dialog .nutrition-inputs{grid-template-columns:1fr}#meal-dialog .nutrition-inputs>.field{grid-template-rows:auto 42px}}
