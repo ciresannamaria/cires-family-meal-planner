@@ -636,3 +636,36 @@
   #view-shopping .shopping-row input{display:none!important}
   #view-shopping .page-heading button,#view-shopping .week-controls{display:none!important}
 }
+
+/* Shopping list: friendly category cards, with matching print styling */
+#view-shopping .shopping-list{background:transparent;border:0;border-radius:0;overflow:visible;display:grid;gap:12px;max-width:900px}
+#view-shopping .shopping-category{--cat-bg:#f3f5ef;--cat-line:#dfe7d9;--cat-ink:#566b56;background:#fff;border:1px solid var(--cat-line);border-radius:13px;overflow:hidden;padding:0;box-shadow:0 2px 8px rgba(35,55,38,.035)}
+#view-shopping .shopping-category-title{background:var(--cat-bg);color:var(--cat-ink);padding:12px 16px;min-height:53px;letter-spacing:.55px;font-size:11px}
+#view-shopping .shopping-category-heading{display:flex;align-items:center;gap:10px}
+#view-shopping .shopping-category-emoji{width:32px;height:32px;display:grid;place-items:center;background:rgba(255,255,255,.76);border-radius:10px;font-size:19px;letter-spacing:0}
+#view-shopping .shopping-category-title small{color:var(--cat-ink);opacity:.72;font-size:10px}
+#view-shopping .shopping-category-items{padding:0 5px}
+#view-shopping .shopping-category .shopping-row{padding:11px 12px;border-bottom:1px solid #f0f2ed}
+#view-shopping .shopping-category-empty{padding:13px 17px 15px;color:#9aa398;font-size:11px;font-style:italic}
+#view-shopping .category-fruit{--cat-bg:#edf5e9;--cat-line:#d7e7d0;--cat-ink:#496b45}
+#view-shopping .category-meat{--cat-bg:#faeeee;--cat-line:#f0dada;--cat-ink:#925b59}
+#view-shopping .category-fish{--cat-bg:#eaf4f7;--cat-line:#d4e8ed;--cat-ink:#477486}
+#view-shopping .category-dairy{--cat-bg:#f5f2e6;--cat-line:#e9e1c9;--cat-ink:#807044}
+#view-shopping .category-bakery{--cat-bg:#fbf1e4;--cat-line:#f0e1ca;--cat-ink:#936b3e}
+#view-shopping .category-grains{--cat-bg:#f3f0e8;--cat-line:#e5dfd0;--cat-ink:#796d4e}
+#view-shopping .category-canned{--cat-bg:#f1edf7;--cat-line:#e3d9ef;--cat-ink:#78628e}
+#view-shopping .category-oils{--cat-bg:#f2f4e5;--cat-line:#e4e8ce;--cat-ink:#727d42}
+#view-shopping .category-spices{--cat-bg:#fbefe8;--cat-line:#f1ddd0;--cat-ink:#a06449}
+#view-shopping .category-nuts{--cat-bg:#f5efe8;--cat-line:#e9dfd1;--cat-ink:#856c4e}
+#view-shopping .category-other{--cat-bg:#eff1f0;--cat-line:#dfe4e1;--cat-ink:#65746b}
+#view-shopping .category-uncategorised{--cat-bg:#f2f0ee;--cat-line:#e5e1dc;--cat-ink:#77716a}
+@media(max-width:700px){#view-shopping .shopping-list{gap:10px}#view-shopping .shopping-category-title{padding:10px 12px}#view-shopping .shopping-category-emoji{width:30px;height:30px}}
+@media print{
+ #view-shopping .shopping-list{display:grid!important;gap:8px!important;border:0!important}
+ #view-shopping .shopping-category{border:1px solid var(--cat-line)!important;border-radius:9px!important;overflow:hidden!important;break-inside:avoid!important;box-shadow:none!important}
+ #view-shopping .shopping-category-title{background:var(--cat-bg)!important;color:var(--cat-ink)!important;padding:8px 12px!important;min-height:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ #view-shopping .shopping-category-emoji{background:rgba(255,255,255,.8)!important}
+ #view-shopping .shopping-category-items{padding:0 4px!important}
+ #view-shopping .shopping-category .shopping-row{padding:7px 10px!important}
+ #view-shopping .shopping-category-empty{padding:8px 12px!important}
+}
