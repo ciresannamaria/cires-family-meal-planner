@@ -267,10 +267,10 @@ async function clearWeek(){
 }
 function weekItems(){let start=dateKey(week),end=dateKey(dayDate(6));return planned.filter(e=>e.plan_date>=start&&e.plan_date<=end)}
 function normalizeShoppingIngredient(value){
- let name=String(value||"").trim().replace(/\\s+/g," ");
+ let name=String(value||"").trim().replace(/\s+/g," ");
  if(!name)return "";
  const prep=new Set(["boiled","boil","roasted","roast","baked","bake","cooked","cook","mashed","steamed","steam","fried","fry","grilled","grill","chopped","chop","diced","dice","sliced","slice","grated","grate","peeled","peel","minced","mince","crushed","crush","shredded","shred","cubed","cube","finely","roughly","thinly","freshly","softened","sauteed","sautéed"]);
- name=name.replace(/[,;()]/g," ").replace(/\\s+/g," ").trim();
+ name=name.replace(/[,;()]/g," ").replace(/\s+/g," ").trim();
  let words=name.split(" ");
  while(words.length&&prep.has(words[0].toLowerCase()))words.shift();
  while(words.length&&prep.has(words[words.length-1].toLowerCase()))words.pop();
@@ -284,7 +284,7 @@ function normalizeShoppingIngredient(value){
  return words.join(" ").toLocaleLowerCase();
 }
 function shoppingUnit(unit){
- const raw=String(unit||"g").trim(),u=raw.toLowerCase().replace(/\\s+/g,"");
+ const raw=String(unit||"g").trim(),u=raw.toLowerCase().replace(/\s+/g,"");
  const map={
   g:{family:"mass",factor:1},gram:{family:"mass",factor:1},grams:{family:"mass",factor:1},
   kg:{family:"mass",factor:1000},kilogram:{family:"mass",factor:1000},kilograms:{family:"mass",factor:1000},
@@ -304,7 +304,7 @@ function amounts(){
    if(!name)return;
    const key=name+"|"+unitInfo.family;
    let item=sum.get(key);
-   if(!item){let displayName=String(i.name).trim().replace(/\\s+/g," ").replace(/^[,; ]+|[,; ]+$/g,"");const words=displayName.split(" ");const prep=["boiled","roasted","baked","cooked","mashed","steamed","fried","grilled","chopped","diced","sliced","grated","peeled","minced","crushed","shredded","cubed","finely","roughly","thinly","softened","sauteed","sautéed"];while(words.length&&prep.includes(words[0].toLowerCase()))words.shift();while(words.length&&prep.includes(words[words.length-1].toLowerCase()))words.pop();displayName=words.join(" ")||name;displayName=displayName.charAt(0).toLocaleUpperCase()+displayName.slice(1);item={name:displayName,unit,unitFactor:unitInfo.factor,amount:0,legacyKeys:new Set()};sum.set(key,item);}
+   if(!item){let displayName=String(i.name).trim().replace(/\s+/g," ").replace(/^[,; ]+|[,; ]+$/g,"");const words=displayName.split(" ");const prep=["boiled","roasted","baked","cooked","mashed","steamed","fried","grilled","chopped","diced","sliced","grated","peeled","minced","crushed","shredded","cubed","finely","roughly","thinly","softened","sauteed","sautéed"];while(words.length&&prep.includes(words[0].toLowerCase()))words.shift();while(words.length&&prep.includes(words[words.length-1].toLowerCase()))words.pop();displayName=words.join(" ")||name;displayName=displayName.charAt(0).toLocaleUpperCase()+displayName.slice(1);item={name:displayName,unit,unitFactor:unitInfo.factor,amount:0,legacyKeys:new Set()};sum.set(key,item);}
    item.amount+=Number(i.amount)*Number(e.portions||1)*unitInfo.factor;
    item.legacyKeys.add(String(i.name).trim().toLowerCase()+"|"+unit);
   });
