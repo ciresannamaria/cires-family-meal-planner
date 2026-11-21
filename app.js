@@ -1,6 +1,6 @@
 const SUPABASE_URL=window.CIRES_SUPABASE_URL, SUPABASE_KEY=window.CIRES_SUPABASE_PUBLISHABLE_KEY;
 const db=window.supabase?.createClient(SUPABASE_URL,SUPABASE_KEY);
-const DAYS=["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],SLOTS=["Breakfast","Lunch","Dinner","Snack"],PHOTO_BUCKET="meal-photos";
+const DAYS=["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"],SLOTS=["Breakfast","Lunch","Dinner","Snack","Dessert"],PHOTO_BUCKET="meal-photos";
 let cycleProfile={usual_period_days:5,average_cycle_days:28},cyclePeriods=[],cycleMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),user=null,meals=[],planned=[],plannerPeople=[],spiceCards=[],spiceProducts=[],mySpiceBlends=[],mySpiceEditingId=null,mySpiceImageFile=null,spiceProductEditingId=null,spiceProductImageFile=null,spiceEditingId=null,spiceImageFile=null,familyId=null,mealFormSnapshot=null,pendingShareToken=new URLSearchParams(location.search).get('share'),week=startWeek(new Date()),photoFile=null,photoPreview="",signedPhotos={},checked={},authMode="login",toastTimer,mealTypeFilter="All",mealAudienceFilter="All";
 const $=(s,root=document)=>root.querySelector(s), queryAll=(s,root=document)=>[...root.querySelectorAll(s)];
 function startWeek(d){let x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-(x.getDay()+1)%7);return x}
