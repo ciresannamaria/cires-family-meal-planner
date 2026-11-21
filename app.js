@@ -305,15 +305,23 @@ function shoppingUnit(unit){
 }
 function amounts(){
  let sum=new Map();
+ const categoryFor=i=>{
+  const linked=i.ingredientId?ingredientLibrary.find(x=>x.id===i.ingredientId):null;
+  if(linked?.category)return linked.category;
+  const normalized=normalizeShoppingIngredient(i.name);
+  const match=ingredientLibrary.find(x=>normalizeShoppingIngredient(x.name)===normalized&&x.category);
+  return match?.category||"Uncategorised";
+ };
  weekItems().forEach(e=>{
   let m=meals.find(x=>x.id===e.meal_id);if(!m)return;
   (m.ingredients||[]).forEach(i=>{
    if(i.amount===null||i.amount===""||!Number.isFinite(Number(i.amount))||!i.name)return;
    const unit=i.unit||"g",unitInfo=shoppingUnit(unit),name=normalizeShoppingIngredient(i.name);
    if(!name)return;
-   const key=name+"|"+unitInfo.family;
+   const key=name+"|"+unitInfo.family,category=categoryFor(i);
    let item=sum.get(key);
-   if(!item){let displayName=String(i.name).trim().replace(/\s+/g," ").replace(/^[,; ]+|[,; ]+$/g,"");const words=displayName.split(" ");const prep=["boiled","roasted","baked","cooked","mashed","steamed","fried","grilled","chopped","diced","sliced","grated","peeled","minced","crushed","shredded","cubed","finely","roughly","thinly","softened","sauteed","sautéed"];while(words.length&&prep.includes(words[0].toLowerCase()))words.shift();while(words.length&&prep.includes(words[words.length-1].toLowerCase()))words.pop();displayName=words.join(" ")||name;displayName=displayName.charAt(0).toLocaleUpperCase()+displayName.slice(1);item={name:displayName,unit,unitFactor:unitInfo.factor,amount:0,legacyKeys:new Set()};sum.set(key,item);}
+   if(!item){let displayName=String(i.name).trim().replace(/\\s+/g," ").replace(/^[,; ]+|[,; ]+$/g,"");const words=displayName.split(" ");const prep=["boiled","roasted","baked","cooked","mashed","steamed","fried","grilled","chopped","diced","sliced","grated","peeled","minced","crushed","shredded","cubed","finely","roughly","thinly","softened","sauteed","sautéed"];while(words.length&&prep.includes(words[0].toLowerCase()))words.shift();while(words.length&&prep.includes(words[words.length-1].toLowerCase()))words.pop();displayName=words.join(" ")||name;displayName=displayName.charAt(0).toLocaleUpperCase()+displayName.slice(1);item={name:displayName,category,unit,unitFactor:unitInfo.factor,amount:0,legacyKeys:new Set()};sum.set(key,item);}
+   if(item.category==="Uncategorised"&&category!=="Uncategorised")item.category=category;
    item.amount+=Number(i.amount)*Number(e.portions||1)*unitInfo.factor;
    item.legacyKeys.add(String(i.name).trim().toLowerCase()+"|"+unit);
   });
@@ -333,8 +341,14 @@ function drawShopping(){
  if(migrated){try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state));}catch(err){toast("Couldn't update saved shopping checks on this device.");}}
  const isChecked=i=>Boolean(state[shoppingItemKey(i)]);
  $("#shopping-summary").innerHTML='<div class="summary-card"><strong>'+items.length+'</strong><small>Different ingredients</small></div><div class="summary-card"><strong>'+n+'</strong><small>Planned meal entries</small></div>';
- const ordered=[...items.filter(i=>!isChecked(i)),...items.filter(isChecked)];
- $("#shopping-list").innerHTML=ordered.length?ordered.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-empty">Your shopping list is empty.<br>Add meals to your weekly planner to calculate ingredients.</div>';
+ const categoryOrder=["Fruit & Vegetables","Meat & Poultry","Fish & Seafood","Dairy & Eggs","Bakery & Bread","Pasta, Rice & Grains","Canned & Jarred","Oils, Sauces & Condiments","Spices & Seasonings","Nuts, Seeds & Spreads","Other","Uncategorised"];
+ const groups=new Map(categoryOrder.map(category=>[category,[]]));
+ items.forEach(i=>{const category=groups.has(i.category)?i.category:"Uncategorised";groups.get(category).push(i);});
+ const sections=categoryOrder.filter(category=>groups.get(category).length).map(category=>{
+  const group=groups.get(category).sort((a,b)=>Number(isChecked(a))-Number(isChecked(b))||a.name.localeCompare(b.name));
+  return '<section class="shopping-category"><h3 class="shopping-category-title"><span>'+esc(category)+'</span><small>'+group.length+' '+(group.length===1?'item':'items')+'</small></h3>'+group.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row'+(isChecked(i)?' checked':'')+'"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join("")+'</section>';
+ }).join("");
+ $("#shopping-list").innerHTML=items.length?sections:'<div class="shopping-empty">Your shopping list is empty.<br>Add meals to your weekly planner to calculate ingredients.</div>';
  $("#shopping-list").onchange=e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input){saveShoppingCheck(input.dataset.shoppingKey,input.checked);drawShopping();}};
 }
 
