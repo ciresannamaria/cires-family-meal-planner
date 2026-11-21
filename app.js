@@ -317,7 +317,10 @@ function saveShoppingCheck(key,value){let state=readShoppingChecks();state[key]=
 function shoppingItemKey(i){return i.key||normalizeShoppingIngredient(i.name)+"|"+shoppingUnit(i.unit||"g").family}
 function drawShopping(){
  let items=amounts(),n=weekItems().length,state=readShoppingChecks();
- const isChecked=i=>Boolean(state[shoppingItemKey(i)]||[...i.legacyKeys].some(k=>state[k]));
+ let migrated=false;
+ items.forEach(i=>{const key=shoppingItemKey(i);if(state[key]===undefined){const legacy=[...i.legacyKeys].find(k=>state[k]===true);if(legacy){state[key]=true;migrated=true;}}i.legacyKeys.forEach(k=>{if(k!==key&&Object.prototype.hasOwnProperty.call(state,k)){delete state[k];migrated=true;}});});
+ if(migrated){try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state));}catch(err){toast("Couldn't update saved shopping checks on this device.");}}
+ const isChecked=i=>Boolean(state[shoppingItemKey(i)]);
  $("#shopping-summary").innerHTML='<div class="summary-card"><strong>'+items.length+'</strong><small>Different ingredients</small></div><div class="summary-card"><strong>'+n+'</strong><small>Planned meal entries</small></div>';
  const ordered=[...items.filter(i=>!isChecked(i)),...items.filter(isChecked)];
  $("#shopping-list").innerHTML=ordered.length?ordered.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-empty">Your shopping list is empty.<br>Add meals to your weekly planner to calculate ingredients.</div>';
