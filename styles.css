@@ -619,3 +619,20 @@
 @media(max-width:520px){.ingredient-row{grid-template-columns:minmax(0,1.25fr) .6fr .6fr minmax(75px,.8fr) 25px;gap:4px}.ing-suggestions{min-width:190px}}
 
 .shopping-category{padding:0 0 5px}.shopping-category+.shopping-category{border-top:1px solid var(--line)}.shopping-category-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:15px 17px 8px;background:#f7f8f5;color:#667568;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.shopping-category-title small{font-size:9px;font-weight:500;letter-spacing:0;text-transform:none;color:#929b92}.shopping-category .shopping-row:last-child{border-bottom:0}
+
+/* Reliable print layout on mobile browsers: keep the selected view mounted
+   until the native print preview has captured it. */
+@media print{
+  html,body{display:block!important;width:100%!important;height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important}
+  #app-shell,.main-content{display:block!important;position:static!important;width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important;visibility:visible!important}
+  .sidebar,.topbar{display:none!important}
+  .view{display:none!important;visibility:hidden!important}
+  .view.print-target{display:block!important;position:static!important;visibility:visible!important;width:100%!important;height:auto!important;overflow:visible!important;padding:0!important}
+  #view-shopping .shopping-list{display:block!important;width:100%!important;max-width:none!important;overflow:visible!important;border:1px solid #ddd!important}
+  #view-shopping .shopping-category{display:block!important;break-inside:avoid}
+  #view-shopping .shopping-category-title{display:flex!important;break-after:avoid}
+  #view-shopping .shopping-category-empty{display:block!important}
+  #view-shopping .shopping-row{display:flex!important;break-inside:avoid}
+  #view-shopping .shopping-row input{display:none!important}
+  #view-shopping .page-heading button,#view-shopping .week-controls{display:none!important}
+}
