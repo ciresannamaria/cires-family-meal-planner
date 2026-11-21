@@ -581,3 +581,8 @@
 
 .settings-select{min-width:150px;padding:10px 34px 10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:500 12px "DM Sans",sans-serif}
 @media(max-width:560px){.settings-select{width:100%}}
+
+/* Per-day meal planning action */
+.day-plan-button{width:100%;border:1px solid #d9e1d5;background:#fff;color:#60745f;border-radius:8px;padding:7px 8px;font:600 10px "DM Sans";cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s}
+.day-plan-button:hover{background:#edf3e9;border-color:#b9c9b4}
+.day-plan-button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
