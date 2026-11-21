@@ -138,13 +138,33 @@
 <dialog id="meal-dialog" class="modal"><form id="meal-form" method="dialog" novalidate>
 <div class="modal-header"><div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
 <input type="hidden" id="meal-id"><div class="form-grid">
-<label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
-<label class="field full">Suitable for <select id="meal-audience"><option value="everyone">Everyone — adults and children</option><option value="adults">Adults</option><option value="children">Children</option></select></label>
-<div class="field full meal-type-field"><span class="field-label">Meal type</span><div class="meal-type-options"><label class="meal-type-option"><input type="checkbox" value="Breakfast"><span>Breakfast</span></label><label class="meal-type-option"><input type="checkbox" value="Lunch"><span>Lunch</span></label><label class="meal-type-option"><input type="checkbox" value="Dinner"><span>Dinner</span></label><label class="meal-type-option"><input type="checkbox" value="Snack"><span>Snack</span></label><label class="meal-type-option"><input type="checkbox" value="Dessert"><span>Dessert</span></label></div></div>
-<div class="field full nutrition-entry"><div class="sharing-options"><label class="family-toggle-row"><span>Share with Sister</span><input id="meal-shared" type="checkbox"></label><label class="family-toggle-row"><span>Add to Cires Family</span><input id="meal-family" type="checkbox"></label></div><div class="nutrition-inputs"><label class="field"><span>Calories <small>(kcal)</small></span><input id="meal-calories" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Enter calories or calculate from ingredients"></label><label class="field"><span>Protein <small>(g)</small></span><input id="meal-protein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 25"></label><label class="field"><span>Fibre <small>(g)</small></span><input id="meal-fiber" type="number" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 6"></label></div></div>
-<div class="field full"><span class="field-label">Meal photo</span><div class="photo-actions"><label class="button light photo-choice">Choose a photo<input id="meal-photo" type="file" accept="image/*"></label><label class="button light photo-choice">Take a photo<input id="meal-camera" type="file" accept="image/*" capture="environment"></label></div><div id="photo-preview"></div></div>
-<div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div></div>
-<label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">01</span><div><h3>Meal details</h3><p>Name, who it's for, and when you eat it</p></div></div>
+  <div class="form-section-content">
+    <label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
+    <label class="field full">Suitable for <select id="meal-audience"><option value="everyone">Everyone — adults and children</option><option value="adults">Adults</option><option value="children">Children</option></select></label>
+    <div class="field full meal-type-field"><span class="field-label">Meal type</span><div class="meal-type-options"><label class="meal-type-option"><input type="checkbox" value="Breakfast"><span>Breakfast</span></label><label class="meal-type-option"><input type="checkbox" value="Lunch"><span>Lunch</span></label><label class="meal-type-option"><input type="checkbox" value="Dinner"><span>Dinner</span></label><label class="meal-type-option"><input type="checkbox" value="Snack"><span>Snack</span></label><label class="meal-type-option"><input type="checkbox" value="Dessert"><span>Dessert</span></label></div></div>
+  </div>
+</section>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">02</span><div><h3>Nutrition</h3><p>Calories and nutritional values per serving</p></div></div>
+  <div class="form-section-content">
+    <div class="field full nutrition-entry"><div class="sharing-options"><label class="family-toggle-row"><span>Share with Sister</span><input id="meal-shared" type="checkbox"></label><label class="family-toggle-row"><span>Add to Cires Family</span><input id="meal-family" type="checkbox"></label></div><div class="nutrition-inputs"><label class="field"><span>Calories <small>(kcal)</small></span><input id="meal-calories" type="number" min="0" step="0.1" inputmode="decimal" placeholder="kcal"></label><label class="field"><span>Protein <small>(g)</small></span><input id="meal-protein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label><label class="field"><span>Fibre <small>(g)</small></span><input id="meal-fiber" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label></div></div>
+  </div>
+</section>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">03</span><div><h3>Meal photo</h3><p>Add a picture of your finished meal</p></div></div>
+  <div class="form-section-content">
+    <div class="field full"><div class="photo-actions"><label class="button light photo-choice">Choose a photo<input id="meal-photo" type="file" accept="image/*"></label><label class="button light photo-choice">Take a photo<input id="meal-camera" type="file" accept="image/*" capture="environment"></label></div><div id="photo-preview"></div></div>
+  </div>
+</section>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">04</span><div><h3>Recipe</h3><p>Ingredients and how to prepare it</p></div></div>
+  <div class="form-section-content">
+    <div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div></div>
+    <label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
+  </div>
+</section>
 </div>
 <div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-meal-button">Save meal</button></div>
 </form></dialog>
