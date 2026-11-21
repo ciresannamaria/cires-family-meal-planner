@@ -344,10 +344,14 @@ function drawShopping(){
  const categoryOrder=["Fruit & Vegetables","Meat & Poultry","Fish & Seafood","Dairy & Eggs","Bakery & Bread","Pasta, Rice & Grains","Canned & Jarred","Oils, Sauces & Condiments","Spices & Seasonings","Nuts, Seeds & Spreads","Other","Uncategorised"];
  const groups=new Map(categoryOrder.map(category=>[category,[]]));
  items.forEach(i=>{const category=groups.has(i.category)?i.category:"Uncategorised";groups.get(category).push(i);});
+ const categoryDesign={
+  "Fruit & Vegetables":["🥑","fruit"],"Meat & Poultry":["🍗","meat"],"Fish & Seafood":["🐟","fish"],"Dairy & Eggs":["🥚","dairy"],"Bakery & Bread":["🥖","bakery"],"Pasta, Rice & Grains":["🍝","grains"],"Canned & Jarred":["🥫","canned"],"Oils, Sauces & Condiments":["🫒","oils"],"Spices & Seasonings":["🌶️","spices"],"Nuts, Seeds & Spreads":["🥜","nuts"],"Other":["🛒","other"],"Uncategorised":["📦","uncategorised"]
+ };
  const sections=categoryOrder.map(category=>{
   const group=groups.get(category).sort((a,b)=>Number(isChecked(a))-Number(isChecked(b))||a.name.localeCompare(b.name));
-  const rows=group.length?group.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row'+(isChecked(i)?' checked':'')+'"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-category-empty">No ingredients planned</div>';
-  return '<section class="shopping-category"><h3 class="shopping-category-title"><span>'+esc(category)+'</span><small>'+group.length+' '+(group.length===1?'item':'items')+'</small></h3>'+rows+'</section>';
+  const [emoji,theme]=categoryDesign[category]||["🛍️","other"];
+  const rows=group.length?group.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row'+(isChecked(i)?' checked':'')+'"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-category-empty">Nothing to buy here this week</div>';
+  return '<section class="shopping-category category-'+theme+'"><h3 class="shopping-category-title"><span class="shopping-category-heading"><span class="shopping-category-emoji" aria-hidden="true">'+emoji+'</span><span>'+esc(category)+'</span></span><small>'+group.length+' '+(group.length===1?'item':'items')+'</small></h3><div class="shopping-category-items">'+rows+'</div></section>';
  }).join("");
  $("#shopping-list").innerHTML=sections;
  $("#shopping-list").onchange=e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input){saveShoppingCheck(input.dataset.shoppingKey,input.checked);drawShopping();}};
