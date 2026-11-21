@@ -266,13 +266,63 @@ async function clearWeek(){
  }catch(err){toast("Couldn't clear this week: "+(err.message||"Please try again."))}
 }
 function weekItems(){let start=dateKey(week),end=dateKey(dayDate(6));return planned.filter(e=>e.plan_date>=start&&e.plan_date<=end)}
-function amounts(){let sum=new Map();weekItems().forEach(e=>{let m=meals.find(x=>x.id===e.meal_id);if(!m)return;(m.ingredients||[]).forEach(i=>{if(i.amount===null||i.amount===""||!Number.isFinite(Number(i.amount))||!i.name)return;let unit=i.unit||"g",k=i.name.trim().toLowerCase()+"|"+unit,it=sum.get(k)||{name:i.name.trim(),unit,amount:0};it.amount+=Number(i.amount)*Number(e.portions||1);sum.set(k,it)})});return[...sum.values()].sort((a,b)=>a.name.localeCompare(b.name))}
+function normalizeShoppingIngredient(value){
+ let name=String(value||"").trim().replace(/\\s+/g," ");
+ if(!name)return "";
+ const prep=new Set(["boiled","boil","roasted","roast","baked","bake","cooked","cook","mashed","steamed","steam","fried","fry","grilled","grill","chopped","chop","diced","dice","sliced","slice","grated","grate","peeled","peel","minced","mince","crushed","crush","shredded","shred","cubed","cube","finely","roughly","thinly","freshly","softened","sauteed","sautéed"]);
+ name=name.replace(/[,;()]/g," ").replace(/\\s+/g," ").trim();
+ let words=name.split(" ");
+ while(words.length&&prep.has(words[0].toLowerCase()))words.shift();
+ while(words.length&&prep.has(words[words.length-1].toLowerCase()))words.pop();
+ if(!words.length)return "";
+ let last=words[words.length-1].toLowerCase();
+ const irregular={leaves:"leaf",loaves:"loaf",knives:"knife",potatoes:"potato",tomatoes:"tomato"};
+ if(irregular[last])words[words.length-1]=irregular[last];
+ else if(last.length>4&&last.endsWith("ies"))words[words.length-1]=last.slice(0,-3)+"y";
+ else if(last.length>4&&/(ches|shes|xes|zes|oes)$/.test(last))words[words.length-1]=last.slice(0,-2);
+ else if(last.length>3&&last.endsWith("s")&&!/(ss|us|is)$/.test(last)&&!["asparagus","couscous","hummus","molasses"].includes(last))words[words.length-1]=last.slice(0,-1);
+ return words.join(" ").toLocaleLowerCase();
+}
+function shoppingUnit(unit){
+ const raw=String(unit||"g").trim(),u=raw.toLowerCase().replace(/\\s+/g,"");
+ const map={
+  g:{family:"mass",factor:1},gram:{family:"mass",factor:1},grams:{family:"mass",factor:1},
+  kg:{family:"mass",factor:1000},kilogram:{family:"mass",factor:1000},kilograms:{family:"mass",factor:1000},
+  ml:{family:"volume",factor:1},milliliter:{family:"volume",factor:1},milliliters:{family:"volume",factor:1},millilitre:{family:"volume",factor:1},millilitres:{family:"volume",factor:1},
+  l:{family:"volume",factor:1000},liter:{family:"volume",factor:1000},liters:{family:"volume",factor:1000},litre:{family:"volume",factor:1000},litres:{family:"volume",factor:1000},
+  piece:{family:"count",factor:1},pieces:{family:"count",factor:1},pc:{family:"count",factor:1},pcs:{family:"count",factor:1}
+ };
+ return map[u]||{family:"unit:"+u,factor:1};
+}
+function amounts(){
+ let sum=new Map();
+ weekItems().forEach(e=>{
+  let m=meals.find(x=>x.id===e.meal_id);if(!m)return;
+  (m.ingredients||[]).forEach(i=>{
+   if(i.amount===null||i.amount===""||!Number.isFinite(Number(i.amount))||!i.name)return;
+   const unit=i.unit||"g",unitInfo=shoppingUnit(unit),name=normalizeShoppingIngredient(i.name);
+   if(!name)return;
+   const key=name+"|"+unitInfo.family;
+   let item=sum.get(key);
+   if(!item){let displayName=String(i.name).trim().replace(/\\s+/g," ").replace(/^[,; ]+|[,; ]+$/g,"");const words=displayName.split(" ");const prep=["boiled","roasted","baked","cooked","mashed","steamed","fried","grilled","chopped","diced","sliced","grated","peeled","minced","crushed","shredded","cubed","finely","roughly","thinly","softened","sauteed","sautéed"];while(words.length&&prep.includes(words[0].toLowerCase()))words.shift();while(words.length&&prep.includes(words[words.length-1].toLowerCase()))words.pop();displayName=words.join(" ")||name;displayName=displayName.charAt(0).toLocaleUpperCase()+displayName.slice(1);item={name:displayName,unit,unitFactor:unitInfo.factor,amount:0,legacyKeys:new Set()};sum.set(key,item);}
+   item.amount+=Number(i.amount)*Number(e.portions||1)*unitInfo.factor;
+   item.legacyKeys.add(String(i.name).trim().toLowerCase()+"|"+unit);
+  });
+ });
+ return [...sum.entries()].map(([key,item])=>({...item,key,amount:item.amount/item.unitFactor})).sort((a,b)=>a.name.localeCompare(b.name));
+}
 function shoppingChecksKey(){return "cires-shopping-checks:"+user.id+":"+dateKey(week)}
 function readShoppingChecks(){try{return JSON.parse(localStorage.getItem(shoppingChecksKey())||"{}")}catch{return {}}}
 function saveShoppingCheck(key,value){let state=readShoppingChecks();state[key]=value;try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state))}catch(err){toast("Couldn't save shopping checks on this device.")}}
-function shoppingItemKey(i){return i.name.trim().toLowerCase()+"|"+(i.unit||"g")}
-function drawShopping(){let items=amounts(),n=weekItems().length,state=readShoppingChecks();$("#shopping-summary").innerHTML='<div class="summary-card"><strong>'+items.length+'</strong><small>Different ingredients</small></div><div class="summary-card"><strong>'+n+'</strong><small>Planned meal entries</small></div>';$("#shopping-list").innerHTML=items.length?items.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(state[key]?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-empty">Your shopping list is empty.<br>Add meals to your weekly planner to calculate ingredients.</div>'}
-$("#shopping-list").addEventListener("change",e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input)saveShoppingCheck(input.dataset.shoppingKey,input.checked)});
+function shoppingItemKey(i){return i.key||normalizeShoppingIngredient(i.name)+"|"+shoppingUnit(i.unit||"g").family}
+function drawShopping(){
+ let items=amounts(),n=weekItems().length,state=readShoppingChecks();
+ const isChecked=i=>Boolean(state[shoppingItemKey(i)]||[...i.legacyKeys].some(k=>state[k]));
+ $("#shopping-summary").innerHTML='<div class="summary-card"><strong>'+items.length+'</strong><small>Different ingredients</small></div><div class="summary-card"><strong>'+n+'</strong><small>Planned meal entries</small></div>';
+ const ordered=[...items.filter(i=>!isChecked(i)),...items.filter(isChecked)];
+ $("#shopping-list").innerHTML=ordered.length?ordered.map(i=>{let key=shoppingItemKey(i);return '<div class="shopping-row"><input type="checkbox" data-shopping-key="'+esc(key)+'" '+(isChecked(i)?'checked':'')+'><label>'+esc(i.name)+'</label><span class="amount">'+(Number.isInteger(i.amount)?i.amount:Math.round(i.amount*100)/100)+' '+esc(i.unit)+'</span></div>'}).join(""):'<div class="shopping-empty">Your shopping list is empty.<br>Add meals to your weekly planner to calculate ingredients.</div>';
+ $("#shopping-list").onchange=e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input){saveShoppingCheck(input.dataset.shoppingKey,input.checked);drawShopping();}};
+}
 
 async function loadSpiceCards(){
  let result=await db.from("spice_cards").select("id,owner_id,title,description,ingredients,notes,image_url,created_at,updated_at").order("updated_at",{ascending:false});
