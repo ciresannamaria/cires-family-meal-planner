@@ -605,3 +605,15 @@
 .settings-select{padding:8px 30px 8px 10px}
 .settings-section .settings-action:only-child{padding-top:7px}
 @media(max-width:560px){.settings-section{padding:12px 14px}.settings-action{padding:8px 0}}
+
+
+/* Ingredient library autocomplete in the meal editor */
+.ingredient-row{grid-template-columns:minmax(0,1.55fr) .65fr .65fr minmax(86px,.9fr) 28px;align-items:center}
+.ing-name-wrap{position:relative;min-width:0}
+.ing-name-wrap>.ing-name{width:100%}
+.ing-suggestions{position:absolute;z-index:30;top:calc(100% + 5px);left:0;right:0;max-height:220px;overflow:auto;background:#fff;border:1px solid #dfe6dc;border-radius:9px;box-shadow:0 10px 28px #26342e1c;padding:4px}
+.ing-suggestions[hidden]{display:none}
+.ing-suggestion{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:0;border-radius:6px;background:#fff;padding:9px 10px;text-align:left;color:var(--ink);font:11px "DM Sans";cursor:pointer}
+.ing-suggestion:hover,.ing-suggestion:focus-visible{background:#f0f4ee;outline:0}
+.ing-suggestion small{color:#8b978d;font-size:9px}
+@media(max-width:520px){.ingredient-row{grid-template-columns:minmax(0,1.25fr) .6fr .6fr minmax(75px,.8fr) 25px;gap:4px}.ing-suggestions{min-width:190px}}
