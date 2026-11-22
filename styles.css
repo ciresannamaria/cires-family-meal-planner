@@ -691,3 +691,19 @@
   .nav-emoji{font-size:18px}
 }
 @media print{.main-nav{display:none!important}}
+
+/* Dedicated Profile destination */
+.profile-page-identity{display:flex;align-items:center;gap:15px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:14px;max-width:760px;margin-bottom:20px}
+.profile-page-avatar{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#e8eee6;font-size:28px}
+.profile-page-identity h2{font:600 20px "Playfair Display";margin:0 0 4px}
+.profile-page-identity p{font-size:11px;color:#8c968e;margin:0}
+.profile-page-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:760px}
+.profile-page-link{display:flex;align-items:center;gap:13px;text-align:left;padding:16px;background:#fff;border:1px solid var(--line);border-radius:12px;cursor:pointer;color:var(--ink);min-width:0}
+.profile-page-link>span:first-child{font-size:23px}
+.profile-page-link>span:nth-child(2){display:grid;gap:4px;min-width:0;flex:1}
+.profile-page-link strong{font-size:12px}
+.profile-page-link small{font-size:10px;color:#8c968e}
+.profile-page-link>b{font-size:20px;color:#8c968e;font-weight:400}
+.profile-page-link:hover{border-color:#bdcbbb;background:#fbfcf9}
+.profile-page-signout{margin-top:20px}
+@media(max-width:700px){.profile-page-links{grid-template-columns:1fr}.profile-page-identity{padding:16px}}
