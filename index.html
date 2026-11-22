@@ -6,7 +6,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2"><title>Cires Family Meal Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261122-23">
+<link rel="stylesheet" href="styles.css?v=20261122-24">
 </head>
 <body>
 <section id="auth-screen" class="auth-screen">
@@ -41,12 +41,25 @@
 <button class="nav-link active" data-view="planner"><span class="nav-emoji" aria-hidden="true">📅</span><span>PLANNER</span></button>
 <button class="nav-link" data-view="family"><span class="nav-emoji" aria-hidden="true">❤️</span><span>FAMILY</span><b id="family-count">0</b></button>
 <button class="nav-link" data-view="shopping"><span class="nav-emoji" aria-hidden="true">🛒</span><span>SHOPPING</span></button>
-<button class="nav-link profile-nav-link" id="profile-nav-toggle" type="button" aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false"><span class="nav-emoji" aria-hidden="true">👤</span><span>PROFILE</span></button>
+<button class="nav-link profile-nav-link" data-view="profile" type="button"><span class="nav-emoji" aria-hidden="true">👤</span><span>PROFILE</span></button>
 </nav>
 
 </aside>
 <main class="main-content">
 <header class="topbar"><div class="breadcrumb">YOUR HOME <span>/</span> <strong id="breadcrumb-current">MEALS</strong></div><div class="top-actions"><span id="today-label"></span><div class="profile-wrap"><button class="avatar profile-toggle" id="profile-toggle" type="button" aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false">🌿</button><section class="profile-menu" id="profile-menu" hidden><div class="profile-heading"><div class="profile-avatar-preview" id="profile-avatar-preview" aria-hidden="true">🌿</div><div class="profile-identity"><strong id="profile-name">Your profile</strong><small id="profile-email"></small></div></div><div class="avatar-picker-label">Choose your avatar</div><div class="avatar-picker" aria-label="Choose a profile avatar"><button type="button" data-avatar="🌿" aria-label="Use 🌿 as avatar" aria-pressed="false">🌿</button><button type="button" data-avatar="🍒" aria-label="Use 🍒 as avatar" aria-pressed="false">🍒</button><button type="button" data-avatar="🍓" aria-label="Use 🍓 as avatar" aria-pressed="false">🍓</button><button type="button" data-avatar="🍋" aria-label="Use 🍋 as avatar" aria-pressed="false">🍋</button><button type="button" data-avatar="🥑" aria-label="Use 🥑 as avatar" aria-pressed="false">🥑</button><button type="button" data-avatar="🍊" aria-label="Use 🍊 as avatar" aria-pressed="false">🍊</button><button type="button" data-avatar="🫐" aria-label="Use 🫐 as avatar" aria-pressed="false">🫐</button><button type="button" data-avatar="🌸" aria-label="Use 🌸 as avatar" aria-pressed="false">🌸</button><button type="button" data-avatar="🌻" aria-label="Use 🌻 as avatar" aria-pressed="false">🌻</button><button type="button" data-avatar="🐝" aria-label="Use 🐝 as avatar" aria-pressed="false">🐝</button><button type="button" data-avatar="🦋" aria-label="Use 🦋 as avatar" aria-pressed="false">🦋</button><button type="button" data-avatar="🐱" aria-label="Use 🐱 as avatar" aria-pressed="false">🐱</button><button type="button" data-avatar="🐻" aria-label="Use 🐻 as avatar" aria-pressed="false">🐻</button><button type="button" data-avatar="🦊" aria-label="Use 🦊 as avatar" aria-pressed="false">🦊</button><button type="button" data-avatar="🐼" aria-label="Use 🐼 as avatar" aria-pressed="false">🐼</button><button type="button" data-avatar="🐸" aria-label="Use 🐸 as avatar" aria-pressed="false">🐸</button></div><div class="profile-menu-actions"><button class="text-button" data-profile-view="shared" type="button">💌 &nbsp; SHARED MEALS</button><button class="text-button" data-profile-view="spices" type="button">🌿 &nbsp; SPICES & PAIRINGS</button><button class="text-button" data-profile-view="settings" type="button">⚙️ &nbsp; SETTINGS</button><button class="text-button" data-profile-view="shopping" type="button">🛒 &nbsp; SHOPPING LIST</button><button class="text-button" data-profile-view="books" type="button">📚 &nbsp; BOOKS</button><button class="text-button" id="open-cycle-calendar" type="button">🌸 &nbsp; MY CYCLE CALENDAR</button><button class="text-button" id="sign-out" type="button">↪ &nbsp; SIGN OUT</button></div></section></div></div></header>
+<section class="view" id="view-profile">
+ <div class="page-heading"><div><div class="eyebrow">YOUR ACCOUNT</div><h1>Profile</h1><p>Manage your account and open the other areas of your family planner.</p></div></div>
+ <section class="profile-page-identity"><div class="profile-page-avatar" id="profile-page-avatar">🌿</div><div><h2 id="profile-page-name">Your profile</h2><p id="profile-page-email"></p></div></section>
+ <div class="profile-page-links">
+  <button class="profile-page-link" data-profile-view="shared" type="button"><span>💌</span><span><strong>Shared Meals</strong><small>Recipes shared with you by your sister</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="spices" type="button"><span>🌿</span><span><strong>Spices & Pairings</strong><small>Explore spices, blends and flavour pairings</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="settings" type="button"><span>⚙️</span><span><strong>Settings</strong><small>Manage preferences and recipe backups</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="shopping" type="button"><span>🛒</span><span><strong>Shopping List</strong><small>Open your shopping list</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="books" type="button"><span>📚</span><span><strong>Books</strong><small>Family library</small></span><b>›</b></button>
+  <button class="profile-page-link" id="profile-page-cycle" type="button"><span>🌸</span><span><strong>My Cycle Calendar</strong><small>Your private cycle calendar</small></span><b>›</b></button>
+ </div>
+ <button class="button light profile-page-signout" id="profile-page-signout" type="button">↪ Sign out</button>
+</section>
 <section class="view" id="view-meals">
 <div class="page-heading"><div><h1>Meals</h1></div><button class="button primary" id="add-meal">＋ Add a meal</button></div>
 <div class="toolbar"><label class="search">⌕ <input id="meal-search" type="search" placeholder="Search meals or ingredients…"></label><span id="meal-results"></span></div>
@@ -176,5 +189,5 @@
 <dialog id="shuffle-dialog" class="modal shuffle-modal"><div class="modal-header"><div><div class="eyebrow">A FRESH WEEK, YOUR WAY</div><h2>Who are we planning for?</h2></div><button type="button" class="icon-button close-dialog">×</button></div><p id="shuffle-description" class="shuffle-description"></p><label class="field">Choose people<select id="shuffle-person"></select></label><div class="shuffle-dialog-note">Only the selected person’s plan will be replaced. Everyone else’s meals will stay as they are.</div><div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="button" class="button primary" id="shuffle-generate">✦ Generate plan</button></div></dialog><div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20261122-22"></script>
+<script src="app.js?v=20261122-23"></script>
 </body></html>
