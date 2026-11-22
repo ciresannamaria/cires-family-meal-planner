@@ -105,6 +105,26 @@ function updateIngredientCalories(row){let value=ingredientCalories(row);$(".ing
 function updateRecipeCalories(){let field=$("#meal-calories");if(!field)return;let total=calculateRecipeCalories(),display=$("#ingredient-calorie-total");if(display)display.textContent=total===null?"—":total.toFixed(1)+" kcal";if(total!==null)field.value=total}
 function closeIngredientSuggestions(row){const box=$(".ing-suggestions",row);if(box){box.hidden=true;box.innerHTML=""}}
 function showIngredientSuggestions(row){const input=$(".ing-name",row),box=$(".ing-suggestions",row),query=input.value.trim().toLocaleLowerCase();if(!query){closeIngredientSuggestions(row);return}const matches=ingredientLibrary.filter(item=>item.name.toLocaleLowerCase().includes(query)).slice(0,7);if(!matches.length){closeIngredientSuggestions(row);return}box.innerHTML=matches.map(item=>'<button type="button" class="ing-suggestion" data-ingredient-id="'+esc(item.id)+'" data-ingredient-name="'+esc(item.name)+'"><strong>'+esc(item.name)+'</strong>'+(item.category?'<small>'+esc(item.category)+'</small>':'')+'</button>').join("");box.hidden=false}
+async function resolveIngredientId(name,selectedId=""){
+ if(selectedId)return selectedId;
+ if(!familyId)throw new Error("Your ingredient library is not available. Please refresh and try again.");
+ const normalized=name.trim().toLocaleLowerCase();
+ const existing=ingredientLibrary.find(x=>x.name.trim().toLocaleLowerCase()===normalized);
+ if(existing)return existing.id;
+ const lookup=await db.from("ingredients").select("id,name,category").eq("family_id",familyId).ilike("name",name.trim()).limit(1).maybeSingle();
+ if(lookup.error)throw lookup.error;
+ if(lookup.data){ingredientLibrary.push(lookup.data);return lookup.data.id;}
+ const created=await db.from("ingredients").insert({family_id:familyId,name:name.trim()}).select("id,name,category").single();
+ if(created.error){
+  if(created.error.code==="23505"){
+   const retry=await db.from("ingredients").select("id,name,category").eq("family_id",familyId).ilike("name",name.trim()).limit(1).maybeSingle();
+   if(!retry.error&&retry.data){ingredientLibrary.push(retry.data);return retry.data.id;}
+  }
+  throw created.error;
+ }
+ ingredientLibrary.push(created.data);
+ return created.data.id;
+}
 function ingredientRow(i={}){let r=document.createElement("div");r.className="ingredient-row";r.dataset.ingredientId=i.ingredientId||"";r.innerHTML='<div class="ing-name-wrap"><input class="ing-name" placeholder="Ingredient" autocomplete="off" value="'+esc(i.name||"")+'"><div class="ing-suggestions" hidden></div></div><input class="ing-amount" type="number" min="0" step="any" placeholder="Qty" value="'+esc(i.amount??"")+'"><select class="ing-unit">'+["g","kg","ml","l","piece","tbsp","tsp","pinch"].map(u=>'<option '+(u===(i.unit||"g")?"selected":"")+'>'+u+'</option>').join("")+'</select><div class="ing-calories"><strong class="ing-kcal-value">—</strong><input class="ing-kcal-per100" type="number" min="0" step="any" inputmode="decimal" placeholder="kcal / 100 g" value="'+esc(i.caloriesPer100??"")+'"></div><button type="button" aria-label="Remove ingredient">×</button>';const nameInput=r.querySelector(".ing-name");nameInput.addEventListener("input",()=>{r.dataset.ingredientId="";updateIngredientCalories(r);showIngredientSuggestions(r)});nameInput.addEventListener("focus",()=>showIngredientSuggestions(r));nameInput.addEventListener("blur",()=>setTimeout(()=>closeIngredientSuggestions(r),150));r.querySelector(".ing-suggestions").addEventListener("mousedown",e=>{const option=e.target.closest("[data-ingredient-id]");if(!option)return;e.preventDefault();nameInput.value=option.dataset.ingredientName;r.dataset.ingredientId=option.dataset.ingredientId;closeIngredientSuggestions(r);updateIngredientCalories(r)});r.querySelector(".ing-amount").addEventListener("input",()=>updateIngredientCalories(r));r.querySelector(".ing-unit").addEventListener("change",()=>updateIngredientCalories(r));r.querySelector(".ing-kcal-per100").addEventListener("input",()=>updateIngredientCalories(r));r.querySelector("button").onclick=()=>{r.remove();updateRecipeCalories()};$("#ingredient-rows").append(r);updateIngredientCalories(r)}
 function openForm(m){$("#meal-form").reset();$("#meal-id").value=m?.id||"";$("#meal-dialog-title").textContent=m?"Edit meal":"Add a meal";$("#meal-family").checked=!!m?.family_id;$("#meal-shared").checked=m?!!m.shared_with_family:true;$("#meal-audience").value=m?.audience||(String(m?.name||"").startsWith("👧")?"children":"everyone");setMealTypes(m?.meal_types||[]);$("#meal-calories").value=m?.calories_kcal??"";$("#meal-protein").value=m?.protein_g??"";$("#meal-fiber").value=m?.fiber_g??"";$("#meal-name").value=m?.name||"";$("#meal-instructions").value=m?.instructions||"";photoFile=null;photoPreview=m?.photo||"";$("#photo-preview").innerHTML=photoPreview?'<img src="'+photoPreview+'" alt="Preview">':"";$("#ingredient-rows").innerHTML="";(m?.ingredients?.length?m.ingredients:[{}]).forEach(ingredientRow);updateRecipeCalories();mealFormSnapshot=mealFormState();$("#meal-dialog").showModal()}
 async function compressMealPhoto(file){
@@ -121,9 +141,91 @@ async function compressMealPhoto(file){
   if(!blob||blob.size>4.9*1024*1024)throw new Error("This photo is still too large after compression. Please choose another image.");
   return blob;
 }
-async function saveMeal(e){e.preventDefault();let name=$("#meal-name").value.trim();if(!name)return;let button=$("#save-meal-button");button.disabled=true;button.textContent="Saving…";try{let mid=$("#meal-id").value,old=meals.find(m=>m.id===mid),mealId=old?.id;let photo_path=old?.photo_path||null;let isFamily=$("#meal-family").checked,isShared=$("#meal-shared").checked,meal_types=selectedMealTypes(),audience=$("#meal-audience").value,calculatedCalories=calculateRecipeCalories(),calories_kcal=calculatedCalories!==null?calculatedCalories:($("#meal-calories").value.trim()===""?(old?.calories_kcal??null):Number($("#meal-calories").value)),protein_g=$("#meal-protein").value.trim()===""?null:Number($("#meal-protein").value),fiber_g=$("#meal-fiber").value.trim()===""?null:Number($("#meal-fiber").value);if(isFamily&&!familyId)throw new Error("Cires Family membership is not available for this account.");if(!mealId){let r=await db.from("meals").insert({owner_id:user.id,created_by:user.id,family_id:isFamily?familyId:null,shared_with_family:isShared,meal_types,audience,calories_kcal,protein_g,fiber_g,name,instructions:$("#meal-instructions").value.trim()}).select("id").single();if(r.error)throw r.error;mealId=r.data.id}else{let r=await db.from("meals").update({family_id:isFamily?familyId:null,shared_with_family:isShared,meal_types,audience,calories_kcal,protein_g,fiber_g,name,instructions:$("#meal-instructions").value.trim(),updated_at:new Date().toISOString()}).eq("id",mealId);if(r.error)throw r.error}
-if(photoFile||(old&&isFamily&&!old.family_id&&photo_path)){let sourceFile=photoFile;if(!sourceFile&&old?.photo){button.textContent="Preparing shared photo…";let response=await fetch(old.photo);if(!response.ok)throw new Error("Could not prepare this photo for family sharing.");let blob=await response.blob();sourceFile=new File([blob],old.name+".jpg",{type:blob.type||"image/jpeg"});}button.textContent="Optimizing photo…";let optimized=await compressMealPhoto(sourceFile);let ext=optimized.type==="image/webp"?"webp":"jpg";button.textContent="Uploading photo…";let path=(isFamily?"family/"+familyId:user.id)+"/"+mealId+"-"+Date.now()+"."+ext;let up=await db.storage.from(PHOTO_BUCKET).upload(path,optimized,{upsert:true,contentType:optimized.type});if(up.error)throw up.error;if(photo_path){await db.storage.from(PHOTO_BUCKET).remove([photo_path])}photo_path=path;let u=await db.from("meals").update({photo_path}).eq("id",mealId);if(u.error)throw u.error}
-let ingredientInputs=queryAll(".ingredient-row",$("#ingredient-rows")).map((r,i)=>({name:$(".ing-name",r).value.trim(),ingredient_id:r.dataset.ingredientId||null,amount:$(".ing-amount",r).value===""?null:Number($(".ing-amount",r).value),unit:$(".ing-unit",r).value,calories_per_100g:$(".ing-kcal-per100",r).value.trim()===""?null:Number($(".ing-kcal-per100",r).value),ingredient_group:"",sort_order:i})).filter(i=>i.name);let ingredients=ingredientInputs.map(item=>({meal_id:mealId,owner_id:user.id,...item}));if(ingredients.length){let ins=await db.from("meal_ingredients").insert(ingredients);if(ins.error)throw ins.error}let oldIngredientIds=(old?.ingredients||[]).map(i=>i.id).filter(Boolean);if(oldIngredientIds.length){let del=await db.from("meal_ingredients").delete().in("id",oldIngredientIds);if(del.error)throw del.error}mealFormSnapshot=null;$("#meal-dialog").close();await loadAll();drawMeals();drawSharedMeals();drawFamilyRecipes();drawPlanner();drawShopping();toast(old?"Meal updated":"Meal saved")}catch(err){toast("Couldn't save meal: "+err.message)}finally{button.disabled=false;button.textContent="Save meal"}}
+async function saveMeal(e){
+ e.preventDefault();
+ const name=$("#meal-name").value.trim();
+ if(!name)return;
+ const button=$("#save-meal-button");
+ button.disabled=true;button.textContent="Saving…";
+ let newlyCreatedMealId=null;
+ try{
+  const mid=$("#meal-id").value,old=meals.find(m=>m.id===mid);
+  const isFamily=$("#meal-family").checked,isShared=$("#meal-shared").checked;
+  const meal_types=selectedMealTypes(),audience=$("#meal-audience").value;
+  const calculatedCalories=calculateRecipeCalories();
+  const calories_kcal=calculatedCalories!==null?calculatedCalories:($("#meal-calories").value.trim()===""?(old?.calories_kcal??null):Number($("#meal-calories").value));
+  const protein_g=$("#meal-protein").value.trim()===""?null:Number($("#meal-protein").value);
+  const fiber_g=$("#meal-fiber").value.trim()===""?null:Number($("#meal-fiber").value);
+  if(isFamily&&!familyId)throw new Error("Cires Family membership is not available for this account.");
+  const ingredientInputs=queryAll(".ingredient-row",$("#ingredient-rows")).map((r,i)=>({
+   name:$(".ing-name",r).value.trim(),selectedId:r.dataset.ingredientId||"",
+   amount:$(".ing-amount",r).value===""?null:Number($(".ing-amount",r).value),
+   unit:$(".ing-unit",r).value,
+   calories_per_100g:$(".ing-kcal-per100",r).value.trim()===""?null:Number($(".ing-kcal-per100",r).value),
+   ingredient_group:"",sort_order:i
+  })).filter(i=>i.name);
+  button.textContent="Checking ingredients…";
+  const ingredients=[];
+  for(const item of ingredientInputs){
+   const ingredient_id=await resolveIngredientId(item.name,item.selectedId);
+   ingredients.push({meal_id:null,owner_id:user.id,ingredient_id,name:item.name,amount:item.amount,unit:item.unit,calories_per_100g:item.calories_per_100g,ingredient_group:item.ingredient_group,sort_order:item.sort_order});
+  }
+  let mealId=old?.id;
+  let photo_path=old?.photo_path||null;
+  const mealPayload={family_id:isFamily?familyId:null,shared_with_family:isShared,meal_types,audience,calories_kcal,protein_g,fiber_g,name,instructions:$("#meal-instructions").value.trim()};
+  if(!mealId){
+   const r=await db.from("meals").insert({owner_id:user.id,created_by:user.id,...mealPayload}).select("id").single();
+   if(r.error)throw r.error;
+   mealId=r.data.id;newlyCreatedMealId=mealId;
+  }else{
+   const r=await db.from("meals").update({...mealPayload,updated_at:new Date().toISOString()}).eq("id",mealId);
+   if(r.error)throw r.error;
+  }
+  if(photoFile||(old&&isFamily&&!old.family_id&&photo_path)){
+   let sourceFile=photoFile;
+   if(!sourceFile&&old?.photo){
+    button.textContent="Preparing shared photo…";
+    const response=await fetch(old.photo);
+    if(!response.ok)throw new Error("Could not prepare this photo for family sharing.");
+    const blob=await response.blob();sourceFile=new File([blob],old.name+".jpg",{type:blob.type||"image/jpeg"});
+   }
+   button.textContent="Optimizing photo…";
+   const optimized=await compressMealPhoto(sourceFile);
+   const ext=optimized.type==="image/webp"?"webp":"jpg";
+   button.textContent="Uploading photo…";
+   const path=(isFamily?"family/"+familyId:user.id)+"/"+mealId+"-"+Date.now()+"."+ext;
+   const up=await db.storage.from(PHOTO_BUCKET).upload(path,optimized,{upsert:true,contentType:optimized.type});
+   if(up.error)throw up.error;
+   if(photo_path)await db.storage.from(PHOTO_BUCKET).remove([photo_path]);
+   photo_path=path;
+   const u=await db.from("meals").update({photo_path}).eq("id",mealId);
+   if(u.error)throw u.error;
+  }
+  const rows=ingredients.map(item=>({...item,meal_id:mealId}));
+  if(rows.length){
+   button.textContent="Saving ingredients…";
+   const ins=await db.from("meal_ingredients").insert(rows);
+   if(ins.error)throw ins.error;
+  }
+  const oldIngredientIds=(old?.ingredients||[]).map(i=>i.id).filter(Boolean);
+  if(oldIngredientIds.length){
+   const del=await db.from("meal_ingredients").delete().in("id",oldIngredientIds);
+   if(del.error)throw del.error;
+  }
+  newlyCreatedMealId=null;
+  mealFormSnapshot=null;$("#meal-dialog").close();
+  await loadAll();drawMeals();drawSharedMeals();drawFamilyRecipes();drawPlanner();drawShopping();
+  toast(old?"Meal updated":"Meal saved");
+ }catch(err){
+  if(newlyCreatedMealId){
+   const cleanup=await db.from("meals").delete().eq("id",newlyCreatedMealId);
+   if(cleanup.error)console.error("Could not roll back incomplete meal:",cleanup.error);
+  }
+  toast("Couldn't save meal: "+(err.message||"Please try again."));
+ }finally{
+  button.disabled=false;button.textContent="Save meal";
+ }
+}
 function detail(mid){
 let m=meals.find(x=>x.id===mid);if(!m)return;const owns=m.owner_id===user.id,canCopy=!owns&&m.shared_with_family;
 $("#detail-content").innerHTML='<div class="detail-photo">'+img(m)+'<button type="button" class="icon-button close-dialog detail-close" aria-label="Close recipe">×</button></div><div class="detail-content"><div class="eyebrow">'+(m.family_id?"CIRES FAMILY · FAMILY HERITAGE RECIPE":canCopy?"SHARED WITH YOU":"YOUR RECIPE")+'</div><h2>'+esc(m.name)+'</h2><div class="detail-actions"><button class="button primary" id="detail-add">＋ Add to planner</button>'+(owns?'<button class="button light" id="detail-share">↗ Share link</button><button class="button light" id="detail-edit">Edit meal</button><button class="button light" id="detail-delete">Delete</button>':canCopy?'<button class="button light" id="detail-copy">＋ Add to My Meals</button>':'')+'</div><h3>Ingredients</h3><div class="detail-ingredients">'+(m.ingredients||[]).map(i=>{let kcal=i.calories_per_100g!==null&&i.calories_per_100g!==undefined&&i.amount!==""&&(i.unit==="g"||i.unit==="kg")?Number(i.amount)*(i.unit==="kg"?1000:1)*Number(i.calories_per_100g)/100:null;return '<div class="detail-ingredient"><span>'+esc(i.name)+(kcal!==null?'<small class="detail-ingredient-kcal">'+Math.round(kcal*10)/10+' kcal · '+esc(i.calories_per_100g)+' kcal / 100 g</small>':"")+'</span><strong>'+esc(i.amount)+(i.amount!==""?" ":"")+esc(i.unit)+'</strong></div>'}).join("")+'</div>'+nutritionDetail(m)+'<h3>Preparation</h3><div class="detail-instructions">'+esc(m.instructions||"No preparation instructions added yet.")+'</div>'+(m.notes?'<h3>Notes</h3><p class="detail-instructions">'+esc(m.notes)+'</p>':"")+'</div><div class="modal-footer"><button class="button light close-dialog">Close</button></div>';
