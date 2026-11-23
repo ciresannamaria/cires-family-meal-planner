@@ -33,9 +33,161 @@
 </section>
 <section id="shared-screen" class="shared-screen" hidden><article id="shared-content" class="shared-card"></article></section>
 <div class="app-shell" id="app-shell" hidden>
-<!-- App content remains unchanged; this cache refresh updates the deployed entry point. -->
+<aside class="sidebar">
+<a class="brand" href="#planner" aria-label="Cires Family Meal Planner home"><img src="assets/cires-family-logo.webp" alt="Cires Family Meal Planner"></a>
+<div class="sidebar-label">WORKSPACE</div>
+<nav class="main-nav" aria-label="Main navigation">
+<button class="nav-link" data-view="meals"><span class="nav-emoji" aria-hidden="true">🍽️</span><span>MEALS</span><b id="meal-count">0</b></button>
+<button class="nav-link active" data-view="planner"><span class="nav-emoji" aria-hidden="true">📅</span><span>PLANNER</span></button>
+<button class="nav-link" data-view="family"><span class="nav-emoji" aria-hidden="true">❤️</span><span>FAMILY</span><b id="family-count">0</b></button>
+<button class="nav-link" data-view="shopping"><span class="nav-emoji" aria-hidden="true">🛒</span><span>SHOPPING</span></button>
+<button class="nav-link profile-nav-link" data-view="profile" type="button"><span class="nav-emoji" aria-hidden="true">👤</span><span>PROFILE</span></button>
+</nav>
+
+</aside>
+<main class="main-content">
+<header class="topbar"><div class="breadcrumb">YOUR HOME <span>/</span> <strong id="breadcrumb-current">MEALS</strong></div><div class="top-actions"><span id="today-label"></span><div class="profile-wrap"><button class="avatar profile-toggle" id="profile-toggle" type="button" aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false">🌿</button><section class="profile-menu" id="profile-menu" hidden><div class="profile-heading"><div class="profile-avatar-preview" id="profile-avatar-preview" aria-hidden="true">🌿</div><div class="profile-identity"><strong id="profile-name">Your profile</strong><small id="profile-email"></small></div></div><div class="avatar-picker-label">Choose your avatar</div><div class="avatar-picker" aria-label="Choose a profile avatar"><button type="button" data-avatar="🌿" aria-label="Use 🌿 as avatar" aria-pressed="false">🌿</button><button type="button" data-avatar="🍒" aria-label="Use 🍒 as avatar" aria-pressed="false">🍒</button><button type="button" data-avatar="🍓" aria-label="Use 🍓 as avatar" aria-pressed="false">🍓</button><button type="button" data-avatar="🍋" aria-label="Use 🍋 as avatar" aria-pressed="false">🍋</button><button type="button" data-avatar="🥑" aria-label="Use 🥑 as avatar" aria-pressed="false">🥑</button><button type="button" data-avatar="🍊" aria-label="Use 🍊 as avatar" aria-pressed="false">🍊</button><button type="button" data-avatar="🫐" aria-label="Use 🫐 as avatar" aria-pressed="false">🫐</button><button type="button" data-avatar="🌸" aria-label="Use 🌸 as avatar" aria-pressed="false">🌸</button><button type="button" data-avatar="🌻" aria-label="Use 🌻 as avatar" aria-pressed="false">🌻</button><button type="button" data-avatar="🐝" aria-label="Use 🐝 as avatar" aria-pressed="false">🐝</button><button type="button" data-avatar="🦋" aria-label="Use 🦋 as avatar" aria-pressed="false">🦋</button><button type="button" data-avatar="🐱" aria-label="Use 🐱 as avatar" aria-pressed="false">🐱</button><button type="button" data-avatar="🐻" aria-label="Use 🐻 as avatar" aria-pressed="false">🐻</button><button type="button" data-avatar="🦊" aria-label="Use 🦊 as avatar" aria-pressed="false">🦊</button><button type="button" data-avatar="🐼" aria-label="Use 🐼 as avatar" aria-pressed="false">🐼</button><button type="button" data-avatar="🐸" aria-label="Use 🐸 as avatar" aria-pressed="false">🐸</button></div><div class="profile-menu-actions"><button class="text-button" data-profile-view="shared" type="button">💌 &nbsp; SHARED MEALS</button><button class="text-button" data-profile-view="spices" type="button">🌿 &nbsp; SPICES & PAIRINGS</button><button class="text-button" data-profile-view="settings" type="button">⚙️ &nbsp; SETTINGS</button><button class="text-button" data-profile-view="shopping" type="button">🛒 &nbsp; SHOPPING LIST</button><button class="text-button" data-profile-view="books" type="button">📚 &nbsp; BOOKS</button><button class="text-button" id="open-cycle-calendar" type="button">🌸 &nbsp; MY CYCLE CALENDAR</button><button class="text-button" id="sign-out" type="button">↪ &nbsp; SIGN OUT</button></div></section></div></div></header>
+<section class="view" id="view-profile">
+ <div class="page-heading"><div><div class="eyebrow">YOUR ACCOUNT</div><h1>Profile</h1><p>Manage your account and open the other areas of your family planner.</p></div></div>
+ <section class="profile-page-identity"><div class="profile-page-avatar" id="profile-page-avatar">🌿</div><div><h2 id="profile-page-name">Your profile</h2><p id="profile-page-email"></p></div></section>
+ <div class="profile-page-links">
+  <button class="profile-page-link" data-profile-view="shared" type="button"><span>💌</span><span><strong>Shared Meals</strong><small>Recipes shared with you by your sister</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="spices" type="button"><span>🌿</span><span><strong>Spices & Pairings</strong><small>Explore spices, blends and flavour pairings</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="settings" type="button"><span>⚙️</span><span><strong>Settings</strong><small>Manage preferences and recipe backups</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="shopping" type="button"><span>🛒</span><span><strong>Shopping List</strong><small>Open your shopping list</small></span><b>›</b></button>
+  <button class="profile-page-link" data-profile-view="books" type="button"><span>📚</span><span><strong>Books</strong><small>Family library</small></span><b>›</b></button>
+  <button class="profile-page-link" id="profile-page-cycle" type="button"><span>🌸</span><span><strong>My Cycle Calendar</strong><small>Your private cycle calendar</small></span><b>›</b></button>
+ </div>
+ <button class="button light profile-page-signout" id="profile-page-signout" type="button">↪ Sign out</button>
+</section>
+<section class="view" id="view-meals">
+<div class="page-heading"><div><h1>Meals</h1></div><button class="button primary" id="add-meal">＋ Add a meal</button></div>
+<div class="toolbar"><label class="search">⌕ <input id="meal-search" type="search" placeholder="Search meals or ingredients…"></label><span id="meal-results"></span></div>
+<div class="meal-type-filters" aria-label="Filter meals by type"><button type="button" data-meal-filter="All" class="active" aria-pressed="true">All</button><button type="button" data-meal-filter="Breakfast" aria-pressed="false">🍳 Breakfast</button><button type="button" data-meal-filter="Lunch" aria-pressed="false">🥗 Lunch</button><button type="button" data-meal-filter="Dinner" aria-pressed="false">🍽️ Dinner</button><button type="button" data-meal-filter="Snack" aria-pressed="false">🍎 Snack</button><button type="button" data-meal-filter="Dessert" aria-pressed="false">🍰 Dessert</button></div>
+<div class="meal-type-filters audience-filters" aria-label="Filter meals by who they are for"><button type="button" data-meal-audience-filter="All" class="active" aria-pressed="true">Everyone</button><button type="button" data-meal-audience-filter="Adults" aria-pressed="false">Adults</button><button type="button" data-meal-audience-filter="Children" aria-pressed="false">Children</button></div>
+<div class="meal-grid" id="meal-grid"></div>
+<div class="empty-state" id="meal-empty"><div class="empty-mark">✳</div><h2>Your recipe collection starts here</h2><p>Add a meal you've cooked. Give it a photo, list its ingredients and save the preparation steps.</p><button class="button primary" id="empty-add-meal">＋ Add your first meal</button></div>
+</section>
+<section class="view" id="view-shared">
+<div class="page-heading"><div><div class="eyebrow">SHARED WITH YOU</div><h1>Shared Meals</h1><p>Recipes your sister has chosen to share with you.</p></div></div>
+<div class="toolbar"><span id="shared-results"></span></div><div class="meal-type-filters" aria-label="Filter shared meals by type"><button type="button" data-meal-filter="All" class="active" aria-pressed="true">All</button><button type="button" data-meal-filter="Breakfast" aria-pressed="false">🍳 Breakfast</button><button type="button" data-meal-filter="Lunch" aria-pressed="false">🥗 Lunch</button><button type="button" data-meal-filter="Dinner" aria-pressed="false">🍽️ Dinner</button><button type="button" data-meal-filter="Snack" aria-pressed="false">🍎 Snack</button><button type="button" data-meal-filter="Dessert" aria-pressed="false">🍰 Dessert</button></div><div class="meal-grid" id="shared-grid"></div><div class="empty-state" id="shared-empty"><div class="empty-mark">↗</div><h2>No shared meals yet</h2><p>When your sister shares a recipe with you, it will appear here.</p></div>
+</section>
+<section class="view" id="view-family">
+<div class="page-heading"><div><div class="eyebrow">CIRES FAMILY</div><h1>Family recipes</h1><p>Recipes we keep and cook together.</p></div><button class="button primary" id="family-add-meal">＋ Add a family recipe</button></div>
+<div class="toolbar"><span id="family-results"></span></div><div class="meal-type-filters" aria-label="Filter family recipes by type"><button type="button" data-meal-filter="All" class="active" aria-pressed="true">All</button><button type="button" data-meal-filter="Breakfast" aria-pressed="false">🍳 Breakfast</button><button type="button" data-meal-filter="Lunch" aria-pressed="false">🥗 Lunch</button><button type="button" data-meal-filter="Dinner" aria-pressed="false">🍽️ Dinner</button><button type="button" data-meal-filter="Snack" aria-pressed="false">🍎 Snack</button><button type="button" data-meal-filter="Dessert" aria-pressed="false">🍰 Dessert</button></div><div class="meal-grid" id="family-grid"></div><div class="empty-state" id="family-empty"><div class="empty-mark">♡</div><h2>No family recipes yet</h2><p>Save a meal and switch on “Add to Cires Family” to share it here.</p><button class="button primary" id="family-empty-add">＋ Add a family recipe</button></div>
+</section>
+<section class="view" id="view-cycle"><div class="page-heading"><div><div class="eyebrow">YOUR PRIVATE HEALTH JOURNAL</div><h1>My cycle calendar</h1><p>Record period start dates and see an estimated cycle day and phase.</p></div></div><div class="cycle-layout"><section class="cycle-settings"><h2>Cycle settings</h2><form id="cycle-settings-form"><label class="field">Usual period length (days)<input id="cycle-period-days" type="number" min="1" max="15" value="5" required></label><label class="field">Average cycle length (days)<input id="cycle-average-days" type="number" min="15" max="60" value="28" required><small>Count from the first day of one period to the first day of the next.</small></label><button class="button primary" type="submit">Save settings</button></form><div class="cycle-add-period"><h2>Add a period start</h2><form id="cycle-period-form"><label class="field">First day of period<input id="cycle-start-date" type="date" required></label><button class="button light" type="submit">＋ Save period start</button></form></div><p class="cycle-privacy">Your cycle records are private to your signed-in account.</p></section><section class="cycle-calendar-panel"><div class="cycle-calendar-heading"><button class="icon-button" id="cycle-prev-month" type="button" aria-label="Previous month">‹</button><h2 id="cycle-month-label"></h2><button class="icon-button" id="cycle-next-month" type="button" aria-label="Next month">›</button></div><div class="cycle-calendar-grid" id="cycle-calendar-grid"></div><p class="cycle-tap-hint">Tap any date to record or check whether your period started.</p><div class="cycle-legend"><span>● Period</span><span>● Follicular</span><span>● Ovulatory estimate</span><span>● Luteal estimate</span></div><div id="cycle-status" class="cycle-status"></div><div class="cycle-history"><h3>Recorded period starts</h3><div id="cycle-period-history"></div></div></section></div><dialog class="cycle-day-dialog" id="cycle-day-dialog"><div class="cycle-day-dialog-inner"><h2 id="cycle-day-dialog-title">Did your period start?</h2><p id="cycle-day-dialog-text"></p><div class="cycle-day-dialog-actions"><button type="button" class="button light" id="cycle-day-no">No, not today</button><button type="button" class="button primary" id="cycle-day-yes">Yes, it started</button></div></div></dialog></section>
+<section class="view active" id="view-planner">
+<div class="page-heading"><div><h1>Planner</h1></div><button class="button light" id="print-menu">↓ Download weekly menu</button></div>
+<div class="week-controls"><button class="button primary" id="shuffle-week">✦ Plan My Week</button><button class="icon-button clear-week-button" id="clear-week" type="button" aria-label="Clear the currently displayed week" title="Clear the currently displayed week">🗑</button><button class="button light" id="add-planner-person">＋ Add one more person</button><button class="icon-button" id="prev-week">‹</button><div><strong id="week-label"></strong><small id="planner-week-range"></small></div><button class="icon-button" id="next-week">›</button><button class="text-button" id="this-week">This week</button></div>
+<div class="week-grid" id="week-grid"></div><p class="planner-tip">✳ Add as many meal entries as you need. Portions are used to calculate your shopping list.</p>
+</section>
+<section class="view" id="view-shopping">
+<div class="page-heading"><div><div class="eyebrow">READY FOR THE STORE</div><h1>Shopping list</h1><p>Ingredients combined from your weekly plan.</p></div><button class="button light" id="print-shopping">↓ Download shopping list</button></div>
+<div class="shopping-week-controls week-controls"><button class="icon-button" id="shopping-prev-week" type="button" aria-label="Previous week">‹</button><div><strong id="shopping-week-label"></strong><small id="shopping-week-range"></small></div><button class="icon-button" id="shopping-next-week" type="button" aria-label="Next week">›</button><button class="text-button" id="shopping-this-week" type="button">This week</button></div>
+<div class="shopping-summary" id="shopping-summary"></div><div class="shopping-list" id="shopping-list"></div>
+</section>
+<section class="view" id="view-settings"><div class="page-heading"><div><div class="eyebrow">PREFERENCES</div><h1>Settings</h1><p>Manage your recipe backups and planner preferences.</p></div></div><div class="settings-sections"><section class="settings-section"><div class="settings-section-heading"><div><h2>Profile avatar</h2><p>Choose from the available icons below.</p></div></div><div class="settings-actions"><div class="settings-action"><div class="avatar-picker" id="settings-avatar-picker" aria-label="Choose a profile avatar"><button type="button" data-avatar="🌿" aria-label="Use 🌿 as avatar" aria-pressed="false">🌿</button><button type="button" data-avatar="🍒" aria-label="Use 🍒 as avatar" aria-pressed="false">🍒</button><button type="button" data-avatar="🍓" aria-label="Use 🍓 as avatar" aria-pressed="false">🍓</button><button type="button" data-avatar="🍋" aria-label="Use 🍋 as avatar" aria-pressed="false">🍋</button><button type="button" data-avatar="🥑" aria-label="Use 🥑 as avatar" aria-pressed="false">🥑</button><button type="button" data-avatar="🍊" aria-label="Use 🍊 as avatar" aria-pressed="false">🍊</button><button type="button" data-avatar="🫐" aria-label="Use 🫐 as avatar" aria-pressed="false">🫐</button><button type="button" data-avatar="🌸" aria-label="Use 🌸 as avatar" aria-pressed="false">🌸</button><button type="button" data-avatar="🌻" aria-label="Use 🌻 as avatar" aria-pressed="false">🌻</button><button type="button" data-avatar="🐝" aria-label="Use 🐝 as avatar" aria-pressed="false">🐝</button><button type="button" data-avatar="🦋" aria-label="Use 🦋 as avatar" aria-pressed="false">🦋</button><button type="button" data-avatar="🐱" aria-label="Use 🐱 as avatar" aria-pressed="false">🐱</button><button type="button" data-avatar="🐻" aria-label="Use 🐻 as avatar" aria-pressed="false">🐻</button><button type="button" data-avatar="🦊" aria-label="Use 🦊 as avatar" aria-pressed="false">🦊</button><button type="button" data-avatar="🐼" aria-label="Use 🐼 as avatar" aria-pressed="false">🐼</button><button type="button" data-avatar="🐸" aria-label="Use 🐸 as avatar" aria-pressed="false">🐸</button></div></div></div></section><section class="settings-section"><div class="settings-section-heading"><div><h2>Export, import your recipes</h2></div></div><div class="settings-actions"><div class="settings-action"><div><h3>Export recipes</h3></div><button class="button light" id="export-data" type="button">Export backup</button></div><div class="settings-action"><div><h3>Import recipes</h3></div><label class="button light settings-file-button">Choose backup<input id="import-data" type="file" accept="application/json"></label></div></div></section><section class="settings-section"><div class="settings-section-heading"><div><h2>Weekly Planner Setup</h2></div></div><div class="settings-actions"><div class="settings-action"><div><h3>First day of the week</h3></div><select id="planner-week-start" class="settings-select" aria-label="First day of the week"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></div><div class="settings-action"><div><h3>Calendar display</h3></div><select id="planner-display-mode" class="settings-select" aria-label="Weekly planner display"><option value="flexible">Flexible — today first</option><option value="fixed">Fixed — selected week order</option></select></div></div></section></div></section>
+<section class="view" id="view-books">
+<div class="page-heading"><div><div class="eyebrow">FAMILY LIBRARY</div><h1>Books</h1><p>Books and guides for everyone in the family.</p></div></div>
+<div class="books-grid">
+ <article class="book-card">
+  <div class="book-card-heading"><div><div class="eyebrow">PAIRINGS GUIDE</div><h2>Pairings</h2></div><a class="button light" href="https://drive.google.com/file/d/1KY96_Xo_2-ZzuFWdYREnXPjH3YR3flr_/view" target="_blank" rel="noopener noreferrer">Open in Drive ↗</a></div>
+  <div class="book-embed-wrap"><iframe src="https://drive.google.com/file/d/1KY96_Xo_2-ZzuFWdYREnXPjH3YR3flr_/preview" title="Pairings book" allow="autoplay" loading="lazy"></iframe></div>
+ </article>
 </div>
+</section>
+<section class="view" id="view-spices">
+<div class="page-heading"><div><div class="eyebrow">EXPLORE FLAVOUR</div><h1>Spices & pairings</h1><p>Build your own guide to ingredients, aromas and combinations worth exploring.</p></div><button class="button primary" id="add-spice-card" hidden>＋ Add a pairing</button></div>
+<div class="spice-tabs" role="tablist" aria-label="Spices sections"><button type="button" class="active" data-spice-tab="products">Spices</button><button type="button" data-spice-tab="mine">My Blends</button><button type="button" data-spice-tab="pairings">Pairings</button></div>
+<div id="spice-products-panel">
+ <div class="spice-section-heading"><div><h2>My Spices</h2><p>Products and spice blends you want to keep.</p></div><button class="button primary" id="add-spice-product" type="button">＋ Add a spice</button></div>
+ <div class="spice-count" id="spice-product-count">0 spices</div>
+ <div class="spice-product-grid" id="spice-product-grid"></div>
+ <div class="spice-empty" id="spice-product-empty" hidden><h2>Your spice collection is ready</h2><p>Add a spice with its photo and a link to the shop.</p></div>
+</div>
+<div id="my-spices-panel" hidden>
+ <div class="spice-section-heading"><div><h2>My Homemade Blends</h2><p>Your own seasoning recipes, with photos and exact ingredient amounts.</p></div><button class="button primary" id="add-my-spice" type="button">＋ Add my blend</button></div>
+ <div class="spice-count" id="my-spice-count">0 blends</div>
+ <div class="spice-product-grid" id="my-spice-grid"></div>
+ <div class="spice-empty" id="my-spice-empty" hidden><h2>Your blend collection is ready</h2><p>Add your first homemade spice blend.</p></div>
+</div>
+<div id="spice-pairings-panel" hidden>
+ <div class="spice-journal-intro"><span>✿</span><p>Explore ingredients, aromas and combinations worth trying.</p><small id="spice-card-count">0 cards</small></div>
+ <div class="spice-card-grid" id="spice-card-grid"></div>
+ <div class="spice-empty" id="spice-empty" hidden><h2>Your flavour journal is ready</h2><p>Add an ingredient card to start collecting pairings.</p></div>
+</div>
+</section>
+</main></div>
+<dialog id="cycle-insight-dialog" class="modal cycle-insight-dialog"><div class="modal-header"><div><div class="eyebrow">YOUR CYCLE & WELLBEING</div><h2>Cycle stage</h2></div><button type="button" class="icon-button" data-cycle-insight-close aria-label="Close">×</button></div><div id="cycle-insight-content"></div><div class="modal-footer"><button type="button" class="button light" data-cycle-insight-close>Close</button></div></dialog>
+<dialog id="spice-form-dialog" class="modal spice-form-dialog"><form id="spice-form">
+<div class="modal-header"><div><div class="eyebrow">YOUR FLAVOUR JOURNAL</div><h2 id="spice-form-title">Add a flavour card</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<label class="field full">Ingredient or product name<input id="spice-title" maxlength="90" required placeholder="e.g. Pumpkin"></label>
+<label class="field full">Flavor and aroma description<textarea id="spice-description" rows="4" required placeholder="Describe its taste, aroma and texture, and why certain pairings work…"></textarea></label>
+<label class="field full">Card photo <small>Choose an existing photo from your gallery or take a new photo with your camera. JPG, PNG or WebP; up to 20 MB.</small><input id="spice-photo" type="file" accept="image/*"></label><div id="spice-photo-preview" class="spice-photo-preview"></div>
+<label class="field full">Ingredients that pair well <small>One per line. Optional group labels can be written like “Warm & sweet: cinnamon stick”.</small><textarea id="spice-ingredients" rows="7" placeholder="Warm & sweet: cinnamon stick&#10;Warm & sweet: fresh ginger&#10;Savory & earthy: cumin seeds"></textarea></label>
+<label class="field full">Notes and shop links<textarea id="spice-notes" rows="4" placeholder="Add your observations, spice-blend ideas, or links to shops…"></textarea></label>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-spice-card">Save card</button></div>
+</form></dialog>
+<dialog id="spice-detail-dialog" class="modal spice-detail-dialog"><div id="spice-detail-content"></div></dialog>
+<dialog id="my-spice-form-dialog" class="modal spice-product-form-dialog"><form id="my-spice-form">
+<div class="modal-header"><div><div class="eyebrow">MY HOMEMADE SPICE BLENDS</div><h2 id="my-spice-form-title">Add your own spice blend</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<label class="field full">Spice blend name<input id="my-spice-title" maxlength="120" required placeholder="e.g. Savory Pumpkin Spice Blend"></label>
+<label class="field full">Photo <small>Upload a photo of your finished spice blend or its ingredients.</small><input id="my-spice-photo" type="file" accept="image/*"></label><div id="my-spice-photo-preview" class="spice-photo-preview"></div>
+<label class="field full">Ingredients and amounts <small>Enter one ingredient per line, for example: Smoked paprika — 2 tbsp</small><textarea id="my-spice-ingredients" rows="7" required placeholder="Smoked paprika — 2 tbsp&#10;Ground cumin — 1 tbsp&#10;Garlic powder — 2 tsp"></textarea></label>
+<label class="field full">How to prepare <textarea id="my-spice-instructions" rows="3" placeholder="Mix thoroughly and store in an airtight jar…"></textarea></label>
+<label class="field full">What to use it with <textarea id="my-spice-uses" rows="2" placeholder="Pumpkin, potatoes, carrots…"></textarea></label>
+<label class="field full">Storage and shelf life <textarea id="my-spice-storage" rows="3" placeholder="Keep in a cool, dry, dark cupboard…"></textarea></label>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-my-spice">Save blend</button></div>
+</form></dialog>
+
+<dialog id="spice-product-form-dialog" class="modal spice-product-form-dialog"><form id="spice-product-form">
+<div class="modal-header"><div><div class="eyebrow">MY SPICE COLLECTION</div><h2 id="spice-product-form-title">Add a spice</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<label class="field full">Spice or product name<input id="spice-product-title" maxlength="120" required placeholder="e.g. Ostmann – Let’s Do Mischungen"></label>
+<label class="field full">Link to the shop page<input id="spice-product-url" type="url" required placeholder="https://…"></label>
+<label class="field full">Product photo <small>Upload a photo from your device. JPG, PNG or WebP.</small><input id="spice-product-photo" type="file" accept="image/*"></label><div id="spice-product-photo-preview" class="spice-photo-preview"></div>
+<label class="field full">My notes <small>Optional</small><textarea id="spice-product-notes" rows="3" placeholder="What you like about it, which dishes you use it for…"></textarea></label>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-spice-product">Save spice</button></div>
+</form></dialog>
+
+<dialog id="meal-dialog" class="modal"><form id="meal-form" method="dialog" novalidate>
+<div class="modal-header"><div><h2 id="meal-dialog-title">Add a meal</h2></div><button type="button" class="icon-button close-dialog">×</button></div>
+<input type="hidden" id="meal-id"><div class="form-grid">
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">01</span><div><h3>Meal details</h3><p>Name, who it's for, and when you eat it</p></div></div>
+  <div class="form-section-content">
+    <label class="field full">Meal name<input id="meal-name" required maxlength="90" placeholder="e.g. Salmon with bulgur"></label>
+    <label class="field full">Suitable for <select id="meal-audience"><option value="everyone">Everyone — adults and children</option><option value="adults">Adults</option><option value="children">Children</option></select></label>
+    <div class="field full meal-type-field"><span class="field-label">Meal type</span><div class="meal-type-options"><label class="meal-type-option"><input type="checkbox" value="Breakfast"><span>Breakfast</span></label><label class="meal-type-option"><input type="checkbox" value="Lunch"><span>Lunch</span></label><label class="meal-type-option"><input type="checkbox" value="Dinner"><span>Dinner</span></label><label class="meal-type-option"><input type="checkbox" value="Snack"><span>Snack</span></label><label class="meal-type-option"><input type="checkbox" value="Dessert"><span>Dessert</span></label></div></div>
+  </div>
+</section>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">02</span><div><h3>Nutrition</h3><p>Calories and nutritional values per serving</p></div></div>
+  <div class="form-section-content">
+    <div class="field full nutrition-entry"><div class="sharing-options"><label class="family-toggle-row"><span>Share with Sister</span><input id="meal-shared" type="checkbox"></label><label class="family-toggle-row"><span>Add to Cires Family</span><input id="meal-family" type="checkbox"></label></div><div class="nutrition-inputs"><label class="field"><span>Calories <small>(kcal)</small></span><input id="meal-calories" type="number" min="0" step="0.1" inputmode="decimal" placeholder="kcal"></label><label class="field"><span>Protein <small>(g)</small></span><input id="meal-protein" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label><label class="field"><span>Fibre <small>(g)</small></span><input id="meal-fiber" type="number" min="0" step="0.1" inputmode="decimal" placeholder="g"></label></div></div>
+  </div>
+</section>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">03</span><div><h3>Meal photo</h3><p>Add a picture of your finished meal</p></div></div>
+  <div class="form-section-content">
+    <div class="field full"><div class="photo-actions"><label class="button light photo-choice">Choose a photo<input id="meal-photo" type="file" accept="image/*"></label><label class="button light photo-choice">Take a photo<input id="meal-camera" type="file" accept="image/*" capture="environment"></label></div><div id="photo-preview"></div></div>
+  </div>
+</section>
+<section class="form-section full">
+  <div class="form-section-heading"><span class="section-number">04</span><div><h3>Recipe</h3><p>Ingredients and how to prepare it</p></div></div>
+  <div class="form-section-content">
+    <div class="field full"><div class="field-title-row"><span>Ingredients</span><button type="button" class="small-add" id="add-ingredient">＋ Add ingredient</button></div><div id="ingredient-rows"></div><div class="ingredient-total" aria-live="polite"><span>Total ingredient calories</span><strong id="ingredient-calorie-total">—</strong></div></div>
+    <label class="field full">Preparation instructions<textarea id="meal-instructions" rows="5" placeholder="Describe how you prepare this meal…"></textarea></label>
+  </div>
+</section>
+</div>
+<div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="submit" class="button primary" id="save-meal-button">Save meal</button></div>
+</form></dialog>
+<dialog id="detail-dialog" class="modal detail-modal"><div id="detail-content"></div></dialog>
+<dialog id="picker-dialog" class="modal picker-modal"><div class="modal-header"><div><div class="eyebrow">WEEKLY PLANNER</div><h2>Choose a meal</h2></div><button class="icon-button close-dialog">×</button></div>
+<input type="hidden" id="picker-day"><input type="hidden" id="picker-slot"><input type="hidden" id="picker-person" value="me"><div class="picker-controls"><label class="field portion-field">Portions<input id="picker-portions" type="number" min="1" max="99" step="1" value="1"></label><label class="search picker-search">⌕ <input id="picker-search" type="search" placeholder="Search…"></label></div><div class="picker-type-filters" role="group" aria-label="Filter recipes by meal type"><button type="button" class="active" data-picker-type="All">All</button><button type="button" data-picker-type="Breakfast">Breakfast</button><button type="button" data-picker-type="Lunch">Lunch</button><button type="button" data-picker-type="Dinner">Dinner</button><button type="button" data-picker-type="Snack">Snack</button><button type="button" data-picker-type="Dessert">Dessert</button></div><div id="picker-meals" class="picker-meals"></div><div class="modal-footer"><button class="button light close-dialog">Close</button></div></dialog>
+<dialog id="shuffle-dialog" class="modal shuffle-modal"><div class="modal-header"><div><div class="eyebrow">A FRESH WEEK, YOUR WAY</div><h2>Who are we planning for?</h2></div><button type="button" class="icon-button close-dialog">×</button></div><p id="shuffle-description" class="shuffle-description"></p><label class="field">Choose people<select id="shuffle-person"></select></label><div class="shuffle-dialog-note">Only the selected person’s plan will be replaced. Everyone else’s meals will stay as they are.</div><div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="button" class="button primary" id="shuffle-generate">✦ Generate plan</button></div></dialog><div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js?v=20261123-27?v=20261123-27"></script>
+<script src="supabase-config.js?v=20261123-27"></script>
 <script src="app.js?v=20261123-27"></script>
 </body></html>
