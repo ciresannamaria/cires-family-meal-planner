@@ -350,7 +350,7 @@ async function saveNutritionProfile(e){
  const button=$("#nutrition-profile-save");button.disabled=true;button.textContent="Saving…";
  try{const r=await db.from("planner_people").update(payload).eq("user_id",user.id).eq("person_key",p.person_key);if(r.error)throw r.error;Object.assign(p,payload);drawAdultNutritionSettings();drawPlanner();$("#nutrition-profile-dialog").close();toast("Nutrition profile saved for "+p.label+".");}catch(err){error.textContent="Could not save profile: "+(err.message||"Please try again.");}finally{button.disabled=false;button.textContent="Save profile";}
 }
-function addPlannerPerson(){
+async function addPlannerPerson(){
  let label=prompt("What should this person’s row be called?");if(label===null)return;label=label.trim();if(!label){toast("Please enter a name.");return}
  let type=prompt("Is this person an adult or a child? Type adult or child.","adult");if(type===null)return;type=type.trim().toLowerCase();if(!["adult","child"].includes(type)){toast("Please enter adult or child.");return}
  let existing=plannerPeople.find(p=>!p.is_active&&p.label.toLowerCase()===label.toLowerCase());
