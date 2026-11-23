@@ -707,3 +707,5 @@
 .profile-page-link:hover{border-color:#bdcbbb;background:#fbfcf9}
 .profile-page-signout{margin-top:20px}
 @media(max-width:700px){.profile-page-links{grid-template-columns:1fr}.profile-page-identity{padding:16px}}
+
+.adult-nutrition-profiles{display:grid;gap:10px;max-width:760px}.nutrition-profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:12px}.nutrition-profile-row>div{display:grid;gap:4px}.nutrition-profile-row small,.settings-hint{font-size:11px;color:#8c968e}.day-nutrition{display:flex;flex-wrap:wrap;gap:5px 10px}.day-nutrition span{font-size:10px}.day-nutrition small{font-size:9px;color:#8c968e}@media(max-width:520px){.nutrition-profile-row{align-items:flex-start;flex-direction:column}}
