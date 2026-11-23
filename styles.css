@@ -709,3 +709,17 @@
 @media(max-width:700px){.profile-page-links{grid-template-columns:1fr}.profile-page-identity{padding:16px}}
 
 .adult-nutrition-profiles{display:grid;gap:10px;max-width:760px}.nutrition-profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:12px}.nutrition-profile-row>div{display:grid;gap:4px}.nutrition-profile-row small,.settings-hint{font-size:11px;color:#8c968e}.day-nutrition{display:flex;flex-wrap:wrap;gap:5px 10px}.day-nutrition span{font-size:10px}.day-nutrition small{font-size:9px;color:#8c968e}@media(max-width:520px){.nutrition-profile-row{align-items:flex-start;flex-direction:column}}
+
+/* Household nutrition profile editor */
+.nutrition-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 15px;padding:8px 0}
+.nutrition-form-grid .field{display:grid;gap:6px;font-size:11px;color:#657266}
+.nutrition-form-grid input,.nutrition-form-grid select{width:100%;min-width:0;padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:12px "DM Sans"}
+.nutrition-calorie-field,.nutrition-calorie-help{grid-column:1/-1}
+.nutrition-calorie-help{margin:-5px 0 0;line-height:1.5}
+.nutrition-profile-dialog{width:min(560px,calc(100vw - 28px));max-height:90dvh;overflow:auto}
+.nutrition-profile-dialog .modal-header{margin-bottom:12px}
+.nutrition-profile-dialog .modal-header p{margin:4px 0 0}
+.nutrition-profile-dialog .form-error{color:#a34436;font-size:11px;min-height:16px}
+.nutrition-person-type{font-weight:500;color:#879187}
+#nutrition-profile-cancel-bottom{margin-right:auto}
+@media(max-width:520px){.nutrition-form-grid{grid-template-columns:1fr;gap:10px}.nutrition-calorie-field,.nutrition-calorie-help{grid-column:auto}}
