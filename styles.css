@@ -723,3 +723,5 @@
 .nutrition-person-type{font-weight:500;color:#879187}
 #nutrition-profile-cancel-bottom{margin-right:auto}
 @media(max-width:520px){.nutrition-form-grid{grid-template-columns:1fr;gap:10px}.nutrition-calorie-field,.nutrition-calorie-help{grid-column:auto}}
+/* Mobile quick-add navigation action */
+@media(max-width:700px){.quick-add-nav .nav-emoji{display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:var(--green);color:#fff;font-size:23px;line-height:1}.quick-add-nav{color:var(--green)!important;font-weight:700}.quick-add-nav:active{background:#edf2eb}}
