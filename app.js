@@ -504,7 +504,7 @@ function foodUsageMonthStart(value){return value+"-01"}
 function foodUsageItems(){
  const [year,month]=foodUsageMonth.split("-").map(Number);
  if(!year||!month)return [];
- const start=foodUsageMonthStart(foodUsageMonth),end=new Date(year,month,1).toISOString().slice(0,10);
+ const start=foodUsageMonthStart(foodUsageMonth),end=year+"-"+String(month+1).padStart(2,"0")+"-01";
  const sum=new Map();
  planned.filter(e=>e.plan_date>=start&&e.plan_date<end).forEach(entry=>{
   const meal=meals.find(m=>m.id===entry.meal_id);if(!meal)return;
