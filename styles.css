@@ -827,3 +827,5 @@
   .main-content{margin-left:0;margin-right:245px;}
   .profile-menu{width:220px;}
 }
+
+@media(min-width:701px){.quick-add-nav{display:none!important}}
