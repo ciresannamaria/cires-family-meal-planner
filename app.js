@@ -505,8 +505,8 @@ function shoppingItemKey(i){return i.key||normalizeShoppingIngredient(i.name)+"|
 
 let foodUsagePrices={},foodUsageMonth="",foodUsageSelectedWeek=null,foodUsageOpenWeek=null;
 function isoWeekStart(year,weekNo){const jan4=new Date(year,0,4,12),monday=new Date(jan4);monday.setDate(jan4.getDate()-((jan4.getDay()+6)%7)+(weekNo-1)*7);return monday}
-function isoWeekNumber(date){const d=new Date(date);d.setHours(12,0,0,0);d.setDate(d.getDate()+4-((d.getDay()+6)%7));const y=new Date(d.getFullYear(),0,1,12);return {year:d.getFullYear(),week:Math.ceil((((d-y)/86400000)+1)/7)}}
-function isoWeeksInYear(year){return isoWeekNumber(new Date(year,11,28,12)).week}
+function isoWeekNumber(date){const d=new Date(date);d.setHours(12,0,0,0);d.setDate(d.getDate()+3-((d.getDay()+6)%7));const year=d.getFullYear(),week1=isoWeekStart(year,1);return {year,week:Math.round((d-week1)/604800000)+1}}
+function isoWeeksInYear(year){return isoWeekNumber(new Date(year,11,31,12)).week}
 function foodUsageMonthStart(value){return value+"-01"}
 function foodUsageItems(forWeek=foodUsageSelectedWeek||startWeek(new Date())){
  const start=dateKey(forWeek),endDate=new Date(forWeek);endDate.setDate(endDate.getDate()+7);const end=dateKey(endDate),sum=new Map();
