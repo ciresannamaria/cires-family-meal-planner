@@ -802,3 +802,16 @@
 .food-usage-week-total{justify-self:end;white-space:nowrap;font:700 12px "DM Sans",sans-serif;color:var(--green);padding:6px 10px;border-radius:20px;background:#edf4e9}
 .food-usage-week-total:empty{display:none}
 @media(max-width:620px){.food-usage-week-button{grid-template-columns:65px minmax(0,1fr) auto 24px;gap:7px}.food-usage-week-total{font-size:10px;padding:5px 7px}}
+
+
+/* Mobile-only compact navigation for secondary pages */
+.mobile-menu-toggle,.mobile-menu{display:none}
+@media(max-width:700px){
+ .topbar{position:relative}
+ .mobile-menu-toggle{display:grid;place-items:center;order:2;width:40px;height:40px;margin-left:auto;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font-size:21px;line-height:1;cursor:pointer}
+ .top-actions{order:3;margin-left:10px}
+ .mobile-menu{position:absolute;z-index:1200;top:calc(100% + 8px);right:10px;display:grid;gap:4px;width:min(290px,calc(100vw - 28px));padding:9px;border:1px solid #e5e9e0;border-radius:14px;background:#fff;box-shadow:0 16px 40px rgba(35,50,39,.16)}
+ .mobile-menu[hidden]{display:none}
+ .mobile-menu button{width:100%;padding:12px 11px;border:0;border-radius:9px;background:#fff;color:var(--ink);text-align:left;font:600 12px "DM Sans",sans-serif;cursor:pointer}
+ .mobile-menu button:active,.mobile-menu button:hover{background:#f1f5ef;color:var(--green)}
+}
