@@ -57,7 +57,8 @@
   <button class="profile-page-link" data-profile-view="shopping" type="button"><span>🛒</span><span><strong>Shopping List</strong><small>Open your shopping list</small></span><b>›</b></button>
   <button class="profile-page-link" data-profile-view="books" type="button"><span>📚</span><span><strong>Books</strong><small>Family library</small></span><b>›</b></button>
   <button class="profile-page-link" id="profile-page-cycle" type="button"><span>🌸</span><span><strong>My Cycle Calendar</strong><small>Your private cycle calendar</small></span><b>›</b></button>
- </div><button class="profile-page-link" data-profile-view="product-database" type="button"><span>🗄️</span><span><strong>Product Database</strong><small>Browse and manage your shared family food list</small></span><b>›</b></button>
+  <button class="profile-page-link profile-page-link-wide" data-profile-view="product-database" type="button"><span>🗄️</span><span><strong>Product Database</strong><small>Browse and manage your shared family food list</small></span><b>›</b></button>
+ </div>
  <button class="button light profile-page-signout" id="profile-page-signout" type="button">↪ Sign out</button>
 </section>
 <section class="view" id="view-meals">
@@ -191,5 +192,5 @@
 <dialog id="shuffle-dialog" class="modal shuffle-modal"><div class="modal-header"><div><div class="eyebrow">A FRESH WEEK, YOUR WAY</div><h2>Who are we planning for?</h2></div><button type="button" class="icon-button close-dialog">×</button></div><p id="shuffle-description" class="shuffle-description"></p><label class="field">Choose people<select id="shuffle-person"></select></label><div class="shuffle-dialog-note">Only the selected person’s plan will be replaced. Everyone else’s meals will stay as they are.</div><div class="modal-footer"><button type="button" class="button light close-dialog">Cancel</button><button type="button" class="button primary" id="shuffle-generate">✦ Generate plan</button></div></dialog><div class="toast" id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=20261123-27"></script>
-<script src="app.js?v=20261126-01"></script>
+<script src="app.js?v=20261126-02"></script>
 </body></html>
