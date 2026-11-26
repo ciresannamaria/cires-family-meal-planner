@@ -827,10 +827,11 @@
   .main-nav .nav-link[data-view="product-database"]{order:4}
   .main-nav .nav-link[data-view="shared"]{order:5}
   .main-nav .nav-link[data-view="family"]{order:6}
-  .main-nav .nav-link[data-view="spices"]{order:7}
-  .main-nav .nav-link[data-view="books"]{order:8}
-  .main-nav .nav-link[data-view="cycle"]{order:9}
-  .main-nav .nav-link[data-view="settings"]{order:10}
+  .main-nav .nav-link[data-view="store-recipes"]{order:7}
+  .main-nav .nav-link[data-view="spices"]{order:8}
+  .main-nav .nav-link[data-view="books"]{order:9}
+  .main-nav .nav-link[data-view="cycle"]{order:10}
+  .main-nav .nav-link[data-view="settings"]{order:11}
 
   .nav-link{width:100%;min-width:0;padding:11px 10px;gap:10px;font-size:11px;white-space:normal;}
   .nav-link>span:not(.nav-emoji){line-height:1.25;}
