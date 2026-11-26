@@ -718,6 +718,17 @@ $("#auth-form").onsubmit=authSubmit;
 if(!db){showAuth("login","The sign-in service did not load. Please refresh the page. If this continues, tell me.");return}
 if(pendingShareToken){await openSharedMeal();const {data:{session}}=await db.auth.getSession();if(session?.user){user=session.user;}return}
 $("#today-label").textContent=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+
+const mobileNavHandle=$("#mobile-nav-handle"),mobileSidebar=$(".sidebar");
+if(mobileNavHandle&&mobileSidebar){
+ let navStartY=null;
+ const setMobileNavExpanded=expanded=>{mobileSidebar.classList.toggle("mobile-nav-expanded",expanded);mobileNavHandle.setAttribute("aria-expanded",String(expanded));mobileNavHandle.setAttribute("aria-label",expanded?"Collapse navigation":"Expand navigation")};
+ mobileNavHandle.addEventListener("click",()=>setMobileNavExpanded(!mobileSidebar.classList.contains("mobile-nav-expanded")));
+ mobileNavHandle.addEventListener("pointerdown",e=>{navStartY=e.clientY;mobileNavHandle.setPointerCapture?.(e.pointerId)});
+ mobileNavHandle.addEventListener("pointerup",e=>{if(navStartY===null)return;const delta=navStartY-e.clientY;if(Math.abs(delta)>24)setMobileNavExpanded(delta>0);navStartY=null});
+ mobileNavHandle.addEventListener("pointercancel",()=>{navStartY=null});
+}
+
 queryAll("[data-view]").forEach(b=>b.onclick=()=>{view(b.dataset.view);closeMobileMenu()});
 function closeMobileMenu(){const menu=$("#mobile-menu"),toggle=$("#mobile-menu-toggle");if(menu){menu.hidden=true;toggle?.setAttribute("aria-expanded","false");toggle?.setAttribute("aria-label","Open navigation menu")}}
 $("#mobile-menu-toggle").onclick=()=>{const menu=$("#mobile-menu"),toggle=$("#mobile-menu-toggle");menu.hidden=!menu.hidden;toggle.setAttribute("aria-expanded",String(!menu.hidden));toggle.setAttribute("aria-label",menu.hidden?"Open navigation menu":"Close navigation menu");toggle.textContent=menu.hidden?"☰":"×"};
