@@ -815,3 +815,15 @@
  .mobile-menu button{width:100%;padding:12px 11px;border:0;border-radius:9px;background:#fff;color:var(--ink);text-align:left;font:600 12px "DM Sans",sans-serif;cursor:pointer}
  .mobile-menu button:active,.mobile-menu button:hover{background:#f1f5ef;color:var(--green)}
 }
+
+/* Desktop navigation moves to the right; mobile navigation remains unchanged. */
+@media(min-width:701px){
+  .sidebar{left:auto;right:0;border-right:0;border-left:1px solid var(--line);width:245px;overflow-y:auto;padding:25px 17px;}
+  .brand{margin-bottom:38px;}
+  .main-nav{display:grid;grid-template-columns:1fr;gap:5px;}
+  .nav-link{width:100%;min-width:0;padding:11px 10px;gap:10px;font-size:11px;white-space:normal;}
+  .nav-link>span:not(.nav-emoji){line-height:1.25;}
+  .nav-emoji{display:block;flex:0 0 20px;text-align:center;font-size:16px;}
+  .main-content{margin-left:0;margin-right:245px;}
+  .profile-menu{width:220px;}
+}
