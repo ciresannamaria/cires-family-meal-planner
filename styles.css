@@ -824,7 +824,7 @@
   .main-nav .nav-link[data-view="meals"]{order:1}
   .main-nav .nav-link[data-view="planner"]{order:2}
   .main-nav .nav-link[data-view="shopping"]{order:3}
-  .main-nav .nav-link[data-view="product-database"]{order:4}
+  .main-nav .nav-link[data-view="food-usage"]{order:4}
   .main-nav .nav-link[data-view="shared"]{order:5}
   .main-nav .nav-link[data-view="family"]{order:6}
   .main-nav .nav-link[data-view="store-recipes"]{order:7}
