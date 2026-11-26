@@ -795,3 +795,10 @@
 .food-usage-week-panel .food-usage-column-head{display:none}
 @media(max-width:850px){.food-usage-week-panel .food-usage-category-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.food-usage-week-panel .food-usage-category-items{grid-template-columns:1fr}.food-usage-week-panel .food-usage-row{padding:9px}.food-usage-week-panel .food-usage-price input{width:100px}}
+
+
+/* Weekly spend shown in the collapsed accordion row */
+.food-usage-week-button{grid-template-columns:85px minmax(0,1fr) auto 28px}
+.food-usage-week-total{justify-self:end;white-space:nowrap;font:700 12px "DM Sans",sans-serif;color:var(--green);padding:6px 10px;border-radius:20px;background:#edf4e9}
+.food-usage-week-total:empty{display:none}
+@media(max-width:620px){.food-usage-week-button{grid-template-columns:65px minmax(0,1fr) auto 24px;gap:7px}.food-usage-week-total{font-size:10px;padding:5px 7px}}
