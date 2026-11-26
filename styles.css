@@ -763,3 +763,18 @@
 
 /* Product Database hub and weekly ingredient usage */
 .product-database-links{max-width:900px;margin-top:18px}.food-usage-week-controls{max-width:900px;margin:10px 0 18px}.food-usage-week-controls>div{min-width:170px;text-align:center}.food-usage-week-controls small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+
+
+/* Ingredient usage: numbered ISO-week accordion with compact price rows */
+.food-usage-year-heading{display:grid;gap:4px;max-width:900px;margin:12px 0 14px;padding:13px 15px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.food-usage-year-heading strong{font:600 15px "DM Sans",sans-serif;color:var(--ink)}.food-usage-year-heading small{font-size:10px;color:var(--muted)}
+.food-usage-weeks{display:grid;gap:8px;max-width:1000px}.food-usage-week{border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden}
+.food-usage-week-button{display:grid;grid-template-columns:95px minmax(0,1fr) 28px;align-items:center;gap:10px;width:100%;padding:13px 15px;border:0;background:#fff;text-align:left;cursor:pointer;color:var(--ink)}
+.food-usage-week-button:hover,.food-usage-week.is-open .food-usage-week-button{background:#f6f8f3}.food-usage-week-button.current .food-usage-week-number{color:var(--green)}
+.food-usage-week-number{font:700 12px "DM Sans",sans-serif}.food-usage-week-date{font-size:11px;color:var(--muted)}
+.food-usage-week-arrow{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#edf2eb;color:var(--green);font-size:17px}
+.food-usage-week-panel{padding:0 14px 14px;border-top:1px solid #eef0ea}.food-usage-week-panel[hidden]{display:none}
+.food-usage-week-panel .food-usage-summary{display:flex;gap:9px;margin:12px 0}.food-usage-week-panel .summary-card{flex:1;min-width:0;padding:10px 12px}.food-usage-week-panel .summary-card strong{font-size:16px}.food-usage-week-panel .summary-card small{font-size:9px}
+.food-usage-week-panel .food-usage-note{margin:0 0 12px}.food-usage-column-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(125px,170px) 105px;gap:14px;padding:8px 5px;color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.food-usage-week-panel .food-usage-groups{max-width:none;gap:9px}.food-usage-week-panel .shopping-category{border:1px solid var(--line);border-radius:9px;overflow:hidden}.food-usage-week-panel .food-usage-row{grid-template-columns:minmax(0,1fr) minmax(125px,170px) 105px;gap:14px;padding:9px 5px}
+@media(max-width:620px){.food-usage-week-button{grid-template-columns:75px minmax(0,1fr) 25px;padding:12px}.food-usage-week-panel{padding:0 8px 10px}.food-usage-column-head,.food-usage-week-panel .food-usage-row{grid-template-columns:minmax(0,1fr) minmax(95px,115px) 75px;gap:6px}.food-usage-week-panel .food-usage-price{font-size:9px}.food-usage-week-panel .food-usage-price input{padding:7px 5px}.food-usage-week-panel .food-usage-cost{font-size:10px}.food-usage-week-panel .food-usage-product strong{font-size:11px}.food-usage-week-panel .food-usage-product small{font-size:9px}.food-usage-week-panel .food-usage-summary{gap:5px}.food-usage-week-panel .summary-card{padding:8px 6px}.food-usage-week-panel .summary-card strong{font-size:13px}.food-usage-week-panel .summary-card small{font-size:8px}}
