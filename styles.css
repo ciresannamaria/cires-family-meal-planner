@@ -890,3 +890,6 @@
  .store-recipe-card-body h2{font-size:16px;margin:1px 0 7px}
  .store-recipe-open{font-size:10px;padding-top:7px}
 }
+
+/* Planner cards: keep portions and actions on one compact, aligned row */
+.planned-meal-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;margin-top:5px}.planned-meal-footer>small{display:block;margin:0;white-space:nowrap;flex:0 0 auto}.planned-meal-footer .meal-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0;min-width:0}.planned-meal-footer .meal-actions button{padding:2px 3px;line-height:1.2;white-space:nowrap}
