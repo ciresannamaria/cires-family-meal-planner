@@ -518,9 +518,35 @@ function amounts(){
  });
  return [...sum.entries()].map(([key,item])=>({...item,key,amount:item.amount/item.unitFactor})).sort((a,b)=>a.name.localeCompare(b.name));
 }
+let shoppingCheckState={},shoppingCheckWeek="";
 function shoppingChecksKey(){return "cires-shopping-checks:"+user.id+":"+dateKey(week)}
-function readShoppingChecks(){try{return JSON.parse(localStorage.getItem(shoppingChecksKey())||"{}")}catch{return {}}}
-function saveShoppingCheck(key,value){let state=readShoppingChecks();state[key]=value;try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state))}catch(err){toast("Couldn't save shopping checks on this device.")}}
+function readShoppingChecks(){return shoppingCheckWeek===dateKey(week)?shoppingCheckState:{}}
+async function loadShoppingChecks(){
+ const wk=dateKey(week);
+ const result=await db.from("shopping_checks").select("item_key,is_checked").eq("user_id",user.id).eq("week_start",wk);
+ if(result.error)throw result.error;
+ const state={};(result.data||[]).forEach(row=>{state[row.item_key]=row.is_checked});
+ // Import any checks saved by the previous device-local version, without overwriting cloud values.
+ try{
+  const legacy=JSON.parse(localStorage.getItem(shoppingChecksKey())||"{}");
+  const missing=Object.entries(legacy).filter(([key])=>state[key]===undefined);
+  if(missing.length){
+   const rows=missing.map(([item_key,is_checked])=>({user_id:user.id,week_start:wk,item_key,is_checked:Boolean(is_checked)}));
+   const saved=await db.from("shopping_checks").upsert(rows,{onConflict:"user_id,week_start,item_key"});
+   if(saved.error)throw saved.error;
+   missing.forEach(([key,value])=>state[key]=Boolean(value));
+  }
+  localStorage.removeItem(shoppingChecksKey());
+ }catch(err){if(err?.message)console.warn("Legacy shopping checks could not be migrated:",err.message);}
+ shoppingCheckState=state;shoppingCheckWeek=wk;return state;
+}
+async function saveShoppingCheck(key,value){
+ const wk=dateKey(week),checked=Boolean(value);
+ const result=await db.from("shopping_checks").upsert({user_id:user.id,week_start:wk,item_key:key,is_checked:checked,updated_at:new Date().toISOString()},{onConflict:"user_id,week_start,item_key"});
+ if(result.error){toast("Couldn't sync this shopping check: "+result.error.message);return false}
+ if(shoppingCheckWeek!==wk){shoppingCheckState={};shoppingCheckWeek=wk}
+ shoppingCheckState[key]=checked;return true;
+}
 function shoppingItemKey(i){return i.key||normalizeShoppingIngredient(i.name)+"|"+shoppingUnit(i.unit||"g").family}
 
 let foodUsagePrices={},foodUsageAllPrices={},foodUsageMonth="",foodUsageSelectedWeek=null,foodUsageOpenWeek=null;
@@ -547,21 +573,17 @@ async function renderFoodUsageWeek(forWeek){foodUsageSelectedWeek=new Date(forWe
  panel.innerHTML='<div class="food-usage-summary"><div class="summary-card"><strong>'+items.length+'</strong><small>Ingredients</small></div><div class="summary-card"><strong>'+foodUsageMoney(total)+'</strong><small>Estimated total · '+priced+' priced</small></div><div class="summary-card"><strong>'+entries.length+'</strong><small>Planned meals</small></div></div><div class="food-usage-note">Prices are saved for the calendar month containing this week. Enter a price per kg, litre or piece; the estimated total updates automatically.</div><div class="food-usage-groups">'+(groupHtml||'<div class="shopping-empty">No ingredients with quantities were found in the planner for this week.</div>')+'</div>'}
 async function saveFoodUsagePrice(input){const item=foodUsageItems(foodUsageSelectedWeek).find(x=>x.key===input.dataset.foodPrice);if(!item)return;const raw=input.value.trim();if(raw===""){const d=await db.from("food_usage_prices").delete().eq("month_start",foodUsageMonthStart(foodUsageMonth)).eq("ingredient_key",item.key);if(d.error)toast("Couldn't remove price: "+d.error.message);else{delete foodUsagePrices[item.key];await renderFoodUsageWeek(foodUsageSelectedWeek)}return}const price=Number(raw);if(!Number.isFinite(price)||price<0)return;const payload={user_id:user.id,month_start:foodUsageMonthStart(foodUsageMonth),ingredient_key:item.key,price_per_base:price,base_unit:item.baseUnit,updated_at:new Date().toISOString()};const r=await db.from("food_usage_prices").upsert(payload,{onConflict:"user_id,month_start,ingredient_key"});if(r.error){toast("Couldn't save price: "+r.error.message);return}foodUsagePrices[item.key]={price,unit:item.baseUnit};await renderFoodUsageWeek(foodUsageSelectedWeek)}
 
-function drawShopping(){
+async function drawShopping(){
  updateWeekRangeLabels();
  const shoppingLabel=$("#shopping-week-label");if(shoppingLabel)shoppingLabel.textContent=dateLabel();
- let items=amounts(),n=weekItems().length,state=readShoppingChecks();
- let migrated=false;
- items.forEach(i=>{const key=shoppingItemKey(i);if(state[key]===undefined){const legacy=[...i.legacyKeys].find(k=>state[k]===true);if(legacy){state[key]=true;migrated=true;}}i.legacyKeys.forEach(k=>{if(k!==key&&Object.prototype.hasOwnProperty.call(state,k)){delete state[k];migrated=true;}});});
- if(migrated){try{localStorage.setItem(shoppingChecksKey(),JSON.stringify(state));}catch(err){toast("Couldn't update saved shopping checks on this device.");}}
+ let items=amounts(),n=weekItems().length,state;
+ try{state=await loadShoppingChecks()}catch(err){console.error("Shopping checks failed to load:",err);toast("Couldn't load shared shopping checks: "+err.message);state=readShoppingChecks();}
  const isChecked=i=>Boolean(state[shoppingItemKey(i)]);
  $("#shopping-summary").innerHTML='<div class="summary-card"><strong>'+items.length+'</strong><small>Different ingredients</small></div><div class="summary-card"><strong>'+n+'</strong><small>Planned meal entries</small></div>';
  const categoryOrder=["Fruit & Vegetables","Meat & Poultry","Fish & Seafood","Dairy & Eggs","Bakery & Bread","Pasta, Rice & Grains","Canned & Jarred","Oils, Sauces & Condiments","Spices & Seasonings","Nuts, Seeds & Spreads","Other","Uncategorised"];
  const groups=new Map(categoryOrder.map(category=>[category,[]]));
  items.forEach(i=>{const category=groups.has(i.category)?i.category:"Uncategorised";groups.get(category).push(i);});
- const categoryDesign={
-  "Fruit & Vegetables":["🥑","fruit"],"Meat & Poultry":["🍗","meat"],"Fish & Seafood":["🐟","fish"],"Dairy & Eggs":["🥚","dairy"],"Bakery & Bread":["🥖","bakery"],"Pasta, Rice & Grains":["🍝","grains"],"Canned & Jarred":["🥫","canned"],"Oils, Sauces & Condiments":["🫒","oils"],"Spices & Seasonings":["🌶️","spices"],"Nuts, Seeds & Spreads":["🥜","nuts"],"Other":["🛒","other"],"Uncategorised":["📦","uncategorised"]
- };
+ const categoryDesign={"Fruit & Vegetables":["🥑","fruit"],"Meat & Poultry":["🍗","meat"],"Fish & Seafood":["🐟","fish"],"Dairy & Eggs":["🥚","dairy"],"Bakery & Bread":["🥖","bakery"],"Pasta, Rice & Grains":["🍝","grains"],"Canned & Jarred":["🥫","canned"],"Oils, Sauces & Condiments":["🫒","oils"],"Spices & Seasonings":["🌶️","spices"],"Nuts, Seeds & Spreads":["🥜","nuts"],"Other":["🛒","other"],"Uncategorised":["📦","uncategorised"]};
  const sections=categoryOrder.map(category=>{
   const group=groups.get(category).sort((a,b)=>Number(isChecked(a))-Number(isChecked(b))||a.name.localeCompare(b.name));
   const [emoji,theme]=categoryDesign[category]||["🛍️","other"];
@@ -569,7 +591,7 @@ function drawShopping(){
   return '<section class="shopping-category category-'+theme+'"><h3 class="shopping-category-title"><span class="shopping-category-heading"><span class="shopping-category-emoji" aria-hidden="true">'+emoji+'</span><span>'+esc(category)+'</span></span><small>'+group.length+' '+(group.length===1?'item':'items')+'</small></h3><div class="shopping-category-items">'+rows+'</div></section>';
  }).join("");
  $("#shopping-list").innerHTML=sections;
- $("#shopping-list").onchange=e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input){saveShoppingCheck(input.dataset.shoppingKey,input.checked);drawShopping();}};
+ $("#shopping-list").onchange=async e=>{let input=e.target.closest('input[type="checkbox"][data-shopping-key]');if(input){input.disabled=true;const ok=await saveShoppingCheck(input.dataset.shoppingKey,input.checked);if(ok)drawShopping();else input.disabled=false;}};
 }
 
 async function loadSpiceCards(){
